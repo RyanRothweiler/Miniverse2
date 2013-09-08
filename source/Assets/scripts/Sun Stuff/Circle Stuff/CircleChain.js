@@ -1,14 +1,19 @@
+		#pragma strict
+
 class CircleChain
 {
 	//variables
 	public var endCircle1 : MeshCircle;
 	public var endCircle2 : MeshCircle;
-	public var members = new Array(); //members does include the two endcircles
+//	public var members = new Array(); //members does include the two endcircles
+//	private var members : MeshCircle[];
+	public var members = new List.<MeshCircle>(); 
 	public var CombinedMesh : MeshFilter;
 	public var parentMesh : MeshFilter;
 	public var SunRadiiHolder : GameObject; //the sunRadiiHolder prefab
 	
 	var i : int;
+	var x : int;
 	var j : int;
 	
 	var tempMeshCircle : MeshCircle;
@@ -338,7 +343,7 @@ class CircleChain
 		}
 	
 		//update model
-		dummyTriangles = new int[dumTris.Count];
+		var dummyTriangles = new int[dumTris.Count];
 		for (x = 0; x < dumTris.Count; x++)
 		{
 			dummyTriangles[x] = dumTris[x];
@@ -351,6 +356,7 @@ class CircleChain
 	function SpliceMesh(circle1EndVerts : Object[], circle2EndVerts : Object[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
 	{
 		//first make sure the points have been set
+		Debug.Log(circle1EndVerts[0]);
 		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
 		{
 			//create intersection circle
@@ -406,8 +412,8 @@ class CircleChain
 			
 			
 			//create new points
-			newPoint1 = Vector3((circle1EndVertLocs[0].x + circle2EndVertLocs[0].x) / 2, (circle1EndVertLocs[0].y + circle2EndVertLocs[0].y) / 2, (circle1EndVertLocs[0].z + circle2EndVertLocs[0].z) / 2);
-			newPoint2 = Vector3((circle1EndVertLocs[1].x + circle2EndVertLocs[1].x) / 2, (circle1EndVertLocs[1].y + circle2EndVertLocs[1].y) / 2, (circle1EndVertLocs[1].z + circle2EndVertLocs[1].z) / 2);
+			var newPoint1 = Vector3((circle1EndVertLocs[0].x + circle2EndVertLocs[0].x) / 2, (circle1EndVertLocs[0].y + circle2EndVertLocs[0].y) / 2, (circle1EndVertLocs[0].z + circle2EndVertLocs[0].z) / 2);
+			var newPoint2 = Vector3((circle1EndVertLocs[1].x + circle2EndVertLocs[1].x) / 2, (circle1EndVertLocs[1].y + circle2EndVertLocs[1].y) / 2, (circle1EndVertLocs[1].z + circle2EndVertLocs[1].z) / 2);
 			
 			//move points a little closer to the intersection center while separating them a bit
 			if (Vector3.Distance(newPoint1, intersectCirc.center) < Vector3.Distance(newPoint2, intersectCirc.center))
