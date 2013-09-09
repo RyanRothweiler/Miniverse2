@@ -58,6 +58,9 @@
      <None Include="Assets\shaders\RampRimSpec.shader" />
      <None Include="Assets\lProgress.xml" />
      <None Include="Assets\shaders\RampRim_Teleport.shader" />
+ <Reference Include="Assembly-UnityScript">
+ <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-vs.csproj">

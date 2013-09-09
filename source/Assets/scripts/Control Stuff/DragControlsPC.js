@@ -310,7 +310,8 @@ function Start ()
 	//scale down
 	if (!isLevelSelect && !isMainMenu && !isSettingsMenu && !isContactMenu && !skipZoom) 
 	{
-		SceneScaleController.transform.localScale = Vector3(0,0,0); 
+		SceneScaleController.transform.localScale = Vector3(0,0,0);
+//		Camera.main.fieldOfView = 100; 
 	}
 	
 	//set platform and platform specific settings
@@ -323,14 +324,14 @@ function Start ()
 	}
 	else
 	{
-		print("IOS");
-		DragRate = 0.02;
-		PlatformIOS = true;
-		PlatformPC = false;
-//		print("PC");
-//		PlatformPC = true;
-//		PlatformIOS = false;
-//		WorldDraggingInverted = true;
+//		print("IOS");
+//		DragRate = 0.02;
+//		PlatformIOS = true;
+//		PlatformPC = false;
+		print("PC");
+		PlatformPC = true;
+		PlatformIOS = false;
+		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -956,7 +957,8 @@ function Update ()
 	if (!skipZoom && CanZoom && !nextLevel && transform.position.z <= camZStopPos && !(SceneScaleController.transform.localScale.x >= 0.97 && SceneScaleController.transform.localScale.y >= 0.97 && SceneScaleController.transform.localScale.x >= 0.97))
 	{
 		halt = true;
-		SceneScaleController.transform.localScale += Vector3(CameraScaleSpeed * Time.deltaTime,CameraScaleSpeed * Time.deltaTime,CameraScaleSpeed * Time.deltaTime);			
+		SceneScaleController.transform.localScale += Vector3(CameraScaleSpeed * Time.deltaTime,CameraScaleSpeed * Time.deltaTime,CameraScaleSpeed * Time.deltaTime);
+//		Camera.main.fieldOfView -= 30 * Time.deltaTime;		
 	}
 	else if(CanZoom && ZoomVirgin)
 	{
@@ -1000,7 +1002,7 @@ function Update ()
 	{
 		LevelWon();
 		FlyAway = true;
-		Timer.LevelDone(previousLevel);	
+		Timer.LevelDone(previousLevel);
 	}
 	
 	//if player lost
