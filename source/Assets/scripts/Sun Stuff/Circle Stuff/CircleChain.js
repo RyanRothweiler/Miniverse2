@@ -353,10 +353,9 @@ class CircleChain
 	}
 	
 	//splice the meshes together 
-	function SpliceMesh(circle1EndVerts : Object[], circle2EndVerts : Object[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
+	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
 	{
 		//first make sure the points have been set
-		Debug.Log(circle1EndVerts[0]);
 		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
 		{
 			//create intersection circle

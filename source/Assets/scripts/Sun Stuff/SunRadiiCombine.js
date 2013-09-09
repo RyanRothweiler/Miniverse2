@@ -35,6 +35,13 @@ private var cont : boolean; //general continue variable
 
 function Start () 
 {
+	//create sun base
+	objects = GameObject.FindGameObjectsWithTag("sun");
+	for (int i = 0; i < objects.Length; i++)
+	{
+		GameObject.Instantiate(
+	}
+	
 	//organize all the circles and parent them to this object
 	objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 	for (var circle : GameObject in objects) 
@@ -160,7 +167,7 @@ function MeshAdd ()
 	{
 		if (circle.collides)
 		{
-			Destroy(circle.mesh.gameObject);
+//			Destroy(circle.mesh.gameObject);
 		}
 	}
 }
@@ -190,4 +197,26 @@ function SetNextMember(chain : CircleChain, currentCircle : MeshCircle) : boolea
 	}
 	currentCircle.endCircle = false;
 	return true;
+}
+
+function Revert()
+{
+	//delete left over shit (old suns, and baked radii)
+	GameObject.DestroyImmediate(GameObject.Find("SunRadiiHolder(Clone)"));
+	do
+	{
+		GameObject.DestroyImmediate(GameObject.Find("SunChainCircle"));
+	} while(GameObject.Find("SunChainCircle"));
+	
+	objects = GameObject.FindGameObjectsWithTag("sun");
+	for (var sun : GameObject in objects) 
+	{
+		GameObject.DestroyImmediate(sun);
+	}
+	
+	//instantiate sun archive
+	for (i = 0; i < sunArchive.Length; i++)
+	{
+		GameObject.Instantiate(sunArchive[i], sunArchive[i].transform.position, sunArchive[i].transform.rotation);
+	}
 }
