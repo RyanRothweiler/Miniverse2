@@ -57,9 +57,9 @@ class MeshCircle
 		this.radius = radius;
 		this.endCircle = false;
 		
-		this.masterNors = mesh.mesh.normals;
-		this.masterTris = mesh.mesh.triangles;
-		this.masterVerts = mesh.mesh.vertices;
+		this.masterNors = mesh.sharedMesh.normals;
+		this.masterTris = mesh.sharedMesh.triangles;
+		this.masterVerts = mesh.sharedMesh.vertices;
 		
 		//init
 		endPoint1Vertex1 = 1000;

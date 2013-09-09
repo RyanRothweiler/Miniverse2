@@ -15,6 +15,8 @@ var masterTris : int[]; //a dummy list holding the new list of vertices
 var masterNors : Vector3[]; 
 var masterVerts : Vector3[];
 var objects : GameObject[];
+var sunsArchive : GameObject[];
+
 var chains = new Array(); //holds all the chains in the level
 
 public var removeArr = new Array();
@@ -37,9 +39,13 @@ function Start ()
 {
 	//create sun base
 	objects = GameObject.FindGameObjectsWithTag("sun");
-	for (int i = 0; i < objects.Length; i++)
+	for (i = 0; i < objects.Length; i++)
 	{
-		GameObject.Instantiate(
+		var dumbObj = GameObject.Instantiate(objects[i], objects[i].transform.position, objects[i].transform.rotation);
+		PrefabUtility.ReconnectToLastPrefab(dumbObj); //connect the prefab
+		dumbObj.transform.parent = Camera.main.transform;
+		dumbObj.name = "Sun";
+		dumbObj.SetActiveRecursively(false);
 	}
 	
 	//organize all the circles and parent them to this object
@@ -53,9 +59,9 @@ function Start ()
 	dummyTriangles = new int[108];
 	
 	//create master mesh data
-	masterTris = transform.GetChild(0).GetComponent(MeshFilter).mesh.triangles.Clone();
-	masterNors = transform.GetChild(0).GetComponent(MeshFilter).mesh.normals.Clone();
-	masterVerts = transform.GetChild(0).GetComponent(MeshFilter).mesh.vertices.Clone();
+	masterTris = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.triangles.Clone();
+	masterNors = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.normals.Clone();
+	masterVerts = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.vertices.Clone();
 	
 	if (combine)
 	{
@@ -83,11 +89,11 @@ function MeshAdd ()
 	circles = new MeshCircle[GetComponentsInChildren(MeshFilter).Length];
 	for (var child : Transform in transform)
 	{
-		circles[count] = new MeshCircle(child.GetComponent(MeshFilter).mesh.vertices[0].y * child.transform.localScale.x, transform.TransformPoint(child.position), child.GetComponent(MeshFilter));
-		circles[count].mesh.mesh.Clear();
-		circles[count].mesh.mesh.vertices = masterVerts;
-		circles[count].mesh.mesh.normals = masterNors;
-		circles[count].mesh.mesh.triangles = masterTris;
+		circles[count] = new MeshCircle(child.GetComponent(MeshFilter).sharedMesh.vertices[0].y * child.transform.localScale.x, transform.TransformPoint(child.position), child.GetComponent(MeshFilter));
+		circles[count].mesh.sharedMesh.Clear();
+		circles[count].mesh.sharedMesh.vertices = masterVerts;
+		circles[count].mesh.sharedMesh.normals = masterNors;
+		circles[count].mesh.sharedMesh.triangles = masterTris;
 		count++;
 	}
 	
@@ -201,13 +207,19 @@ function SetNextMember(chain : CircleChain, currentCircle : MeshCircle) : boolea
 
 function Revert()
 {
-	//delete left over shit (old suns, and baked radii)
-	GameObject.DestroyImmediate(GameObject.Find("SunRadiiHolder(Clone)"));
+	//ddestroy sundradiiholders
+	do
+	{
+		GameObject.DestroyImmediate(GameObject.Find("SunRadiiHolder(Clone)"));
+	} while(GameObject.Find("SunRadiiHolder(Clone)"));
+	
+	//destroy sunchaincricles
 	do
 	{
 		GameObject.DestroyImmediate(GameObject.Find("SunChainCircle"));
 	} while(GameObject.Find("SunChainCircle"));
 	
+	//destroy old suns
 	objects = GameObject.FindGameObjectsWithTag("sun");
 	for (var sun : GameObject in objects) 
 	{
@@ -215,8 +227,9 @@ function Revert()
 	}
 	
 	//instantiate sun archive
-	for (i = 0; i < sunArchive.Length; i++)
+	do
 	{
-		GameObject.Instantiate(sunArchive[i], sunArchive[i].transform.position, sunArchive[i].transform.rotation);
-	}
+		Camera.main.transform.Find("Sun").gameObject.SetActiveRecursively(true); //activate sun
+		Camera.main.transform.Find("Sun").parent = null; //unparent it
+	} while(Camera.main.transform.Find("Sun"));
 }

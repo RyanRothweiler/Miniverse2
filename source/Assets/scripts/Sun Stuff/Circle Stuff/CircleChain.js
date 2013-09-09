@@ -292,15 +292,15 @@ class CircleChain
 		//copy triangles to dumTris
 		dumTris.Clear();
 		vertsToRemove.Clear();
-		for (x = 0; x < baseCircle.mesh.mesh.triangles.length; x++)
+		for (x = 0; x < baseCircle.mesh.sharedMesh.triangles.length; x++)
 		{
-			dumTris.Add(baseCircle.mesh.mesh.triangles[x]);
+			dumTris.Add(baseCircle.mesh.sharedMesh.triangles[x]);
 		}
 		
 		//go through vertices and save the ones inside the circles s
-		for (x = 0; x < baseCircle.mesh.mesh.vertices.length; x++)
+		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.length; x++)
 		{
-			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.mesh.vertices[x])))
+			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[x])))
 			{
 				vertsToRemove.Add(x);
 			}
