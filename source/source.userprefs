@@ -1,8 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/Sun Stuff/SunRadiiCombine.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Background Stuff\NebulaBackground.js">
     <Files>
-      <File FileName="Assets/scripts/Sun Stuff/SunRadiiCombine.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Background Stuff\NebulaBackground.js" Line="14" Column="36" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="317" Column="47" />
+      <File FileName="Assets\scripts\Sun Stuff\SunRadiiCombine.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
