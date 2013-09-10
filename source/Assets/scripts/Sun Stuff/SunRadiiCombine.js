@@ -42,7 +42,6 @@ function Start ()
 	for (i = 0; i < objects.Length; i++)
 	{
 		var dumbObj = GameObject.Instantiate(objects[i], objects[i].transform.position, objects[i].transform.rotation);
-		PrefabUtility.ReconnectToLastPrefab(dumbObj); //connect the prefab
 		dumbObj.transform.parent = Camera.main.transform;
 		dumbObj.name = "Sun";
 		dumbObj.SetActiveRecursively(false);
