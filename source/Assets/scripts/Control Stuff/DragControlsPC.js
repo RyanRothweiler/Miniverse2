@@ -324,14 +324,14 @@ function Start ()
 	}
 	else
 	{
-//		print("IOS");
-//		DragRate = 0.02;
-//		PlatformIOS = true;
-//		PlatformPC = false;
-		print("PC");
-		PlatformPC = true;
-		PlatformIOS = false;
-		WorldDraggingInverted = true;
+		print("IOS");
+		DragRate = 0.02;
+		PlatformIOS = true;
+		PlatformPC = false;
+//		print("PC");
+//		PlatformPC = true;
+//		PlatformIOS = false;
+//		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -1880,22 +1880,22 @@ function LevelSelect()
 					 
 					MovementControllerOldPos = LevelOffset;
 					//limit movement 
-					if (LevelSelectMovementController.transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate < 0) //left side 
+					if (LevelSelectMovementController.transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -1) //left side 
 					{ 
-						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
-					}
-					else 
-					{ 
-						LevelOffset.x = 0; 
-						return; //then kick out
-					}
-					if (LevelSelectMovementController.transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -146) //right side
-					{ 
-						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
+						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate * -1;
 					}
 					else 
 					{
-						LevelOffset.x += -146; 
+						LevelOffset.x = 0; 
+						return; //then kick out
+					}
+					if (LevelSelectMovementController.transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate < 146) //right side
+					{ 
+						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate * -1;
+					}
+					else 
+					{
+						LevelOffset.x = 146; 
 						return; //kick out
 					}
 						
@@ -1931,7 +1931,7 @@ function LevelSelect()
 			if (Touch1Move)
 			{				
 				//limit movement
-				if (LevelOffset.x - Movement1Delta.x < 0) //left side
+				if (LevelOffset.x - Movement1Delta.x > -1) //left side
 				{ 
 					LevelOffset.x -= (Movement1Delta.x);
 				}
@@ -1945,7 +1945,7 @@ function LevelSelect()
 					Movement1Delta.x = 0;
 					Touch1Move = false;
 				}
-				if (LevelOffset.x - Movement1Delta.x > -146) //right side 
+				if (LevelOffset.x - Movement1Delta.x < 146) //right side 
 				{
 					LevelOffset.x -= (Movement1Delta.x); 
 				}
@@ -1953,7 +1953,7 @@ function LevelSelect()
 				{
 					//end the flick
 					print("limiting and ending the flick");
-					LevelOffset.x = -146;
+					LevelOffset.x = 146;
 					
 					Touch1StartPos = Vector2(0,0);
 					Touch1EndPos = Vector2(1000,1000);		
@@ -2262,7 +2262,7 @@ function UnpressLevelTag(info : RaycastHit, isLevelTag : boolean)
 		//here we do the things that pertain only to the level tags. yeah I know the method name is depress level tag, sue me
 		if (isLevelTag)
 		{
-			info.collider.transform.localScale = Vector3(2.0, 2.0, 1.0); //tag scale
+			info.collider.transform.localScale = Vector3(1.0, 1.0, 1.0); //tag scale
 			info.collider.transform.Find("Num").renderer.material.color.a = 1; //number
 			info.collider.transform.Find("Name").renderer.material.color.a = 1; //name
 			info.collider.transform.Find("CompletedPlane").renderer.material.color.a = 1; //completed plane
