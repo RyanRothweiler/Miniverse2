@@ -5,8 +5,6 @@ class CircleChain
 	//variables
 	public var endCircle1 : MeshCircle;
 	public var endCircle2 : MeshCircle;
-//	public var members = new Array(); //members does include the two endcircles
-//	private var members : MeshCircle[];
 	public var members = new List.<MeshCircle>(); 
 	public var CombinedMesh : MeshFilter;
 	public var parentMesh : MeshFilter;
@@ -22,7 +20,6 @@ class CircleChain
 	public var dumVerts = new List.<Vector3>(); 
 	public var vertsToRemove = new List.<int>(); //list of vertices to remove from the circle
 	var parentObj : GameObject; //an instance of SunRadiiHolder which holds the mesh of the chain
-	
 	
 	
 	function CircleChain(endCircle1 : MeshCircle, endCircle2 : MeshCircle, SunRadiiHolder : GameObject)
@@ -253,6 +250,12 @@ class CircleChain
 				}
 			}
 		}
+		
+		//when everything is done disable the members
+		for (i = 0; i < members.Count; i++)
+		{
+			members[i].mesh.renderer.enabled = false;
+		}
 	}
 	
 	//removes the points from base circle which are inside otherCircle
@@ -348,8 +351,22 @@ class CircleChain
 		{
 			dummyTriangles[x] = dumTris[x];
 		}
-		//assign new mesh
-		baseCircle.mesh.mesh.triangles = dummyTriangles;
+		
+		//create an asset for the new mesh and add it to the project as well as assigning it to the circle
+		var m : Mesh = new Mesh();
+		m.vertices = baseCircle.mesh.sharedMesh.vertices;
+		m.uv = baseCircle.mesh.mesh.uv;
+		m.triangles = dummyTriangles;
+			
+		
+		var pathList = EditorApplication.currentScene.Split("."[0]);
+		var levelName = pathList[0].Split("/"[0]);
+		var name = levelName[3];
+
+		AssetDatabase.CreateFolder("Assets/models/Sun Radii Stuff", name+".mesh");
+		
+		AssetDatabase.CreateAsset(m, "Assets/models/Sun Radii Stuff/"+EditorApplication.currentScene+".mesh");
+		baseCircle.mesh.mesh = m;
 	}
 	
 	//splice the meshes together 

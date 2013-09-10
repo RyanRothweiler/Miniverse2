@@ -30,5 +30,8 @@ class SunRadiiBaking extends Editor
 	    	    
 	    //set dirty bitch
 	    EditorUtility.SetDirty(target);
+	    
+	    //draw everything else
+	    DrawDefaultInspector ();
     }
 }
