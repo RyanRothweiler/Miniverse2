@@ -1,11 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/Sun Stuff/SunRadiiCombine.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1723" Column="2" />
-      <File FileName="Assets\scripts\Sun Stuff\SunRadiiCombine.js" Line="96" Column="33" />
-      <File FileName="Assets\editor\SunRadiiBaking.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\MeshCircle.js" Line="1" Column="1" />
+      <File FileName="Assets/scripts/Sun Stuff/SunRadiiCombine.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
