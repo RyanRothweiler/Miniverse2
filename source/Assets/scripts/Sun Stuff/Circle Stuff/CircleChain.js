@@ -1,4 +1,6 @@
-		#pragma strict
+#pragma strict
+
+import System.IO;
 
 class CircleChain
 {
@@ -13,6 +15,7 @@ class CircleChain
 	var i : int;
 	var x : int;
 	var j : int;
+	var fileNum : int;
 	
 	var tempMeshCircle : MeshCircle;
 	
@@ -32,7 +35,20 @@ class CircleChain
 	
 	function SpliceTogether(DeathSphere : GameObject)
 	{	
-		//remove all internal points and set endpoint circles
+		//first create directory to save these new circles. unity is a dick
+		var pathList = EditorApplication.currentScene.Split("."[0]);
+		var levelName = pathList[0].Split("/"[0]);
+		var name = levelName[3];
+		
+		//if the directory doesn't exist then create it
+		if (!(System.IO.Directory.Exists("Assets/models/Sun Radii Stuff/"+name)))
+		{
+			Debug.Log("creating directory");
+			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Stuff", name); //create the folder
+		}
+		
+		//now remove all internal points and set endpoint circles
+		fileNum = 0; //init file counter
 		for (j = 0; j < members.Count; j++)
 		{
 			//make sure the circle is set as collides
@@ -61,12 +77,28 @@ class CircleChain
 		var combine : CombineInstance[] = new CombineInstance[members.Count];
 		for (i = 0; i < members.Count; i++)
 		{
-			combine[i].mesh = members[i].mesh.mesh;
+			combine[i].mesh = members[i].mesh.sharedMesh;
 			combine[i].transform = members[i].mesh.gameObject.transform.localToWorldMatrix;
 		}
 			
+		//create another mesh before assigning it to the parent
+		var m : Mesh = new Mesh();
+		m = combine[0];
+		m.CombineMeshes(combine);
+		
+		//set path for new asset
+		var pathList = EditorApplication.currentScene.Split("."[0]);
+		var levelName = pathList[0].Split("/"[0]);
+		var name = levelName[3];
+		var path = "Assets/models/Sun Radii Stuff/"+name+"/file"+fileNum+".asset";
+		fileNum++;
+		
+		//crate the asset and assign it to the circle
+		AssetDatabase.CreateAsset(m, path);
+		baseCircle.mesh.mesh = m;
+		
 		parentMesh = parentObj.GetComponent(MeshFilter);
-		parentMesh.mesh.CombineMeshes(combine);
+		parentMesh.sharedMesh.CombineMeshes(combine);
 				
 		//set new endpoints using the CombinedMesh THIS SLOWS THINGS DOWN A LOT OPTIMIZE HERE FIRST
 		for (i = 1; i < members.Count - 1; i++)
@@ -355,17 +387,19 @@ class CircleChain
 		//create an asset for the new mesh and add it to the project as well as assigning it to the circle
 		var m : Mesh = new Mesh();
 		m.vertices = baseCircle.mesh.sharedMesh.vertices;
-		m.uv = baseCircle.mesh.mesh.uv;
+		m.uv = baseCircle.mesh.sharedMesh.uv;
+		m.normals = baseCircle.mesh.sharedMesh.normals;
 		m.triangles = dummyTriangles;
-			
 		
+		//set path for new asset
 		var pathList = EditorApplication.currentScene.Split("."[0]);
 		var levelName = pathList[0].Split("/"[0]);
 		var name = levelName[3];
-
-		AssetDatabase.CreateFolder("Assets/models/Sun Radii Stuff", name+".mesh");
+		var path = "Assets/models/Sun Radii Stuff/"+name+"/file"+fileNum+".asset";
+		fileNum++;
 		
-		AssetDatabase.CreateAsset(m, "Assets/models/Sun Radii Stuff/"+EditorApplication.currentScene+".mesh");
+		//crate the asset and assign it to the circle
+		AssetDatabase.CreateAsset(m, path);
 		baseCircle.mesh.mesh = m;
 	}
 	
