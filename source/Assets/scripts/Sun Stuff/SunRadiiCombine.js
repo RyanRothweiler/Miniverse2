@@ -10,6 +10,7 @@ public var circles : MeshCircle[]; //holds all sun radii circles
 public var dummyTriangles : int[]; //a dummy list holding the new list of vertices
 public var dumTris = new List.<int>(); 
 public var vertsToRemove = new List.<int>(); //list of vertices to remove from the circle
+public var spliceNum : int; //increments every time a splice circle file is saved
 
 var masterTris : int[]; //a dummy list holding the new list of vertices
 var masterNors : Vector3[]; 
@@ -57,13 +58,13 @@ function Start ()
 	//init
 	dummyTriangles = new int[108];
 	
-	//create master mesh data
-	masterTris = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.triangles.Clone();
-	masterNors = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.normals.Clone();
-	masterVerts = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.vertices.Clone();
-	
 	if (combine)
 	{
+		//create master mesh data
+		masterTris = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.triangles.Clone();
+		masterNors = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.normals.Clone();
+		masterVerts = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.vertices.Clone();
+		
 		MeshAdd();
 	}
 }

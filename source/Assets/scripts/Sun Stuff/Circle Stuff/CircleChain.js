@@ -25,6 +25,7 @@ class CircleChain
 	public var dumVerts = new List.<Vector3>(); 
 	public var vertsToRemove = new List.<int>(); //list of vertices to remove from the circle
 	var parentObj : GameObject; //an instance of SunRadiiHolder which holds the mesh of the chain
+	var mi : Mesh = new Mesh();
 	
 	
 	function CircleChain(endCircle1 : MeshCircle, endCircle2 : MeshCircle, SunRadiiHolder : GameObject)
@@ -39,7 +40,6 @@ class CircleChain
 	{
 		//init file counters
 		fileNum = 0; 
-		spliceNum = 0;
 		combinedNum = 0;
 		
 		//first create directory to save these new circles. unity is a dick
@@ -89,20 +89,17 @@ class CircleChain
 			
 		//create another mesh before assigning it to the parent
 		var me : Mesh = new Mesh();
-//		me = members[0].mesh.sharedMesh;
+//		me = members[0].mesh.mesh;
 		me.CombineMeshes(combine);
 		
 		//set path for new asset
 		pathList = EditorApplication.currentScene.Split("."[0]);
 		levelName = pathList[0].Split("/"[0]);
 		name = levelName[3];
-		var path = "Assets/models/Sun Radii Stuff/"+name+"/combinedMesh"+combinedNum+".asset";
-		combinedNum++;
 		
 		//crate the asset and assign it to the circle
-		AssetDatabase.CreateAsset(me, path);
-		parentMesh = parentObj.GetComponent(MeshFilter);
-		parentMesh.mesh = me;
+		AssetDatabase.CreateAsset(me, "Assets/models/Sun Radii Stuff/"+name+"/combomesh.asset");
+		parentObj.GetComponent(MeshFilter).mesh = me;
 				
 		//set new endpoints using the CombinedMesh THIS SLOWS THINGS DOWN A LOT OPTIMIZE HERE FIRST
 		for (i = 1; i < members.Count - 1; i++)
@@ -401,13 +398,11 @@ class CircleChain
 		var name = levelName[3];
 		var path = "Assets/models/Sun Radii Stuff/"+name+"/file"+fileNum+".asset";
 		fileNum++;
-		
 		//crate the asset and assign it to the circle
 		AssetDatabase.CreateAsset(m, path);
 		baseCircle.mesh.mesh = m;
 	}
 	
-	//splice the meshes together 
 	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
 	{
 		//first make sure the points have been set
@@ -507,22 +502,22 @@ class CircleChain
 			uvs[uvs.length - 2] = Vector2(vertices[vertices.Length-2].x, vertices[vertices.Length-2].z);
 			
 			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
-			var m : Mesh = new Mesh();
-			m.vertices = vertices;
-			m.uv = uvs;
-			m.triangles = triangles;
+			mi = new Mesh();
+			mi.vertices = vertices;
+			mi.uv = uvs;
+			mi.triangles = triangles;
 			
 			//set path for new asset
 			var pathList = EditorApplication.currentScene.Split("."[0]);
 			var levelName = pathList[0].Split("/"[0]);
 			var name = levelName[3];
-			var path = "Assets/models/Sun Radii Stuff/"+name+"/splicedMesh"+spliceNum+".asset";
-			spliceNum++;
+			var path = "Assets/models/Sun Radii Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
+			Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum++;
 			
 			//crate the asset and assign it to the circle
-			AssetDatabase.CreateAsset(m, path);
+			AssetDatabase.CreateAsset(mi, path);
 			parentMesh.sharedMesh.Clear();
-			parentMesh.sharedMesh = m;
+			parentMesh.sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
 		}
 		else
 		{

@@ -1,14 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\editor\SunRadiiBaking.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
     <Files>
-      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\CircleChain.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Control Stuff\Joystick.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Background Stuff\NebulaBackground.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\SunRadiiCombine.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\CircleChain.js" Line="515" Column="84" />
+      <File FileName="Assets\scripts\Sun Stuff\SunRadiiCombine.js" Line="67" Column="3" />
       <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\MeshCircle.js" Line="179" Column="74" />
-      <File FileName="Assets\editor\SunRadiiBaking.js" Line="29" Column="42" />
+      <File FileName="Assets\editor\SunRadiiBaking.js" Line="30" Column="11" />
+      <File FileName="Assets\scripts\Tutorial Stuff\PinchOutTutorial.js" Line="81" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="234" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
