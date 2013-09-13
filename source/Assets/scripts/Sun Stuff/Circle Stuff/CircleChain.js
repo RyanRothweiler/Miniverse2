@@ -16,6 +16,8 @@ class CircleChain
 	var x : int;
 	var j : int;
 	var fileNum : int;
+	var spliceNum : int;
+	var combinedNum : int;
 	
 	var tempMeshCircle : MeshCircle;
 	
@@ -34,7 +36,12 @@ class CircleChain
 	}
 	
 	function SpliceTogether(DeathSphere : GameObject)
-	{	
+	{
+		//init file counters
+		fileNum = 0; 
+		spliceNum = 0;
+		combinedNum = 0;
+		
 		//first create directory to save these new circles. unity is a dick
 		var pathList = EditorApplication.currentScene.Split("."[0]);
 		var levelName = pathList[0].Split("/"[0]);
@@ -48,7 +55,6 @@ class CircleChain
 		}
 		
 		//now remove all internal points and set endpoint circles
-		fileNum = 0; //init file counter
 		for (j = 0; j < members.Count; j++)
 		{
 			//make sure the circle is set as collides
@@ -82,23 +88,21 @@ class CircleChain
 		}
 			
 		//create another mesh before assigning it to the parent
-		var m : Mesh = new Mesh();
-		m = combine[0];
-		m.CombineMeshes(combine);
+		var me : Mesh = new Mesh();
+//		me = members[0].mesh.sharedMesh;
+		me.CombineMeshes(combine);
 		
 		//set path for new asset
-		var pathList = EditorApplication.currentScene.Split("."[0]);
-		var levelName = pathList[0].Split("/"[0]);
-		var name = levelName[3];
-		var path = "Assets/models/Sun Radii Stuff/"+name+"/file"+fileNum+".asset";
-		fileNum++;
+		pathList = EditorApplication.currentScene.Split("."[0]);
+		levelName = pathList[0].Split("/"[0]);
+		name = levelName[3];
+		var path = "Assets/models/Sun Radii Stuff/"+name+"/combinedMesh"+combinedNum+".asset";
+		combinedNum++;
 		
 		//crate the asset and assign it to the circle
-		AssetDatabase.CreateAsset(m, path);
-		baseCircle.mesh.mesh = m;
-		
+		AssetDatabase.CreateAsset(me, path);
 		parentMesh = parentObj.GetComponent(MeshFilter);
-		parentMesh.sharedMesh.CombineMeshes(combine);
+		parentMesh.mesh = me;
 				
 		//set new endpoints using the CombinedMesh THIS SLOWS THINGS DOWN A LOT OPTIMIZE HERE FIRST
 		for (i = 1; i < members.Count - 1; i++)
@@ -441,24 +445,24 @@ class CircleChain
 			}
 		
 			//get data and initialize... should probably not do this for every member
-			var vertices = new Vector3[parentMesh.mesh.vertices.length + 2];
-			var triangles = new int[parentMesh.mesh.triangles.length + 12];
-			var uvs = new Vector2[parentMesh.mesh.uv.length + 2];
-			for (i = 0; i < parentMesh.mesh.vertices.length; i++)
+			var vertices = new Vector3[parentMesh.sharedMesh.vertices.length + 2];
+			var triangles = new int[parentMesh.sharedMesh.triangles.length + 12];
+			var uvs = new Vector2[parentMesh.sharedMesh.uv.length + 2];
+			for (i = 0; i < parentMesh.sharedMesh.vertices.length; i++)
 			{
-				vertices[i] = parentMesh.mesh.vertices[i];
+				vertices[i] = parentMesh.sharedMesh.vertices[i];
 			}
-			for (i = 0; i < parentMesh.mesh.triangles.length; i++)
+			for (i = 0; i < parentMesh.sharedMesh.triangles.length; i++)
 			{
-				triangles[i] = parentMesh.mesh.triangles[i];
+				triangles[i] = parentMesh.sharedMesh.triangles[i];
 			}
-			for (i = 0; i < parentMesh.mesh.uv.length; i++)
+			for (i = 0; i < parentMesh.sharedMesh.uv.length; i++)
 			{
-				uvs[i] = parentMesh.mesh.uv[i];
+				uvs[i] = parentMesh.sharedMesh.uv[i];
 			}
 		
-			var circle1EndVertLocs = [parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle1EndVerts[0]]), parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle1EndVerts[1]])];
-			var circle2EndVertLocs = [parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle2EndVerts[0]]), parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle2EndVerts[0]])];
+			var circle1EndVertLocs = [parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle1EndVerts[0]]), parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle1EndVerts[1]])];
+			var circle2EndVertLocs = [parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle2EndVerts[0]]), parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle2EndVerts[0]])];
 			
 			
 			//create new points
@@ -502,12 +506,23 @@ class CircleChain
 			uvs[uvs.length - 1] = Vector2(vertices[vertices.Length-1].x, vertices[vertices.Length-1].z);
 			uvs[uvs.length - 2] = Vector2(vertices[vertices.Length-2].x, vertices[vertices.Length-2].z);
 			
-			//update model
-			parentMesh.mesh.Clear();
+			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
+			var m : Mesh = new Mesh();
+			m.vertices = vertices;
+			m.uv = uvs;
+			m.triangles = triangles;
 			
-			parentMesh.mesh.vertices = vertices;
-			parentMesh.mesh.uv = uvs;
-			parentMesh.mesh.triangles = triangles;
+			//set path for new asset
+			var pathList = EditorApplication.currentScene.Split("."[0]);
+			var levelName = pathList[0].Split("/"[0]);
+			var name = levelName[3];
+			var path = "Assets/models/Sun Radii Stuff/"+name+"/splicedMesh"+spliceNum+".asset";
+			spliceNum++;
+			
+			//crate the asset and assign it to the circle
+			AssetDatabase.CreateAsset(m, path);
+			parentMesh.sharedMesh.Clear();
+			parentMesh.sharedMesh = m;
 		}
 		else
 		{
