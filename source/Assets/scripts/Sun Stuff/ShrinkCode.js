@@ -2,6 +2,7 @@
 
 //public vars
 public var RadiiMatObj : GameObject; //the game object which holds the radii ring material
+public var PlanetExplosion : GameObject; //the planet explosion particle effect
 public var radiiSize : float;
 public var check : boolean;
 public var shrinkSpeed : float;
@@ -47,5 +48,28 @@ function Update ()
 	else
 	{
 		shrinkSpeed = 0;
+	}
+	
+	///shrink the sun
+	if (transform.parent == null) //wait until the level transition is over
+	{
+		if(check == true && !dead)
+		{
+			RadiiMatObj.transform.localScale -= Vector3(shrinkSpeed * .1 * Time.deltaTime, shrinkSpeed * .1 * Time.deltaTime, shrinkSpeed * .1 * Time.deltaTime);
+			radiiSize -= shrinkSpeed * .1 * Time.deltaTime;			
+		}
+		
+		//if the sun is totally shrunk
+		if (radiiSize <= 1 && !dead)
+		{
+			//create explosion
+			GameObject.Instantiate(PlanetExplosion, transform.position, Quaternion(0,0,0,0)); 
+			
+			//move sun
+			RadiiMatObj.transform.position = Vector3(1000,1000,1000);
+			
+			//sun is dead
+			dead = true;
+		}
 	}
 }

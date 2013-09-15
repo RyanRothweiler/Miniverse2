@@ -91,6 +91,7 @@
      <Compile Include="Assets\scripts\Sun Stuff\Circle Stuff\CircleChain.js" />
      <Compile Include="Assets\scripts\Sun Stuff\Circle Stuff\MeshCircle.js" />
      <Compile Include="Assets\scripts\Sun Stuff\ShrinkCode.js" />
+     <Compile Include="Assets\scripts\Sun Stuff\SunController.js" />
      <Compile Include="Assets\scripts\Sun Stuff\SunRadii.js" />
      <Compile Include="Assets\scripts\Sun Stuff\SunRadiiCombine.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\AnywhereTutorial.js" />

@@ -44,6 +44,6 @@ class SunRadiiBaking extends Editor
 	    }
 	    
 	    //draw everything else
-//	    DrawDefaultInspector ();
+	    DrawDefaultInspector ();
     }
 }

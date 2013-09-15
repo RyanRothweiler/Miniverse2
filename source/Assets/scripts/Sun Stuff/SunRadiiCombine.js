@@ -6,6 +6,7 @@
 //public vars
 public var SunRadiiHolder : GameObject;
 public var combine : boolean;
+public var LiveCombine : boolean; //if the level needs live combination of circles
 public var circles : MeshCircle[]; //holds all sun radii circles
 public var dummyTriangles : int[]; //a dummy list holding the new list of vertices
 public var dumTris = new List.<int>(); 
@@ -52,7 +53,18 @@ function Start ()
 	objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 	for (var circle : GameObject in objects) 
 	{
-		circle.transform.parent = this.transform;
+		if (LiveCombine) //if using live combine then make sure this circle wants to use live radi addition, otherwise just add all the circles regardless of what they want. fuck what they want.
+		{
+			if (circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+			{
+				Debug.Log("adding this one");
+				circle.transform.parent = this.transform;
+			}
+		}
+		else
+		{
+			circle.transform.parent = this.transform;
+		}
 	}
 	
 	//init
@@ -71,11 +83,11 @@ function Start ()
 
 function Update () 
 {
-//	//combine the meshes
-//	if (combine)
-//	{
-//		MeshAdd();
-//	}
+	//combine the meshes
+	if (LiveCombine)
+	{
+		MeshAdd();
+	}
 }
 
 //add all child meshes into one and delete internal points

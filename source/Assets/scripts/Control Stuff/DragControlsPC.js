@@ -1347,34 +1347,7 @@ function ZoomIn ()
 //Sun Shrinking Code
 function shrinkCheck()
 {
-	//shrink all the suns	
-	for(var sun: GameObject in sunObjects)
-	{
-		//wait until the level transition is over
-		if (sun.transform.parent == null)
-		{
-			shrinkCode = sun.GetComponent(ShrinkCode);
-			if(shrinkCode.check == true && !shrinkCode.dead)
-			{
-				radiiBall = sun.transform.Find("SunRadiiFade");
-				radiiBall.localScale -= Vector3(shrinkCode.shrinkSpeed * .1 * Time.deltaTime,shrinkCode.shrinkSpeed * .1 * Time.deltaTime, shrinkCode.shrinkSpeed * .1 * Time.deltaTime);
-				shrinkCode.radiiSize -= shrinkCode.shrinkSpeed * .1 * Time.deltaTime;			
-			}
-			
-			//if the sun is totally shrunk
-			if (shrinkCode.radiiSize <= 1 && !shrinkCode.dead)
-			{
-				//create explosion
-				GameObject.Instantiate(PlanetExplosion, sun.transform.position, Quaternion(0,0,0,0)); 
-				
-				//move sun
-				sun.transform.position = Vector3(1000,1000,1000);
-				
-				//sun is dead
-				shrinkCode.dead = true;
-			}
-		}
-	}
+	//why the fuck is this here
 }
 
 //code for settings menu functionality
