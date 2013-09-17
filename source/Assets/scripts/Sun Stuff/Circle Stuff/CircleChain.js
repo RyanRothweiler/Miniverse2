@@ -99,7 +99,7 @@ class CircleChain
 		}
 		
 		//if in editor than the stuff is baking, else it is running live
-		if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !Application.isPlaying)
+		if (!Application.isPlaying)
 		{
 			var me : Mesh = new Mesh();
 	//		me = members[0].mesh.mesh;
@@ -127,186 +127,186 @@ class CircleChain
 		}
 		//catch the last circle and the first circle
 		members[members.Count-1].SetEndPoints(parentObj, members[i-1], DeathSphere);
-		members[0].SetEndPoints(parentObj, members[1], DeathSphere);		
+		members[0].SetEndPoints(parentObj, members[1], DeathSphere);	
 		
-		//go through the members to get the information, but actually act on the parentObj mesh
-		for (j = 0; j < members.Count-1	; j++) 
-		{
-			var ds = new Array();
-			if (!members[j].endPoint1Spliced) //this whole entire if statement is probably more complicated than it needs to be
-			{
-				ds.Clear();
-				//find point to splice
-				ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
-				ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
-				if (members[j+1].endPoint3Vertex1 != 1000)
-				{
-					ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000)
-				{
-					ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
-				}
-				ds.Sort();
-				//splice mesh
-				if (ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint1Spliced = true;
-					members[j+1].endPoint1Spliced = true;
-				}
-				if (ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint1Spliced = true;
-					members[j+1].endPoint2Spliced = true;
-				}
-				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint1Spliced = true;
-					members[j+1].endPoint3Spliced = true;
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint1Spliced = true;
-					members[j+1].endPoint4Spliced = true;
-				}
-			}
-			if (!members[j].endPoint2Spliced) //this whole entire if statement is probably more complicated than it needs to be
-			{
-				ds.Clear();
-				//get mesh to splice
-				ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
-				ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
-				if (members[j+1].endPoint3Vertex1 != 1000)
-				{
-					ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000)
-				{
-					ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
-				}
-				ds.Sort();
-				
-				//splice mesh
-				if (ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint2Spliced = true;
-					members[j+1].endPoint1Spliced = true;
-				}
-				if (ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint2Spliced = true;
-					members[j+1].endPoint2Spliced = true;
-				}
-				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint2Spliced = true;
-					members[j+1].endPoint3Spliced = true;				
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint2Spliced = true;
-					members[j+1].endPoint4Spliced = true;
-				}
-			}
-			if ((!members[j].endPoint3Spliced) && members[j].endPoint3Vertex1 != 1000) //this whole entire if statement is probably more complicated than it needs to be
-			{
-				ds.Clear();
-				//get mesh to splice
-				ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
-				ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
-				if (members[j+1].endPoint3Vertex1 != 1000)
-				{
-					ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000)
-				{
-					ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
-				}
-				ds.Sort();
-				
-				//splice mesh
-				if (ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint3Spliced = true;
-					members[j+1].endPoint1Spliced = true;
-				}
-				if (ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint3Spliced = true;
-					members[j+1].endPoint2Spliced = true;
-				}
-				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint3Spliced = true;
-					members[j+1].endPoint3Spliced = true;
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint3Spliced = true;
-					members[j+1].endPoint4Spliced = true;
-				}
-			}
-			if ((!members[j].endPoint4Spliced) && members[j].endPoint4Vertex1 != 1000) //this whole entire if statement is probably more complicated than it needs to be
-			{
-				ds.Clear();
-				//get mesh to splice
-				ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
-				ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
-				if (members[j+1].endPoint3Vertex1 != 1000)
-				{
-					ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000)
-				{
-					ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
-				}
-				ds.Sort();
-				
-				//splice mesh
-				if (ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint4Spliced = true;
-					members[j+1].endPoint1Spliced = true;
-				}
-				if (ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint4Spliced = true;
-					members[j+1].endPoint2Spliced = true;
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint4Spliced = true;
-					members[j+1].endPoint3Spliced = true;
-				}
-				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
-				{
-					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
-					members[j].endPoint4Spliced = true;
-					members[j+1].endPoint4Spliced = true;
-				}
-			}
-		}
-		
-		//when everything is done disable the members
-		for (i = 0; i < members.Count; i++)
-		{
-			members[i].mesh.renderer.enabled = false;
-		}
+//		//go through the members to get the information, but actually act on the parentObj mesh
+//		for (j = 0; j < members.Count-1	; j++) 
+//		{
+//			var ds = new Array();
+//			if (!members[j].endPoint1Spliced) //this whole entire if statement is probably more complicated than it needs to be
+//			{
+//				ds.Clear();
+//				//find point to splice
+//				ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
+//				ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
+//				if (members[j+1].endPoint3Vertex1 != 1000)
+//				{
+//					ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000)
+//				{
+//					ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
+//				}
+//				ds.Sort();
+//				//splice mesh
+//				if (ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint1Spliced = true;
+//					members[j+1].endPoint1Spliced = true;
+//				}
+//				if (ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint1Spliced = true;
+//					members[j+1].endPoint2Spliced = true;
+//				}
+//				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint1Spliced = true;
+//					members[j+1].endPoint3Spliced = true;
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint1Spliced = true;
+//					members[j+1].endPoint4Spliced = true;
+//				}
+//			}
+//			if (!members[j].endPoint2Spliced) //this whole entire if statement is probably more complicated than it needs to be
+//			{
+//				ds.Clear();
+//				//get mesh to splice
+//				ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
+//				ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
+//				if (members[j+1].endPoint3Vertex1 != 1000)
+//				{
+//					ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000)
+//				{
+//					ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
+//				}
+//				ds.Sort();
+//				
+//				//splice mesh
+//				if (ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint2Spliced = true;
+//					members[j+1].endPoint1Spliced = true;
+//				}
+//				if (ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint2Spliced = true;
+//					members[j+1].endPoint2Spliced = true;
+//				}
+//				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint2Spliced = true;
+//					members[j+1].endPoint3Spliced = true;				
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint2Spliced = true;
+//					members[j+1].endPoint4Spliced = true;
+//				}
+//			}
+//			if ((!members[j].endPoint3Spliced) && members[j].endPoint3Vertex1 != 1000) //this whole entire if statement is probably more complicated than it needs to be
+//			{
+//				ds.Clear();
+//				//get mesh to splice
+//				ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
+//				ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
+//				if (members[j+1].endPoint3Vertex1 != 1000)
+//				{
+//					ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000)
+//				{
+//					ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
+//				}
+//				ds.Sort();
+//				
+//				//splice mesh
+//				if (ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint3Spliced = true;
+//					members[j+1].endPoint1Spliced = true;
+//				}
+//				if (ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint3Spliced = true;
+//					members[j+1].endPoint2Spliced = true;
+//				}
+//				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint3Spliced = true;
+//					members[j+1].endPoint3Spliced = true;
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint3Spliced = true;
+//					members[j+1].endPoint4Spliced = true;
+//				}
+//			}
+//			if ((!members[j].endPoint4Spliced) && members[j].endPoint4Vertex1 != 1000) //this whole entire if statement is probably more complicated than it needs to be
+//			{
+//				ds.Clear();
+//				//get mesh to splice
+//				ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
+//				ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
+//				if (members[j+1].endPoint3Vertex1 != 1000)
+//				{
+//					ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000)
+//				{
+//					ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
+//				}
+//				ds.Sort();
+//				
+//				//splice mesh
+//				if (ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint4Spliced = true;
+//					members[j+1].endPoint1Spliced = true;
+//				}
+//				if (ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint4Spliced = true;
+//					members[j+1].endPoint2Spliced = true;
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint4Spliced = true;
+//					members[j+1].endPoint3Spliced = true;
+//				}
+//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
+//				{
+//					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1]);
+//					members[j].endPoint4Spliced = true;
+//					members[j+1].endPoint4Spliced = true;
+//				}
+//			}
+//		}
+//		
+//		//when everything is done disable the members
+//		for (i = 0; i < members.Count; i++)
+//		{
+//			members[i].mesh.renderer.enabled = false;
+//		}
 	}
 	
 	//removes the points from base circle which are inside otherCircle
@@ -346,17 +346,19 @@ class CircleChain
 		//copy triangles to dumTris
 		dumTris.Clear();
 		vertsToRemove.Clear();
-		for (x = 0; x < baseCircle.mesh.sharedMesh.triangles.length; x++)
+		for (x = 0; x < baseCircle.mesh.mesh.triangles.length; x++)
 		{
 			dumTris.Add(baseCircle.mesh.sharedMesh.triangles[x]);
 		}
 		
-		//go through vertices and save the ones inside the circles s
+		//go through vertices and save the ones inside the intersect circle
 		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.length; x++)
 		{
 			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[x])))
 			{
 				vertsToRemove.Add(x);
+				baseCircle.mesh.sharedMesh.vertices[x] = Vector3(0.0,0.0,0.0);
+				Debug.Log(baseCircle.mesh.sharedMesh.vertices[x]);
 			}
 		}		
 		
@@ -395,6 +397,42 @@ class CircleChain
 				}
 			}
 		}
+		
+		//go through the vertices and set all the ones to remove to zero (I'm not removing them since that'll change the array and thus break all triangle data
+//		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.Length; x++)
+//		{
+//			for (i = 0; i < vertsToRemove.Count; i++)
+//			{
+//				if (x == vertsToRemove[i])
+//				{
+//					baseCircle.mesh.mesh.vertices[x] = Vector3(0.0,0.0,0.0);
+//				}
+//			}
+//		}
+
+		//create new tris array
+		dumVerts.Clear();
+		for (x = 0; x < baseCircle.mesh.mesh.vertices.Length; x++)
+		{
+			var found = true;
+			for (i = 0; i < vertsToRemove.Count; i++)
+			{
+				if (vertsToRemove[i] == x)
+				{
+					found = false;
+				}
+			}
+			
+			if (!found)
+			{
+				dumVerts.Add(baseCircle.mesh.mesh.vertices[x]);
+			}
+			else
+			{
+				dumVerts.Add(Vector3.zero);
+			}
+		}
+		
 	
 		//update model
 		var dummyTriangles = new int[dumTris.Count];
@@ -402,9 +440,14 @@ class CircleChain
 		{
 			dummyTriangles[x] = dumTris[x];
 		}
+		var dummyVertices = new Vector3[dumVerts.Count];
+		for (x = 0; x < dumVerts.Count; x++)
+		{
+			dummyVertices[x] = dumVerts[x];
+		}
 		
 		//if in editor than the stuff is baking, else it is running live
-		if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !Application.isPlaying)
+		if (!Application.isPlaying)
 		{
 			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
 			var m : Mesh = new Mesh();
@@ -426,7 +469,11 @@ class CircleChain
 		else
 		{
 			//assign new mesh
+//			baseCircle.mesh.mesh.vertices = baseCircle.mesh.sharedMesh.vertices;
 			baseCircle.mesh.mesh.triangles = dummyTriangles;
+			baseCircle.mesh.mesh.vertices = dummyVertices;
+			
+//			Debug.Log(baseCircle.mesh.mesh.vertices[vertsToRemove[0]]);
 		}
 	}
 	
@@ -535,7 +582,7 @@ class CircleChain
 			mi.triangles = triangles;
 			
 			//if in editor than the stuff is baking, else it is running live
-			if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !Application.isPlaying)
+			if (!Application.isPlaying)
 			{
 				//set path for new asset
 				var pathList = EditorApplication.currentScene.Split("."[0]);

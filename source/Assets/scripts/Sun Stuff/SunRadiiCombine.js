@@ -40,7 +40,7 @@ private var masterMeshSet : boolean; //if the master mesh data has been set
 
 function Start () 
 {
-	//create sun base (used for sun radii baking
+	//create sun base (used for sun radii baking)
 	if (!Application.isPlaying)
 	{
 		objects = GameObject.FindGameObjectsWithTag("sun");
@@ -94,32 +94,52 @@ function MeshAdd ()
 	count = 0;
 	var size = 0;
 	chains.Clear();
-		
-	//get information about all circles, duplicating all sun chain circles and parenting them to this
-	//first find the number of circles we're dealing with
-	objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
-	for (var obj : GameObject in objects)
+	
+	//only do this for live radii
+	if (LiveCombine)
 	{
-		if (obj.name != "SunChainCircle(Clone)" && obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+		//get information about all circles, duplicating all sun chain circles and parenting them to this
+		//first find the number of circles we're dealing with
+		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
+		for (var obj : GameObject in objects)
 		{
-			size++;
+			if (obj.name != "SunChainCircle(Clone)" && obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+			{
+				size++;
+			}
 		}
-	}
-	//now we may proceed
-	circles = new MeshCircle[size];
-	objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
-	for (var circle : GameObject in objects)
-	{
-		if (circle.name != "SunChainCircle(Clone)" && circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+		//now we may proceed
+		circles = new MeshCircle[size];
+		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
+		for (var circle : GameObject in objects)
 		{
-			//set up the circle
-			var newCirc = GameObject.Instantiate(circle, circle.transform.position, circle.transform.rotation);
-			newCirc.transform.parent = this.transform;
-			newCirc.AddComponent(TimeDeath);
-			newCirc.GetComponent(TimeDeath).time = 0.1;
-			
+			if (circle.name != "SunChainCircle(Clone)" && circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+			{
+				//set up the circle
+				var newCirc = GameObject.Instantiate(circle, circle.transform.position, circle.transform.rotation);
+				newCirc.transform.parent = this.transform;
+				newCirc.AddComponent(TimeDeath);
+				newCirc.GetComponent(TimeDeath).time = 0.1;
+				
+				//create mesh circle data
+				circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);
+				circles[count].mesh.sharedMesh.Clear();
+				circles[count].mesh.sharedMesh.vertices = masterVerts;
+				circles[count].mesh.sharedMesh.normals = masterNors;
+				circles[count].mesh.sharedMesh.triangles = masterTris;
+				count++;
+			}
+		}
+		
+		//set the master mesh data
+		SetMasterMeshData();
+	}
+	else //not live combining
+	{
+		for (var child : Transform in transform)
+		{
 			//create mesh circle data
-			circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);
+			circles[count] = new MeshCircle(child.GetComponent(MeshFilter).sharedMesh.vertices[0].y * child.localScale.x, transform.TransformPoint(child.position), child.GetComponent(MeshFilter), null);
 			circles[count].mesh.sharedMesh.Clear();
 			circles[count].mesh.sharedMesh.vertices = masterVerts;
 			circles[count].mesh.sharedMesh.normals = masterNors;
@@ -127,9 +147,6 @@ function MeshAdd ()
 			count++;
 		}
 	}
-	
-	//set the master mesh data
-	SetMasterMeshData();
 
 	//mark the end circles
 	for (var circle1 : MeshCircle in circles)
@@ -213,20 +230,13 @@ function MeshAdd ()
 	}
 	
 	//show circles that have been marked for live radii addition but aren't colliding with anything atm
-	for (var circle : MeshCircle in circles)
+	if (LiveCombine)
 	{
-		circle.CheckCollidesForPastLife();
-	}
-	
-	//disable the sun circles
-//	objects = GameObject.FindGameObjectsWithTag("sun");
-//	for (var sun : GameObject in objects)
-//	{
-//		if (sun.GetComponent(SunController).LiveRadiiAddition)
-//		{
-//			sun.transform.Find("SunChainCircle").GetComponent(MeshRenderer).enabled = false;
-//		}
-//	}	
+		for (var circle : MeshCircle in circles)
+		{
+			circle.CheckCollidesForPastLife();
+		}
+	}	
 }
 
 //assigns the next member in the chain

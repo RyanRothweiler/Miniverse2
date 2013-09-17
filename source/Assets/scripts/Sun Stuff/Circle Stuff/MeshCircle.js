@@ -86,25 +86,48 @@ class MeshCircle
 			//find the point
 			var smallestDist = 10000.0;
 			var smallestPoint = 0;
-			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles.Length; j++)
+//			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles.Length; j++)
+//			{
+//				var nextDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j]]), otherCircle.center);
+//				if ((nextDist < smallestDist) && (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j]]), center) < (circle.radius + 0.1)))
+//				{
+//					if (endCircle)
+//					{
+//						if ((endPoint1Vertex1 == 1000 || endPoint1Vertex2 == 1000 || endPoint2Vertex1 == 1000 || endPoint2Vertex2 == 1000)  && endPoint1Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint1Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint2Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint2Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j])
+//						{
+//							smallestDist = nextDist;
+//							smallestPoint = ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j];
+//						}
+//					}
+//					else
+//					{
+//						if ((endPoint1Vertex1 == 1000 || endPoint1Vertex2 == 1000 || endPoint2Vertex1 == 1000 || endPoint2Vertex2 == 1000 || endPoint3Vertex1 == 1000 || endPoint3Vertex2 == 1000 || endPoint4Vertex1 == 1000 || endPoint4Vertex2 == 1000) && endPoint1Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint1Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint2Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint2Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint3Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint3Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint4Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint4Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j])
+//						{
+//							smallestDist = nextDist;
+//							smallestPoint = ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j];
+//						}
+//					}
+//				}
+//			}
+			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length; j++)
 			{
-				var nextDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j]]), otherCircle.center);
-				if ((nextDist < smallestDist) && (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j]]), center) < (circle.radius + 0.1)))
+				var nextDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center);
+				if ((ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j] != Vector3(0,0,0)) && (nextDist < smallestDist) && (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius + 0.1)))
 				{
 					if (endCircle)
 					{
-						if ((endPoint1Vertex1 == 1000 || endPoint1Vertex2 == 1000 || endPoint2Vertex1 == 1000 || endPoint2Vertex2 == 1000)  && endPoint1Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint1Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint2Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint2Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j])
+						if ((endPoint1Vertex1 == 1000 || endPoint1Vertex2 == 1000 || endPoint2Vertex1 == 1000 || endPoint2Vertex2 == 1000)  && endPoint1Vertex1 != j && endPoint1Vertex2 != j && endPoint2Vertex1 != j && endPoint2Vertex2 != j)
 						{
 							smallestDist = nextDist;
-							smallestPoint = ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j];
+							smallestPoint = j;
 						}
 					}
 					else
 					{
-						if ((endPoint1Vertex1 == 1000 || endPoint1Vertex2 == 1000 || endPoint2Vertex1 == 1000 || endPoint2Vertex2 == 1000 || endPoint3Vertex1 == 1000 || endPoint3Vertex2 == 1000 || endPoint4Vertex1 == 1000 || endPoint4Vertex2 == 1000) && endPoint1Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint1Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint2Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint2Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint3Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint3Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint4Vertex1 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j] && endPoint4Vertex2 != ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j])
+						if ((endPoint1Vertex1 == 1000 || endPoint1Vertex2 == 1000 || endPoint2Vertex1 == 1000 || endPoint2Vertex2 == 1000 || endPoint3Vertex1 == 1000 || endPoint3Vertex2 == 1000 || endPoint4Vertex1 == 1000 || endPoint4Vertex2 == 1000) && endPoint1Vertex1 != j && endPoint1Vertex2 != j && endPoint2Vertex1 != j && endPoint2Vertex2 != j && endPoint3Vertex1 != j && endPoint3Vertex2 != j && endPoint4Vertex1 != j && endPoint4Vertex2 != j)
 						{
 							smallestDist = nextDist;
-							smallestPoint = ObjToCheck.GetComponent(MeshFilter).sharedMesh.triangles[j];
+							smallestPoint = j;
 						}
 					}
 				}
@@ -183,6 +206,10 @@ class MeshCircle
 				}
 			}
 		}
+		
+		//visualize
+		var cir1 = new Circ(endPoint1Vertex1Loc, 0.1);
+		cir1.Visualize(DeathSphere);
 	}
 	
 	function CheckCollidesForPastLife() //if this circle doesn't colide with anything then enable its past life
