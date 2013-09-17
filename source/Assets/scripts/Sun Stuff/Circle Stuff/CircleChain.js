@@ -28,12 +28,23 @@ class CircleChain
 	var mi : Mesh = new Mesh();
 	
 	
-	function CircleChain(endCircle1 : MeshCircle, endCircle2 : MeshCircle, SunRadiiHolder : GameObject)
+	function CircleChain(endCircle1 : MeshCircle, endCircle2 : MeshCircle, SunRadiiHolder : GameObject, Liveing : boolean)
 	{
 		this.endCircle1 = endCircle1;
 		this.endCircle2 = endCircle2;
 		this.SunRadiiHolder = SunRadiiHolder;
-		parentObj = GameObject.Instantiate(SunRadiiHolder, Vector3.zero, Quaternion.identity);
+		
+		//if live combine then do different things
+		if (Liveing)
+		{
+			parentObj = GameObject.Instantiate(SunRadiiHolder, Vector3.zero, Quaternion.identity);
+			parentObj.AddComponent(TimeDeath);
+			parentObj.GetComponent(TimeDeath).time = 0.1;
+		}
+		else
+		{
+			parentObj = GameObject.Instantiate(SunRadiiHolder, Vector3.zero, Quaternion.identity);
+		}
 	}
 	
 	function SpliceTogether(DeathSphere : GameObject)
@@ -48,7 +59,7 @@ class CircleChain
 		var name = levelName[3];
 		
 		//if the directory doesn't exist then create it
-		if (!(System.IO.Directory.Exists("Assets/models/Sun Radii Stuff/"+name)))
+		if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !(System.IO.Directory.Exists("Assets/models/Sun Radii Stuff/"+name)))
 		{
 			Debug.Log("creating directory");
 			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Stuff", name); //create the folder
@@ -86,21 +97,28 @@ class CircleChain
 			combine[i].mesh = members[i].mesh.sharedMesh;
 			combine[i].transform = members[i].mesh.gameObject.transform.localToWorldMatrix;
 		}
+		
+		//if in editor than the stuff is baking, else it is running live
+		if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !Application.isPlaying)
+		{
+			var me : Mesh = new Mesh();
+	//		me = members[0].mesh.mesh;
+			me.CombineMeshes(combine);
 			
-		//create another mesh before assigning it to the parent
-		var me : Mesh = new Mesh();
-//		me = members[0].mesh.mesh;
-		me.CombineMeshes(combine);
+			//set path for new asset
+			pathList = EditorApplication.currentScene.Split("."[0]);
+			levelName = pathList[0].Split("/"[0]);
+			name = levelName[3];
+			
+			//crate the asset and assign it to the circle
+			AssetDatabase.CreateAsset(me, "Assets/models/Sun Radii Stuff/"+name+"/combomesh.asset");
+			parentObj.GetComponent(MeshFilter).mesh = me;
+		}
+		else
+		{
+			parentObj.GetComponent(MeshFilter).mesh.CombineMeshes(combine);
+		}
 		
-		//set path for new asset
-		pathList = EditorApplication.currentScene.Split("."[0]);
-		levelName = pathList[0].Split("/"[0]);
-		name = levelName[3];
-		
-		//crate the asset and assign it to the circle
-		AssetDatabase.CreateAsset(me, "Assets/models/Sun Radii Stuff/"+name+"/combomesh.asset");
-		parentObj.GetComponent(MeshFilter).mesh = me;
-				
 		//set new endpoints using the CombinedMesh THIS SLOWS THINGS DOWN A LOT OPTIMIZE HERE FIRST
 		for (i = 1; i < members.Count - 1; i++)
 		{
@@ -385,22 +403,31 @@ class CircleChain
 			dummyTriangles[x] = dumTris[x];
 		}
 		
-		//create an asset for the new mesh and add it to the project as well as assigning it to the circle
-		var m : Mesh = new Mesh();
-		m.vertices = baseCircle.mesh.sharedMesh.vertices;
-		m.uv = baseCircle.mesh.sharedMesh.uv;
-		m.normals = baseCircle.mesh.sharedMesh.normals;
-		m.triangles = dummyTriangles;
-		
-		//set path for new asset
-		var pathList = EditorApplication.currentScene.Split("."[0]);
-		var levelName = pathList[0].Split("/"[0]);
-		var name = levelName[3];
-		var path = "Assets/models/Sun Radii Stuff/"+name+"/file"+fileNum+".asset";
-		fileNum++;
-		//crate the asset and assign it to the circle
-		AssetDatabase.CreateAsset(m, path);
-		baseCircle.mesh.mesh = m;
+		//if in editor than the stuff is baking, else it is running live
+		if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !Application.isPlaying)
+		{
+			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
+			var m : Mesh = new Mesh();
+			m.vertices = baseCircle.mesh.sharedMesh.vertices;
+			m.uv = baseCircle.mesh.sharedMesh.uv;
+			m.normals = baseCircle.mesh.sharedMesh.normals;
+			m.triangles = dummyTriangles;
+			
+			//set path for new asset
+			var pathList = EditorApplication.currentScene.Split("."[0]);
+			var levelName = pathList[0].Split("/"[0]);
+			var name = levelName[3];
+			var path = "Assets/models/Sun Radii Stuff/"+name+"/file"+fileNum+".asset";
+			fileNum++;
+			//crate the asset and assign it to the circle
+			AssetDatabase.CreateAsset(m, path);
+			baseCircle.mesh.mesh = m;
+		}
+		else
+		{
+			//assign new mesh
+			baseCircle.mesh.mesh.triangles = dummyTriangles;
+		}
 	}
 	
 	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
@@ -507,17 +534,29 @@ class CircleChain
 			mi.uv = uvs;
 			mi.triangles = triangles;
 			
-			//set path for new asset
-			var pathList = EditorApplication.currentScene.Split("."[0]);
-			var levelName = pathList[0].Split("/"[0]);
-			var name = levelName[3];
-			var path = "Assets/models/Sun Radii Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
-			Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum++;
-			
-			//crate the asset and assign it to the circle
-			AssetDatabase.CreateAsset(mi, path);
-			parentMesh.sharedMesh.Clear();
-			parentMesh.sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
+			//if in editor than the stuff is baking, else it is running live
+			if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !Application.isPlaying)
+			{
+				//set path for new asset
+				var pathList = EditorApplication.currentScene.Split("."[0]);
+				var levelName = pathList[0].Split("/"[0]);
+				var name = levelName[3];
+				var path = "Assets/models/Sun Radii Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
+				Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum++;
+				
+				//crate the asset and assign it to the circle
+				AssetDatabase.CreateAsset(mi, path);
+				parentMesh.sharedMesh.Clear();
+				parentMesh.sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
+			}
+			else
+			{
+				parentMesh.mesh.Clear();
+	
+				parentMesh.mesh.vertices = vertices;
+				parentMesh.mesh.uv = uvs;
+				parentMesh.mesh.triangles = triangles;
+			}
 		}
 		else
 		{

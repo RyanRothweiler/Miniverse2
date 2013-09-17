@@ -51,7 +51,7 @@ function Update ()
 	}
 	
 	///shrink the sun
-	if (transform.parent == null) //wait until the level transition is over
+	if (transform.parent == null && !dragControls.LevelPaused) //wait until the level transition is over
 	{
 		if(check == true && !dead)
 		{

@@ -4,6 +4,7 @@ class MeshCircle
 {
 	//variables
 	var mesh : MeshFilter;
+	var pastLife : GameObject; //this is the original circle that this one was cloned from
 	var center : Vector3;
 	var circle : Circ; //the circle bounding this mesh
 	var radius : float;
@@ -47,7 +48,7 @@ class MeshCircle
 	var loopNum : int;
 	
 	//default constructor
-	function MeshCircle(radius : float, center : Vector3, mesh : MeshFilter)
+	function MeshCircle(radius : float, center : Vector3, mesh : MeshFilter, pastLife : GameObject)
 	{
 		this.circle = Circ(center, radius);
 		this.circle.center.z = 15;
@@ -56,6 +57,7 @@ class MeshCircle
 		this.center.z = 15;
 		this.radius = radius;
 		this.endCircle = false;
+		this.pastLife = pastLife;
 		
 		this.masterNors = mesh.sharedMesh.normals;
 		this.masterTris = mesh.sharedMesh.triangles;
@@ -144,7 +146,7 @@ class MeshCircle
 				endPoint2Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
 				cont = false;
 			}
-			if (!endCircle)
+			if (!endCircle) 
 			{
 				if (cont && endPoint2Vertex2 != 1000 && endPoint3Vertex1 == 1000)
 				{
@@ -180,6 +182,18 @@ class MeshCircle
 					cont = false;
 				}
 			}
+		}
+	}
+	
+	function CheckCollidesForPastLife() //if this circle doesn't colide with anything then enable its past life
+	{
+		if (!collides)
+		{
+			pastLife.GetComponent(MeshRenderer).enabled = true;
+		}
+		else
+		{
+			pastLife.GetComponent(MeshRenderer).enabled = false;
 		}
 	}
 }
