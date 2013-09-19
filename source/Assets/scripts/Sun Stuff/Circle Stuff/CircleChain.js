@@ -127,9 +127,17 @@ class CircleChain
 		}
 		//catch the last circle and the first circle
 		members[members.Count-1].SetEndPoints(parentObj, members[i-1], DeathSphere);
-		members[0].SetEndPoints(parentObj, members[1], DeathSphere);	
+		members[0].SetEndPoints(parentObj, members[1], DeathSphere);
 		
-//		//go through the members to get the information, but actually act on the parentObj mesh
+//		var cir1 = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
+//		var cir2 = new Circ(members[1].endPoint1Vertex1Loc, 0.1);
+//		cir1.Visualize(DeathSphere);
+//		cir2.Visualize(DeathSphere);
+		
+		//splice the circles together
+		SpliceMesh([members[0].endPoint1Vertex1, members[0].endPoint1Vertex2], [members[1].endPoint1Vertex1, members[1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
+		
+		//go through the members to get the information, but actually act on the parentObj mesh
 //		for (j = 0; j < members.Count-1	; j++) 
 //		{
 //			var ds = new Array();
@@ -301,12 +309,12 @@ class CircleChain
 //				}
 //			}
 //		}
-//		
-//		//when everything is done disable the members
-//		for (i = 0; i < members.Count; i++)
-//		{
-//			members[i].mesh.renderer.enabled = false;
-//		}
+		
+		//when everything is done disable the members
+		for (i = 0; i < members.Count; i++)
+		{
+			members[i].mesh.renderer.enabled = false;
+		}
 	}
 	
 	//removes the points from base circle which are inside otherCircle
@@ -395,18 +403,6 @@ class CircleChain
 				}
 			}
 		}
-		
-		//go through the vertices and set all the ones to remove to zero (I'm not removing them since that'll change the array and thus break all triangle data)
-//		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.Length; x++)
-//		{
-//			for (i = 0; i < vertsToRemove.Count; i++)
-//			{
-//				if (x == vertsToRemove[i])
-//				{
-//					baseCircle.mesh.mesh.vertices[x] = Vector3(0.0,0.0,0.0);
-//				}
-//			}
-//		}
 
 		//create new verts array
 		dumVerts.Clear();
@@ -479,6 +475,8 @@ class CircleChain
 	
 	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
 	{
+		Debug.Log(circle1EndVerts[0]);
+		Debug.Log(circle2EndVerts[0]);
 		//first make sure the points have been set
 		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
 		{
