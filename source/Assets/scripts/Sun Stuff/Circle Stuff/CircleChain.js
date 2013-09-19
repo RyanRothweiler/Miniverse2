@@ -357,8 +357,6 @@ class CircleChain
 			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[x])))
 			{
 				vertsToRemove.Add(x);
-				baseCircle.mesh.sharedMesh.vertices[x] = Vector3(0.0,0.0,0.0);
-				Debug.Log(baseCircle.mesh.sharedMesh.vertices[x]);
 			}
 		}		
 		
@@ -398,7 +396,7 @@ class CircleChain
 			}
 		}
 		
-		//go through the vertices and set all the ones to remove to zero (I'm not removing them since that'll change the array and thus break all triangle data
+		//go through the vertices and set all the ones to remove to zero (I'm not removing them since that'll change the array and thus break all triangle data)
 //		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.Length; x++)
 //		{
 //			for (i = 0; i < vertsToRemove.Count; i++)
@@ -410,25 +408,27 @@ class CircleChain
 //			}
 //		}
 
-		//create new tris array
+		//create new verts array
 		dumVerts.Clear();
 		for (x = 0; x < baseCircle.mesh.mesh.vertices.Length; x++)
 		{
-			var found = true;
+			var found = false;
 			for (i = 0; i < vertsToRemove.Count; i++)
 			{
 				if (vertsToRemove[i] == x)
 				{
-					found = false;
+					found = true;
 				}
 			}
 			
 			if (!found)
 			{
+//				Debug.Log("adding regular");
 				dumVerts.Add(baseCircle.mesh.mesh.vertices[x]);
 			}
 			else
 			{
+//				Debug.Log("adding zero");
 				dumVerts.Add(Vector3.zero);
 			}
 		}
