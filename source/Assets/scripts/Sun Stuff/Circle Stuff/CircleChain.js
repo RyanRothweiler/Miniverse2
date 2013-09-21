@@ -129,13 +129,16 @@ class CircleChain
 		members[members.Count-1].SetEndPoints(parentObj, members[i-1], DeathSphere);
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere);
 		
-//		var cir1 = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
-//		var cir2 = new Circ(members[1].endPoint1Vertex1Loc, 0.1);
-//		cir1.Visualize(DeathSphere);
-//		cir2.Visualize(DeathSphere);
+		var cir1 = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
+		var cir2 = new Circ(members[0].endPoint1Vertex2Loc, 0.1);
+		cir1.Visualize(DeathSphere);
+		cir2.Visualize(DeathSphere);
 		
 		//splice the circles together
-		SpliceMesh([members[0].endPoint1Vertex1, members[0].endPoint1Vertex2], [members[1].endPoint1Vertex1, members[1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
+		Debug.Log(members[0].endPoint2Vertex1);
+		Debug.Log(members[0].endPoint2Vertex2);
+//		SpliceMesh([members[0].endPoint1Vertex1, members[0].endPoint1Vertex2], [members[1].endPoint1Vertex1, members[1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
+//		SpliceMesh([members[0].endPoint2Vertex1, members[0].endPoint2Vertex2], [members[1].endPoint2Vertex1, members[1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
 		
 		//go through the members to get the information, but actually act on the parentObj mesh
 //		for (j = 0; j < members.Count-1	; j++) 

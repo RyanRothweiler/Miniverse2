@@ -120,16 +120,12 @@ class MeshCircle
 				if (ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length < smallestPoint + 31)
 				{
 					endPoint1Vertex2 = smallestPoint;
-					endPoint1Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
 					endPoint1Vertex1 = smallestPoint - 30;
-					endPoint1Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint - 30];
 				}
 				else
 				{
 					endPoint1Vertex1 = smallestPoint;
-					endPoint1Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
 					endPoint1Vertex2 = smallestPoint + 30;
-					endPoint1Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint + 30];
 				}
 				cont = false;
 			}
@@ -139,16 +135,12 @@ class MeshCircle
 				if (ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length < smallestPoint + 31)
 				{
 					endPoint2Vertex2 = smallestPoint;
-					endPoint2Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
-					endPont2Vertex1 = smallestPoint - 30;
-					endPoint2Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint - 30];
+					endPoint2Vertex1 = smallestPoint - 30;
 				}
 				else
 				{
 					endPoint2Vertex1 = smallestPoint;
-					endPoint2Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
-					endPont2Vertex2 = smallestPoint + 30;
-					endPoint2Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint + 30];
+					endPoint2Vertex2 = smallestPoint + 30;
 				}
 				cont = false;
 			}
@@ -158,16 +150,12 @@ class MeshCircle
 				if (ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length < smallestPoint + 31)
 				{
 					endPoint3Vertex2 = smallestPoint;
-					endPoint3Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
 					endPoint3Vertex1 = smallestPoint - 30;
-					endPoint3Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint - 30];
 				}
 				else
 				{
 					endPoint3Vertex1 = smallestPoint;
-					endPoint3Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
 					endPoint3Vertex2 = smallestPoint + 30;
-					endPoint3Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint + 30];
 				}
 				cont = false;
 			}
@@ -177,44 +165,36 @@ class MeshCircle
 				if (ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length < smallestPoint + 31)
 				{
 					endPoint4Vertex2 = smallestPoint;
-					endPoint4Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
 					endPoint4Vertex1 = smallestPoint - 30;
-					endPoint4Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint - 30];
 				}
 				else
 				{
 					endPoint4Vertex1 = smallestPoint;
-					endPoint4Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint];
 					endPoint4Vertex2 = smallestPoint + 30;
-					endPoint4Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint + 30];
 				}
 				cont = false;
 			}
 		}
 		
+		
 		//top left most point is vertex 1, top right is 2, bottom left is 3, bottom right is 4. 
-		if (ObjToCheck.transform.TransformPoint(endPoint1Vertex1Loc).x > ObjToCheck.transform.TransformPoint(endPoint2Vertex1Loc).x) //check points 1 and 2
+		if (ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1Vertex1]).x > ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex1]).x) //check points 1 and 2
 		{
 			//save dummy
 			var save1 = endPoint1Vertex1;
-			var save1Loc = endPoint1Vertex1Loc;
 			var save2 = endPoint1Vertex2;
-			var save2Loc = endPoint1Vertex2Loc;
 			
 			//swap
 			endPoint1Vertex1 = endPoint2Vertex1;
-			endPoint1Vertex1loc = endPoint2Vertex1Loc;
 			endPoint1Vertex2 = endPoint2Vertex2;
-			endPoint1Vertex2Loc = endPoint2Vertex2Loc;
+
 			
 			//set to dummy
 			endPoint2Vertex1 = save1;
-			endPoint2Vertex1Loc = Vector3(save1Loc.x, save1Loc.y, save1Loc.z);
 			endPoint2Vertex2 = save2;
-			endPoint2Vertex2Loc = Vector3(save2Loc.x, save2Loc.y, save2Loc.z);
 		}
 		
-		//set locations again. why? fuck idk
+		//set locations after everything settles.
 		if (endPoint1Vertex1 != 1000)
 		{
 			endPoint1Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1Vertex1]; 
@@ -231,14 +211,6 @@ class MeshCircle
 		{
 			endPoint2Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex2]; 
 		}
-		
-		//visualize
-
-//		var cir2 = new Circ(endPoint1Vertex1Loc, 0.1);
-//		cir2.Visualize(DeathSphere);
-//		Debug.Log(endPoint1Vertex1);
-//		Debug.Log(endPoint1Vertex2);
-//		Debug.Log(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.length);
 	}
 	
 	function CheckCollidesForPastLife() //if this circle doesn't colide with anything then enable its past life
