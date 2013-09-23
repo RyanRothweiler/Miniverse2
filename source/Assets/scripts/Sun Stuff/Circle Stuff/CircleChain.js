@@ -130,15 +130,17 @@ class CircleChain
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere);
 		
 		var cir1 = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
+		Debug.Log(members[0].endPoint1Vertex1);
 		var cir2 = new Circ(members[0].endPoint1Vertex2Loc, 0.1);
+		Debug.Log(members[0].endPoint1Vertex2);
 		cir1.Visualize(DeathSphere);
 		cir2.Visualize(DeathSphere);
 		
 		//splice the circles together
-		Debug.Log(members[0].endPoint2Vertex1);
-		Debug.Log(members[0].endPoint2Vertex2);
-//		SpliceMesh([members[0].endPoint1Vertex1, members[0].endPoint1Vertex2], [members[1].endPoint1Vertex1, members[1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
-//		SpliceMesh([members[0].endPoint2Vertex1, members[0].endPoint2Vertex2], [members[1].endPoint2Vertex1, members[1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
+//		Debug.Log(members[0].endPoint1Vertex1);
+//		Debug.Log(members[0].endPoint1Vertex2);
+		SpliceMesh([members[0].endPoint1Vertex1, members[0].endPoint1Vertex2], [members[1].endPoint1Vertex1, members[1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
+		SpliceMesh([members[0].endPoint2Vertex1, members[0].endPoint2Vertex2], [members[1].endPoint2Vertex1, members[1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
 		
 		//go through the members to get the information, but actually act on the parentObj mesh
 //		for (j = 0; j < members.Count-1	; j++) 
@@ -328,32 +330,34 @@ class CircleChain
 		var intersectPoints = baseCircle.circle.FindIntersectPoints(otherCircle.circle);
 		
 		//set intersection circle
-		var dx = baseCircle.center.x - otherCircle.center.x; //distance x
-		var dy = baseCircle.center.y - otherCircle.center.y; //distance y
+		var dx = intersectPoints[0].x + intersectPoints[1].x; //distance x
+		var dy = intersectPoints[0].y + intersectPoints[1].y; //distance y
 
 		if (baseCircle.center.x > otherCircle.center.x)
 		{
 			if (baseCircle.center.y > otherCircle.center.y)
 			{
-				intersectCirc = Circ(Vector3(baseCircle.center.x - (dx/2), baseCircle.center.y - (dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.02);
+				intersectCirc = Circ(Vector3((dx/2),(dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
 			else
 			{
-				intersectCirc = Circ(Vector3(baseCircle.center.x - (dx/2), baseCircle.center.y - (dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.02);
+				intersectCirc = Circ(Vector3((dx/2),(dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
 		}
 		else
 		{
 			if (baseCircle.center.y > otherCircle.center.y)
 			{
-				intersectCirc = Circ(Vector3(otherCircle.center.x + (dx/2), otherCircle.center.y + (dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.02);
+				intersectCirc = Circ(Vector3((dx/2),(dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
 			else
 			{
-				intersectCirc = Circ(Vector3(otherCircle.center.x + (dx/2), otherCircle.center.y + (dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.02);
+				intersectCirc = Circ(Vector3((dx/2),(dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
 		}
-	
+		
+//		intersectCirc.Visualize(DeathSphere);
+		
 		//copy triangles to dumTris
 		dumTris.Clear();
 		vertsToRemove.Clear();
@@ -478,8 +482,6 @@ class CircleChain
 	
 	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
 	{
-		Debug.Log(circle1EndVerts[0]);
-		Debug.Log(circle2EndVerts[0]);
 		//first make sure the points have been set
 		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
 		{

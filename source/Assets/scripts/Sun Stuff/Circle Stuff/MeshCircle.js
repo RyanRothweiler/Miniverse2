@@ -90,7 +90,7 @@ class MeshCircle
 			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length; j++)
 			{
 				var nextDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center);
-				if ((ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j] != Vector3(0,0,0)) && (nextDist < smallestDist) && (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius + 0.1)))
+				if ((ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j] != Vector3(0,0,0)) && (nextDist < smallestDist) && (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius)))
 				{
 					if (endCircle)
 					{
@@ -109,20 +109,35 @@ class MeshCircle
 						}
 					}
 				}
-			}
-			
+			}			
 			
 			//hold and organize the info
+			var decided = false;
 			var cont = true;
 			//first set
 			if (endPoint1Vertex1 == 1000)
 			{
-				if (ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length < smallestPoint + 31)
+				decided = false;
+				if ((smallestPoint - 30) < 0)
 				{
+					decided = true;
+					endPoint1Vertex2 = smallestPoint;
+					endPoint1Vertex1 = smallestPoint + 30;
+				}
+				if (!decided && (smallestPoint + 30 > ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length-1))
+				{
+					decided = true;
 					endPoint1Vertex2 = smallestPoint;
 					endPoint1Vertex1 = smallestPoint - 30;
 				}
-				else
+				//check which point (-30 or +30) is closer and use that one
+				if (!decided && (Vector3.Distance(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint + 30], ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint]) > Vector3.Distance(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint - 30], ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint])))
+				{
+					decided = true;
+					endPoint1Vertex1 = smallestPoint;
+					endPoint1Vertex2 = smallestPoint - 30;
+				}
+				else if(!decided)
 				{
 					endPoint1Vertex1 = smallestPoint;
 					endPoint1Vertex2 = smallestPoint + 30;
@@ -132,12 +147,27 @@ class MeshCircle
 			//second set
 			if (cont && endPoint2Vertex1 == 1000)
 			{
-				if (ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length < smallestPoint + 31)
+				decided = false;
+				if ((smallestPoint - 30) < 0)
 				{
+					decided = true;
+					endPoint2Vertex2 = smallestPoint;
+					endPoint2Vertex1 = smallestPoint + 30;
+				}
+				if (!decided && (smallestPoint + 30 > ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length-1))
+				{
+					decided = true;
 					endPoint2Vertex2 = smallestPoint;
 					endPoint2Vertex1 = smallestPoint - 30;
 				}
-				else
+				//check which point (-30 or +30) is closer and use that one
+				if (!decided && (Vector3.Distance(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint + 30], ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint]) > Vector3.Distance(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint - 30], ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint])))
+				{
+					decided = true;
+					endPoint2Vertex1 = smallestPoint;
+					endPoint2Vertex2 = smallestPoint - 30;
+				}
+				else if(!decided)
 				{
 					endPoint2Vertex1 = smallestPoint;
 					endPoint2Vertex2 = smallestPoint + 30;
