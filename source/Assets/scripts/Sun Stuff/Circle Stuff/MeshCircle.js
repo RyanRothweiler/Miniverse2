@@ -89,23 +89,25 @@ class MeshCircle
 			var smallestPoint = 0;
 			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length; j++)
 			{
-				var nextDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center);
-				if ((ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j] != circle.center) && (nextDist < smallestDist) && (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius)))
+				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius)) //first rule out anything not within this circle
 				{
-					if (endCircle)
+					if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center) < smallestDist) //now check if the distance is smaller than the smallest
 					{
-						if ((endPoint1Vertex1 == 1000 || endPoint2Vertex1 == 1000)  && endPoint1Vertex1 != j && endPoint1Vertex2 != j && endPoint2Vertex1 != j && endPoint2Vertex2 != j)
+						if (endCircle)
 						{
-							smallestDist = nextDist;
-							smallestPoint = j;
+							if ((endPoint1Vertex1 == 1000 || endPoint2Vertex1 == 1000)  && endPoint1Vertex1 != j && endPoint1Vertex2 != j && endPoint2Vertex1 != j && endPoint2Vertex2 != j)
+							{
+								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center);
+								smallestPoint = j;
+							}
 						}
-					}
-					else
-					{
-						if ((endPoint1Vertex1 == 1000 || endPoint2Vertex1 == 1000 || endPoint3Vertex1 == 1000 || endPoint4Vertex1 == 1000) && endPoint1Vertex1 != j && endPoint1Vertex2 != j && endPoint2Vertex1 != j && endPoint2Vertex2 != j && endPoint3Vertex1 != j && endPoint3Vertex2 != j && endPoint4Vertex1 != j && endPoint4Vertex2 != j)
+						else
 						{
-							smallestDist = nextDist;
-							smallestPoint = j;
+							if ((endPoint1Vertex1 == 1000 || endPoint2Vertex1 == 1000 || endPoint3Vertex1 == 1000 || endPoint4Vertex1 == 1000) && endPoint1Vertex1 != j && endPoint1Vertex2 != j && endPoint2Vertex1 != j && endPoint2Vertex2 != j && endPoint3Vertex1 != j && endPoint3Vertex2 != j && endPoint4Vertex1 != j && endPoint4Vertex2 != j)
+							{
+								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center);
+								smallestPoint = j;
+							}
 						}
 					}
 				}
@@ -242,6 +244,22 @@ class MeshCircle
 			endPoint2Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex2]; 
 		}
 		
+		//check black hole shenanigans
+		if ((endPoint2Vertex1Loc.x == circle.center.x) && (endPoint2Vertex1Loc.y == circle.center.y))
+		{
+			Debug.Log(endPoint2Vertex1);
+			var cir1 = new Circ(endPoint2Vertex1Loc, 0.1);
+			Debug.Log(endPoint2Vertex1Loc);
+			cir1.Visualize(DeathSphere);
+			
+			Debug.Log(endPoint2Vertex2);
+			var cir2 = new Circ(endPoint2Vertex2Loc, 0.1);
+			Debug.Log(endPoint2Vertex2Loc);
+			cir2.Visualize(DeathSphere);
+		}
+		
+		Debug.Log(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[13]);
+		Debug.Log(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[43]);
 		
 //		var cir1 = new Circ(endPoint2Vertex1Loc, 0.1);
 //		Debug.Log(endPoint2Vertex1);
