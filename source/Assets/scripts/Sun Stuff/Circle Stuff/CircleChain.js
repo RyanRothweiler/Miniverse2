@@ -129,12 +129,12 @@ class CircleChain
 		members[members.Count-1].SetEndPoints(parentObj, members[i-1], DeathSphere);
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere);
 		
-		var cir1 = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
-		Debug.Log(members[0].endPoint1Vertex1);
-		var cir2 = new Circ(members[0].endPoint1Vertex2Loc, 0.1);
-		Debug.Log(members[0].endPoint1Vertex2);
-		cir1.Visualize(DeathSphere);
-		cir2.Visualize(DeathSphere);
+//		var cir1 = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
+//		Debug.Log(members[0].endPoint2Vertex1);
+//		var cir2 = new Circ(members[0].endPoint2Vertex2Loc, 0.1);
+//		Debug.Log(members[0].endPoint2Vertex2);
+//		cir1.Visualize(DeathSphere);
+//		cir2.Visualize(DeathSphere);
 		
 		//splice the circles together
 //		Debug.Log(members[0].endPoint1Vertex1);

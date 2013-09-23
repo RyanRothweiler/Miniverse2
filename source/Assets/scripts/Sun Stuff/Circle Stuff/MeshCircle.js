@@ -90,7 +90,7 @@ class MeshCircle
 			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length; j++)
 			{
 				var nextDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center);
-				if ((ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j] != Vector3(0,0,0)) && (nextDist < smallestDist) && (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius)))
+				if ((ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j] != circle.center) && (nextDist < smallestDist) && (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius)))
 				{
 					if (endCircle)
 					{
@@ -109,7 +109,7 @@ class MeshCircle
 						}
 					}
 				}
-			}			
+			}	
 			
 			//hold and organize the info
 			var decided = false;
@@ -241,6 +241,14 @@ class MeshCircle
 		{
 			endPoint2Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex2]; 
 		}
+		
+		
+//		var cir1 = new Circ(endPoint2Vertex1Loc, 0.1);
+//		Debug.Log(endPoint2Vertex1);
+//		var cir2 = new Circ(endPoint2Vertex2Loc, 0.1);
+//		Debug.Log(endPoint2Vertex2);
+//		cir1.Visualize(DeathSphere);
+//		cir2.Visualize(DeathSphere);
 	}
 	
 	function CheckCollidesForPastLife() //if this circle doesn't colide with anything then enable its past life
