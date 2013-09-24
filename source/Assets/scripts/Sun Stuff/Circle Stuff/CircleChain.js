@@ -325,6 +325,8 @@ class CircleChain
 	//removes the points from base circle which are inside otherCircle
 	function RemoveInternalPoints(baseCircle : MeshCircle, otherCircle : MeshCircle, DeathSphere : GameObject)
 	{
+//		Debug.Log(Time.realtimeSinceStartup);
+	
 		//create intersection circle
 		var intersectCirc = Circ(Vector3.zero, 0);
 		var intersectPoints = baseCircle.circle.FindIntersectPoints(otherCircle.circle);
@@ -356,17 +358,15 @@ class CircleChain
 			}
 		}
 		
-//		intersectCirc.Visualize(DeathSphere);
-		
 		//copy triangles to dumTris
 		dumTris.Clear();
-		vertsToRemove.Clear();
 		for (x = 0; x < baseCircle.mesh.mesh.triangles.length; x++)
 		{
 			dumTris.Add(baseCircle.mesh.sharedMesh.triangles[x]);
 		}
 		
 		//go through vertices and save the ones inside the intersect circle
+		vertsToRemove.Clear();
 		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.length; x++)
 		{
 			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[x])))
@@ -478,10 +478,15 @@ class CircleChain
 			
 //			Debug.Log(baseCircle.mesh.mesh.vertices[vertsToRemove[0]]);
 		}
+		
+//		Debug.Log("-------------");
+//		Debug.Log(Time.realtimeSinceStartup);
 	}
 	
 	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
 	{
+		Debug.Log(Time.realtimeSinceStartup);
+	
 		//first make sure the points have been set
 		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
 		{
@@ -610,7 +615,10 @@ class CircleChain
 		}
 		else
 		{
-			Debug.Log("-----WARNING: Not all the end points have been found. Try wiggling things around a bit. (twss)");
+//			Debug.Log("-----WARNING: Not all the end points have been found. Try wiggling things around a bit. (twss)");
 		}
+		
+		Debug.Log("-------------");
+		Debug.Log(Time.realtimeSinceStartup);
 	}
 }

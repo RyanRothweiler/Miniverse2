@@ -81,6 +81,8 @@ class MeshCircle
 	//set the endpoint variables using the end point circles
 	function SetEndPoints(ObjToCheck : GameObject, otherCircle : MeshCircle, DeathSphere : GameObject)
 	{
+//		Debug.Log(Time.realtimeSinceStartup);
+		
 		//get endpoints
 		for (i = 0; i < 2; i++) //probably need to go through this four times for non end circles
 		{
@@ -89,8 +91,11 @@ class MeshCircle
 			var smallestPoint = 0;
 			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length; j++)
 			{
-				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius)) //first rule out anything not within this circle
+				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius+0.1)) //first rule out anything not within this circle
 				{
+//					Debug.Log("instantiating");
+//					GameObject.Instantiate(DeathSphere, ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), Quaternion.identity);
+//					yield WaitForSeconds(0.1);
 					if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center) < smallestDist) //now check if the distance is smaller than the smallest
 					{
 						if (endCircle)
@@ -245,28 +250,37 @@ class MeshCircle
 		}
 		
 		//check black hole shenanigans
+		//endpoint1vertex1
+		if ((endPoint1Vertex1Loc.x == circle.center.x) && (endPoint1Vertex1Loc.y == circle.center.y))
+		{
+			endPoint1Vertex1 = 1000;
+		}
+		//endpoint1vertex2
+		if ((endPoint1Vertex2Loc.x == circle.center.x) && (endPoint1Vertex2Loc.y == circle.center.y))
+		{
+			endPoint1Vertex2 = 1000;
+		}
+		//endpoint2vertex1
 		if ((endPoint2Vertex1Loc.x == circle.center.x) && (endPoint2Vertex1Loc.y == circle.center.y))
 		{
-			Debug.Log(endPoint2Vertex1);
-			var cir1 = new Circ(endPoint2Vertex1Loc, 0.1);
-			Debug.Log(endPoint2Vertex1Loc);
-			cir1.Visualize(DeathSphere);
-			
-			Debug.Log(endPoint2Vertex2);
-			var cir2 = new Circ(endPoint2Vertex2Loc, 0.1);
-			Debug.Log(endPoint2Vertex2Loc);
-			cir2.Visualize(DeathSphere);
+			endPoint2Vertex1 = 1000;
+		}
+		//endpoint2vertex2
+		if ((endPoint2Vertex2Loc.x == circle.center.x) && (endPoint2Vertex2Loc.y == circle.center.y))
+		{
+			endPoint2Vertex2 = 1000;
 		}
 		
-		Debug.Log(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[13]);
-		Debug.Log(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[43]);
-		
-//		var cir1 = new Circ(endPoint2Vertex1Loc, 0.1);
-//		Debug.Log(endPoint2Vertex1);
-//		var cir2 = new Circ(endPoint2Vertex2Loc, 0.1);
+		var cir1 = new Circ(endPoint1Vertex1Loc, 0.1);
+//		Debug.Log(endPoint1Vertex1);
+		var cir2 = new Circ(endPoint1Vertex2Loc, 0.1);
 //		Debug.Log(endPoint2Vertex2);
-//		cir1.Visualize(DeathSphere);
-//		cir2.Visualize(DeathSphere);
+		cir1.Visualize(DeathSphere);
+		cir2.Visualize(DeathSphere);
+		
+		
+//		Debug.Log("-------------");
+//		Debug.Log(Time.realtimeSinceStartup);
 	}
 	
 	function CheckCollidesForPastLife() //if this circle doesn't colide with anything then enable its past life
