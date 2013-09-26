@@ -66,6 +66,7 @@ class CircleChain
 			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Stuff", name); //create the folder
 		}
 		
+		Debug.Log(Time.realtimeSinceStartup);
 		//now remove all internal points and set endpoint circles
 		for (j = 0; j < members.Count; j++)
 		{
@@ -88,6 +89,8 @@ class CircleChain
 				RemoveInternalPoints(members[j], members[j-1], DeathSphere);
 			}
 		}
+		Debug.Log("-----");
+		Debug.Log(Time.realtimeSinceStartup);
 			
 		//splice together the chain
 		
@@ -387,29 +390,26 @@ class CircleChain
 		var intersectPoints = baseCircle.circle.FindIntersectPoints(otherCircle.circle);
 		
 		//set intersection circle
-		var dx = intersectPoints[0].x + intersectPoints[1].x; //distance x
-		var dy = intersectPoints[0].y + intersectPoints[1].y; //distance y
-
 		if (baseCircle.center.x > otherCircle.center.x)
 		{
 			if (baseCircle.center.y > otherCircle.center.y)
 			{
-				intersectCirc = Circ(Vector3((dx/2),(dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
+				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
 			else
 			{
-				intersectCirc = Circ(Vector3((dx/2),(dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
+				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
 		}
 		else
 		{
 			if (baseCircle.center.y > otherCircle.center.y)
 			{
-				intersectCirc = Circ(Vector3((dx/2),(dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
+				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
 			else
 			{
-				intersectCirc = Circ(Vector3((dx/2),(dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
+				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
 		}
 		
@@ -418,81 +418,117 @@ class CircleChain
 		
 		//copy triangles to dumTris
 		dumTris.Clear();
-		for (x = 0; x < baseCircle.mesh.mesh.triangles.length; x++)
+		dumVerts.Clear();
+		for (x = 0; x < baseCircle.mesh.sharedMesh.triangles.Length; x++)
 		{
 			dumTris.Add(baseCircle.mesh.sharedMesh.triangles[x]);
 		}
-		
-		//go through vertices and save the ones inside the intersect circle
-		vertsToRemove.Clear();
-		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.length; x++)
+		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.Length; x++)
 		{
-			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[x])))
-			{
-				vertsToRemove.Add(x);
-			}
-		}		
+			dumVerts.Add(baseCircle.mesh.sharedMesh.vertices[x]);
+		}
 		
-		//go through triangles and check if the triangle uses one of the vertsToRemove. if so remove the appropriate triangle.
+		//remove the triangles that have points within the interset circle
 		for (x = 0; x < dumTris.Count; x++)
-		{	
-			for (i = 0; i < vertsToRemove.Count; i++)
-			{
-				if (dumTris[x] == vertsToRemove[i])
-				{
-					//last vert
-					if ((x%3) == 1)
-					{
-						dumTris.RemoveAt((x)-1);
-						dumTris.RemoveAt((x)-1);
-						dumTris.RemoveAt((x)-1);
-					}
-					//middle vert
-					if ((x%3) == 2)
-					{
-						dumTris.RemoveAt((x)-2);
-						dumTris.RemoveAt((x)-2);
-						dumTris.RemoveAt((x)-2);
-					}
-					//last vert
-					if ((x%3) == 0)
-					{
-						dumTris.RemoveAt((x));
-						dumTris.RemoveAt((x));
-						dumTris.RemoveAt((x));
-					}
-					
-//					//reset
-					i = 0;
-					x = 0;
-				}
-			}
-		}
-
-		//create new verts array
-		dumVerts.Clear();
-		for (x = 0; x < baseCircle.mesh.mesh.vertices.Length; x++)
 		{
-			var found = false;
-			for (i = 0; i < vertsToRemove.Count; i++)
+			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[dumTris[x]])))
 			{
-				if (vertsToRemove[i] == x)
+				dumVerts[dumTris[x]] = Vector3.zero;
+				//last vert
+				if ((x%3) == 1)
 				{
-					found = true;
+					dumTris.RemoveAt((x)-1);
+					dumTris.RemoveAt((x)-1);
+					dumTris.RemoveAt((x)-1);
 				}
-			}
-			
-			if (!found)
-			{
-//				Debug.Log("adding regular");
-				dumVerts.Add(baseCircle.mesh.mesh.vertices[x]);
-			}
-			else
-			{
-//				Debug.Log("adding zero");
-				dumVerts.Add(Vector3.zero);
+				//middle vert
+				if ((x%3) == 2)
+				{
+					dumTris.RemoveAt((x)-2);
+					dumTris.RemoveAt((x)-2);
+					dumTris.RemoveAt((x)-2);
+				}
+				//last vert
+				if ((x%3) == 0)
+				{
+					dumTris.RemoveAt((x));
+					dumTris.RemoveAt((x));
+					dumTris.RemoveAt((x));
+				}
+				
+				//reset
+				x = 0;
 			}
 		}
+		
+//		//go through vertices and save the ones inside the intersect circle
+//		vertsToRemove.Clear();
+//		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.Length; x++)
+//		{
+//			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[x])))
+//			{
+//				vertsToRemove.Add(x);
+//			}
+//		}		
+//		
+//		//go through triangles and check if the triangle uses one of the vertsToRemove. if so remove the appropriate triangle.
+//		for (x = 0; x < dumTris.Count; x++)
+//		{	
+//			for (i = 0; i < vertsToRemove.Count; i++)
+//			{
+//				if (dumTris[x] == vertsToRemove[i])
+//				{
+//					//last vert
+//					if ((x%3) == 1)
+//					{
+//						dumTris.RemoveAt((x)-1);
+//						dumTris.RemoveAt((x)-1);
+//						dumTris.RemoveAt((x)-1);
+//					}
+//					//middle vert
+//					if ((x%3) == 2)
+//					{
+//						dumTris.RemoveAt((x)-2);
+//						dumTris.RemoveAt((x)-2);
+//						dumTris.RemoveAt((x)-2);
+//					}
+//					//last vert
+//					if ((x%3) == 0)
+//					{
+//						dumTris.RemoveAt((x));
+//						dumTris.RemoveAt((x));
+//						dumTris.RemoveAt((x));
+//					}
+//					
+////					//reset
+//					i = 0;
+//					x = 0;
+//				}
+//			}
+//		}
+
+//		//create new verts array
+//		dumVerts.Clear();
+//		for (x = 0; x < baseCircle.mesh.mesh.vertices.Length; x++)
+//		{
+//			var found = false;
+//			for (i = 0; i < vertsToRemove.Count; i++)
+//			{
+//				if (vertsToRemove[i] == x)
+//				{
+//					found = true;
+//				}
+//			}
+//			
+//			if (!found)
+//			{
+//				dumVerts.Add(baseCircle.mesh.mesh.vertices[x]);
+//			}
+//			else
+//			{
+//				dumVerts.Add(Vector3.zero);
+//			}
+//		}
 		
 	
 		//update model
