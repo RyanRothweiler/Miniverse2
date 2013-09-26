@@ -198,7 +198,7 @@ private var tapTimeLimit = 0.3; //the time to wait unitl resetting tapCount
 
 //camera zooming
 function OnLevelWasLoaded()
-{
+{	
 	if(isPlayOne)
 	{
 		isPlayOne = false;
@@ -210,6 +210,9 @@ function OnLevelWasLoaded()
 
 function Start () 
 {
+	//set fps
+	Application.targetFrameRate = 40; //set to 60 fps?
+	
 	//initialize things
 	peopleDragging = false;
 	nextLevel = false;
@@ -444,12 +447,12 @@ function Update ()
 					if (WorldDraggingInverted) 
 					{
 						FailType.transform.parent = this.transform;
-						this.transform.Translate(Vector3(Input.GetAxis("Horizontal") * DragRate, Input.GetAxis("Vertical") * DragRate, 0));
+						this.transform.Translate(Vector3(Input.GetAxis("Horizontal") * DragRate * Time.deltaTime, Input.GetAxis("Vertical") * DragRate * Time.deltaTime, 0));
 					}
 					else 
 					{
 						FailType.transform.parent = this.transform;
-						this.transform.Translate(Vector3(Input.GetAxis("Horizontal") * DragRate * -1, Input.GetAxis("Vertical") * DragRate * -1, 0));
+						this.transform.Translate(Vector3(Input.GetAxis("Horizontal") * DragRate * -1 * Time.deltaTime, Input.GetAxis("Vertical") * DragRate * -1 * Time.deltaTime, 0));
 					}
 				}
 				else
@@ -457,12 +460,12 @@ function Update ()
 					if (WorldDraggingInverted) 
 					{
 						FailType.transform.parent = this.transform;
-						this.transform.Translate(0, Input.GetAxis("Vertical") * DragRate, 0);
+						this.transform.Translate(0, Input.GetAxis("Vertical") * DragRate * Time.deltaTime, 0);
 					}
 					else 
 					{
 						FailType.transform.parent = this.transform;
-						this.transform.Translate(0, Input.GetAxis("Vertical") * DragRate * -1, 0);
+						this.transform.Translate(0, Input.GetAxis("Vertical") * DragRate * -1 * Time.deltaTime, 0);
 					}
 				}
 			}

@@ -119,7 +119,7 @@ function MeshAdd ()
 				var newCirc = GameObject.Instantiate(circle, circle.transform.position, circle.transform.rotation);
 				newCirc.transform.parent = this.transform;
 				newCirc.AddComponent(TimeDeath);
-				newCirc.GetComponent(TimeDeath).time = 0.1;
+				newCirc.GetComponent(TimeDeath).time = 0.2;
 				
 				//create mesh circle data
 				circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);

@@ -7,7 +7,8 @@ class CircleChain
 	//variables
 	public var endCircle1 : MeshCircle;
 	public var endCircle2 : MeshCircle;
-	public var members = new List.<MeshCircle>(); 
+	public var members = new List.<MeshCircle>();
+	public var intersectCircles = new List.<Circ>();
 	public var CombinedMesh : MeshFilter;
 	public var parentMesh : MeshFilter;
 	public var SunRadiiHolder : GameObject; //the sunRadiiHolder prefab
@@ -139,8 +140,62 @@ class CircleChain
 		//splice the circles together
 //		Debug.Log(members[0].endPoint1Vertex1);
 //		Debug.Log(members[0].endPoint1Vertex2);
-		SpliceMesh([members[0].endPoint1Vertex1, members[0].endPoint1Vertex2], [members[1].endPoint1Vertex1, members[1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
-		SpliceMesh([members[0].endPoint2Vertex1, members[0].endPoint2Vertex2], [members[1].endPoint2Vertex1, members[1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1]);
+
+		//get data and initialize
+		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * members.Count)];
+		var triangles = new int[parentObj.GetComponent(MeshFilter).sharedMesh.triangles.Length + (12 * members.Count)];
+		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.uv.Length + (2 * members.Count)];
+		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length; i++)
+		{
+			vertices[i] = parentObj.GetComponent(MeshFilter).sharedMesh.vertices[i];
+		}
+		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.triangles.Length; i++)
+		{
+			triangles[i] = parentObj.GetComponent(MeshFilter).sharedMesh.triangles[i];
+		}
+		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.uv.Length; i++)
+		{
+			uvs[i] = parentObj.GetComponent(MeshFilter).sharedMesh.uv[i];
+		}
+		
+//		Debug.Log(Time.realtimeSinceStartup);
+		
+		SpliceMesh([members[0].endPoint1Vertex1, members[0].endPoint1Vertex2], [members[1].endPoint1Vertex1, members[1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1], intersectCircles[0], vertices, triangles, uvs, 0);
+		SpliceMesh([members[0].endPoint2Vertex1, members[0].endPoint2Vertex2], [members[1].endPoint2Vertex1, members[1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[0], members[1], intersectCircles[0], vertices, triangles, uvs, 1);
+		
+		//set the newly spliced circle only after all the splicing has been done
+		//if in editor than the stuff is baking, else it is running live
+		if (!Application.isPlaying)
+		{
+			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
+			mi = new Mesh();
+			mi.vertices = vertices;
+			mi.uv = uvs;
+			mi.triangles = triangles;
+		
+			//set path for new asset
+			pathList = EditorApplication.currentScene.Split("."[0]);
+			levelName = pathList[0].Split("/"[0]);
+			name = levelName[3];
+			var path = "Assets/models/Sun Radii Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
+			Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum++;
+			
+			//crate the asset and assign it to the circle
+			AssetDatabase.CreateAsset(mi, path);
+			parentMesh.sharedMesh.Clear();
+			parentMesh.sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
+		}
+		else
+		{
+			parentObj.GetComponent(MeshFilter).mesh.Clear();
+
+			parentObj.GetComponent(MeshFilter).mesh.vertices = vertices;
+			parentObj.GetComponent(MeshFilter).mesh.uv = uvs;
+			parentObj.GetComponent(MeshFilter).mesh.triangles = triangles;
+		}
+		
+//		Debug.Log("-------------");
+//		Debug.Log(Time.realtimeSinceStartup);
 		
 		//go through the members to get the information, but actually act on the parentObj mesh
 //		for (j = 0; j < members.Count-1	; j++) 
@@ -358,6 +413,9 @@ class CircleChain
 			}
 		}
 		
+		//save intersect circle
+		intersectCircles.Add(intersectCirc);
+		
 		//copy triangles to dumTris
 		dumTris.Clear();
 		for (x = 0; x < baseCircle.mesh.mesh.triangles.length; x++)
@@ -483,60 +541,12 @@ class CircleChain
 //		Debug.Log(Time.realtimeSinceStartup);
 	}
 	
-	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle)
-	{
-		Debug.Log(Time.realtimeSinceStartup);
-	
+	//splice two meshes together. holy arguments batman
+	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle, intersectCirc : Circ, vertices : Vector3[], triangles : int[], uvs : Vector2[], startIndex : int)
+	{	
 		//first make sure the points have been set
 		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
 		{
-			//create intersection circle
-			var intersectCirc = Circ(Vector3.zero, 0);
-			var intersectPoints = circle1.circle.FindIntersectPoints(circle2.circle);
-			
-			//set intersection circle
-			var dx = circle1.center.x - circle2.center.x; //distance x
-			var dy = circle1.center.y - circle2.center.y; //distance y
-	
-			if (circle1.center.x > circle2.center.x)
-			{
-				if (circle1.center.y > circle2.center.y)
-				{
-					intersectCirc = Circ(Vector3(circle1.center.x - (dx/2), circle1.center.y - (dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.02);
-				}
-				else
-				{
-					intersectCirc = Circ(Vector3(circle1.center.x - (dx/2), circle1.center.y - (dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.02);
-				}
-			}
-			else
-			{
-				if (circle1.center.y > circle2.center.y)
-				{
-					intersectCirc = Circ(Vector3(circle2.center.x + (dx/2), circle2.center.y + (dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.02);
-				}
-				else
-				{
-					intersectCirc = Circ(Vector3(circle2.center.x + (dx/2), circle2.center.y + (dy/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.02);
-				}
-			}
-		
-			//get data and initialize... should probably not do this for every member
-			var vertices = new Vector3[parentMesh.sharedMesh.vertices.length + 2];
-			var triangles = new int[parentMesh.sharedMesh.triangles.length + 12];
-			var uvs = new Vector2[parentMesh.sharedMesh.uv.length + 2];
-			for (i = 0; i < parentMesh.sharedMesh.vertices.length; i++)
-			{
-				vertices[i] = parentMesh.sharedMesh.vertices[i];
-			}
-			for (i = 0; i < parentMesh.sharedMesh.triangles.length; i++)
-			{
-				triangles[i] = parentMesh.sharedMesh.triangles[i];
-			}
-			for (i = 0; i < parentMesh.sharedMesh.uv.length; i++)
-			{
-				uvs[i] = parentMesh.sharedMesh.uv[i];
-			}
 		
 			var circle1EndVertLocs = [parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle1EndVerts[0]]), parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle1EndVerts[1]])];
 			var circle2EndVertLocs = [parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle2EndVerts[0]]), parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle2EndVerts[0]])];
@@ -560,65 +570,32 @@ class CircleChain
 		
 			
 			//create new vertices
-			vertices[vertices.length - 1] = newPoint1;
-			vertices[vertices.length - 2] = newPoint2;
+			vertices[vertices.length - ((startIndex * 2) + 1)] = newPoint1; //1
+			vertices[vertices.length - ((startIndex * 2) + 2)] = newPoint2; //2
 			
 			//create triangles
 			//one side
-			triangles[triangles.length - 1] = vertices.length - 1;
-			triangles[triangles.length - 2] = circle1EndVerts[0];	
-			triangles[triangles.length - 3] = circle1EndVerts[1];
-			triangles[triangles.length - 4] = vertices.length - 1;
-			triangles[triangles.length - 5] = vertices.Length - 2;
-			triangles[triangles.length - 6] = circle1EndVerts[1];
+			triangles[triangles.Length - ((startIndex * 12) + 1)] = vertices.Length - ((startIndex * 2) + 1);
+			triangles[triangles.Length - ((startIndex * 12) + 2)] = circle1EndVerts[0];	
+			triangles[triangles.Length - ((startIndex * 12) + 3)] = circle1EndVerts[1];
+			triangles[triangles.Length - ((startIndex * 12) + 4)] = vertices.Length - ((startIndex * 2) + 1);
+			triangles[triangles.Length - ((startIndex * 12) + 5)] = vertices.Length - ((startIndex * 2) + 2);
+			triangles[triangles.Length - ((startIndex * 12) + 6)] = circle1EndVerts[1];
 			//the other side
-			triangles[triangles.length - 7] = vertices.length - 1;
-			triangles[triangles.length - 8] = circle2EndVerts[0];
-			triangles[triangles.length - 9] = circle2EndVerts[1];
-			triangles[triangles.length - 10] = vertices.length - 1;
-			triangles[triangles.length - 11] = vertices.Length - 2;
-			triangles[triangles.length - 12] = circle2EndVerts[1];
+			triangles[triangles.Length - ((startIndex * 12) + 7)] = vertices.Length - ((startIndex * 2) + 1);
+			triangles[triangles.Length - ((startIndex * 12) + 8)] = circle2EndVerts[0];
+			triangles[triangles.Length - ((startIndex * 12) + 9)] = circle2EndVerts[1];
+			triangles[triangles.Length - ((startIndex * 12) + 10)] = vertices.Length - ((startIndex * 2) + 1);
+			triangles[triangles.Length - ((startIndex * 12) + 11)] = vertices.Length - ((startIndex * 2) + 2);
+			triangles[triangles.Length - ((startIndex * 12) + 12)] = circle2EndVerts[1];
 			
 			//create new uvs
-			uvs[uvs.length - 1] = Vector2(vertices[vertices.Length-1].x, vertices[vertices.Length-1].z);
-			uvs[uvs.length - 2] = Vector2(vertices[vertices.Length-2].x, vertices[vertices.Length-2].z);
-			
-			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
-			mi = new Mesh();
-			mi.vertices = vertices;
-			mi.uv = uvs;
-			mi.triangles = triangles;
-			
-			//if in editor than the stuff is baking, else it is running live
-			if (!Application.isPlaying)
-			{
-				//set path for new asset
-				var pathList = EditorApplication.currentScene.Split("."[0]);
-				var levelName = pathList[0].Split("/"[0]);
-				var name = levelName[3];
-				var path = "Assets/models/Sun Radii Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
-				Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum++;
-				
-				//crate the asset and assign it to the circle
-				AssetDatabase.CreateAsset(mi, path);
-				parentMesh.sharedMesh.Clear();
-				parentMesh.sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
-			}
-			else
-			{
-				parentMesh.mesh.Clear();
-	
-				parentMesh.mesh.vertices = vertices;
-				parentMesh.mesh.uv = uvs;
-				parentMesh.mesh.triangles = triangles;
-			}
+			uvs[uvs.length - ((startIndex * 2) + 1)] = Vector2(vertices[vertices.Length - ((startIndex * 2) + 1)].x, vertices[vertices.Length - ((startIndex * 2) + 1)].z);
+			uvs[uvs.length - ((startIndex * 2) + 2)] = Vector2(vertices[vertices.Length - ((startIndex * 2) + 2)].x, vertices[vertices.Length - ((startIndex * 2) + 2)].z);
 		}
 		else
 		{
 //			Debug.Log("-----WARNING: Not all the end points have been found. Try wiggling things around a bit. (twss)");
 		}
-		
-		Debug.Log("-------------");
-		Debug.Log(Time.realtimeSinceStartup);
 	}
 }
