@@ -22,9 +22,10 @@ class CircleChain
 	
 	var tempMeshCircle : MeshCircle;
 	
-	public var dumTris = new List.<int>(); 
+	public var dumTris = new List.<int>();
 	public var dumVerts = new List.<Vector3>(); 
 	public var vertsToRemove = new List.<int>(); //list of vertices to remove from the circle
+	public var beenHit = new List.<int>();
 	var parentObj : GameObject; //an instance of SunRadiiHolder which holds the mesh of the chain
 	var mi : Mesh = new Mesh();
 	
@@ -66,7 +67,7 @@ class CircleChain
 			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Stuff", name); //create the folder
 		}
 		
-		Debug.Log(Time.realtimeSinceStartup);
+//		Debug.Log(Time.realtimeSinceStartup);
 		//now remove all internal points and set endpoint circles
 		for (j = 0; j < members.Count; j++)
 		{
@@ -89,8 +90,8 @@ class CircleChain
 				RemoveInternalPoints(members[j], members[j-1], DeathSphere);
 			}
 		}
-		Debug.Log("-----");
-		Debug.Log(Time.realtimeSinceStartup);
+//		Debug.Log("-----");
+//		Debug.Log(Time.realtimeSinceStartup);
 			
 		//splice together the chain
 		
@@ -383,7 +384,7 @@ class CircleChain
 	//removes the points from base circle which are inside otherCircle
 	function RemoveInternalPoints(baseCircle : MeshCircle, otherCircle : MeshCircle, DeathSphere : GameObject)
 	{
-//		Debug.Log(Time.realtimeSinceStartup);
+		Debug.Log(Time.realtimeSinceStartup);
 	
 		//create intersection circle
 		var intersectCirc = Circ(Vector3.zero, 0);
@@ -423,17 +424,16 @@ class CircleChain
 		{
 			dumTris.Add(baseCircle.mesh.sharedMesh.triangles[x]);
 		}
-		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.Length; x++)
-		{
-			dumVerts.Add(baseCircle.mesh.sharedMesh.vertices[x]);
-		}
+//		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.Length; x++)
+//		{
+//			dumVerts.Add(baseCircle.mesh.sharedMesh.vertices[x]);
+//		}
 		
 		//remove the triangles that have points within the interset circle
 		for (x = 0; x < dumTris.Count; x++)
 		{
-			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[dumTris[x]])))
-			{
-				dumVerts[dumTris[x]] = Vector3.zero;
+			if (intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.mesh.vertices[dumTris[x]])))
+			{				
 				//last vert
 				if ((x%3) == 1)
 				{
@@ -458,6 +458,18 @@ class CircleChain
 				
 				//reset
 				x = 0;
+			}
+		}
+		//create new verts array
+		for (x = 0; x < baseCircle.mesh.mesh.vertices.Length; x++)
+		{
+			if (!(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[x]))))
+			{
+				dumVerts.Add(baseCircle.mesh.mesh.vertices[x]);
+			}
+			else
+			{
+				dumVerts.Add(Vector3.zero);
 			}
 		}
 		
@@ -506,7 +518,7 @@ class CircleChain
 //				}
 //			}
 //		}
-
+//
 //		//create new verts array
 //		dumVerts.Clear();
 //		for (x = 0; x < baseCircle.mesh.mesh.vertices.Length; x++)
@@ -566,15 +578,15 @@ class CircleChain
 		else
 		{
 			//assign new mesh
-//			baseCircle.mesh.mesh.vertices = baseCircle.mesh.sharedMesh.vertices;
 			baseCircle.mesh.mesh.triangles = dummyTriangles;
 			baseCircle.mesh.mesh.vertices = dummyVertices;
-			
-//			Debug.Log(baseCircle.mesh.mesh.vertices[vertsToRemove[0]]);
 		}
 		
-//		Debug.Log("-------------");
-//		Debug.Log(Time.realtimeSinceStartup);
+//		Debug.Log(baseCircle.mesh.mesh.triangles.Length);
+//		Debug.Log(baseCircle.mesh.mesh.vertices.Length);
+		
+		Debug.Log("-------------");
+		Debug.Log(Time.realtimeSinceStartup);
 	}
 	
 	//splice two meshes together. holy arguments batman

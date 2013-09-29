@@ -271,11 +271,11 @@ class MeshCircle
 			endPoint2Vertex2 = 1000;
 		}
 		
-//		var cir1 = new Circ(endPoint1Vertex1Loc, 0.1);
+		var cir1 = new Circ(endPoint1Vertex1Loc, 0.1);
 //		Debug.Log(endPoint1Vertex1);
 //		var cir2 = new Circ(endPoint1Vertex2Loc, 0.1);
 //		Debug.Log(endPoint2Vertex2);
-//		cir1.Visualize(DeathSphere);
+		cir1.Visualize(DeathSphere);
 //		cir2.Visualize(DeathSphere);
 		
 		
