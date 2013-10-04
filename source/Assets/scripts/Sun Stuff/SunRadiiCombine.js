@@ -4,10 +4,10 @@
 
 
 //public vars
-public var SunRadiiHolder : GameObject;
+public var SunRadiiHolder : GameObject; //the object that holds the new added sun radii
 public var combine : boolean;
 public var LiveCombine : boolean; //if the level needs live combination of circles
-public var circles : MeshCircle[]; //holds all sun radii circles
+public var circles : MeshCircle[]; //holds all sun radii circles. these circle objects should not be deleted, they are instantiated at the start of the level and only their mesh data is changed after that.
 public var dummyTriangles : int[]; //a dummy list holding the new list of vertices
 public var dumTris = new List.<int>(); 
 public var vertsToRemove = new List.<int>(); //list of vertices to remove from the circle
@@ -65,6 +65,9 @@ function Start ()
 		//init
 		dummyTriangles = new int[108];
 		
+		
+		//now we may proceed
+		
 		if (combine)
 		{
 			//create master mesh data
@@ -74,6 +77,39 @@ function Start ()
 			masterVerts = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.vertices.Clone();
 			
 			MeshAdd();
+		}
+	}
+	else //eles then it is live combining and I should set up the circle list
+	{
+		//get circles and set them once and for all 
+		//get information about all circles, duplicating all sun chain circles and parenting them to this
+		//first find the number of circles we're dealing with
+		var size : int;
+		for (var obj : GameObject in objects)
+		{
+			if (obj.name != "SunChainCircle(Clone)" && obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+			{
+				size++;
+			}
+		}
+		circles = new MeshCircle[size];
+		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
+		for (var circle : GameObject in objects)
+		{
+			if (circle.name != "SunChainCircle(Clone)" && circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+			{
+				//set up the circle
+				var newCirc = GameObject.Instantiate(circle, circle.transform.position, circle.transform.rotation);
+				newCirc.transform.parent = this.transform;
+				
+//				Debug.Log(circle.GetComponent(MeshFilter).sharedMesh.vertices.Length);
+				
+				//create mesh circle data
+				circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);
+//				circles[count].mesh.sharedMesh.Clear();
+				
+				count++;
+			}
 		}
 	}
 }
@@ -95,45 +131,37 @@ function MeshAdd ()
 	var size = 0;
 	chains.Clear();
 	
-	//only do this for live radii
+	//only for live combining, reset the circles but don't delete them, because that takes a lot of resources.
 	if (LiveCombine)
 	{
-		//get information about all circles, duplicating all sun chain circles and parenting them to this
-		//first find the number of circles we're dealing with
-		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
-		for (var obj : GameObject in objects)
-		{
-			if (obj.name != "SunChainCircle(Clone)" && obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
-			{
-				size++;
-			}
-		}
-		//now we may proceed
-		circles = new MeshCircle[size];
 		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 		for (var circle : GameObject in objects)
 		{
 			if (circle.name != "SunChainCircle(Clone)" && circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
 			{
-				//set up the circle
-				var newCirc = GameObject.Instantiate(circle, circle.transform.position, circle.transform.rotation);
-				newCirc.transform.parent = this.transform;
-				newCirc.AddComponent(TimeDeath);
-				newCirc.GetComponent(TimeDeath).time = 0.2;
-				
-				//create mesh circle data
-				circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);
-				circles[count].mesh.sharedMesh.Clear();
-				circles[count].mesh.sharedMesh.vertices = masterVerts;
-				circles[count].mesh.sharedMesh.normals = masterNors;
-				circles[count].mesh.sharedMesh.triangles = masterTris;
+				circles[count].mesh.gameObject.transform.localScale = circle.transform.localScale; //set scale
+				circles[count].mesh.mesh.Clear(); //set mesh data
+				circles[count].mesh.mesh.vertices = circle.GetComponent(MeshFilter).mesh.vertices;
+				circles[count].mesh.mesh.normals = circle.GetComponent(MeshFilter).mesh.normals;
+				circles[count].mesh.mesh.triangles = circle.GetComponent(MeshFilter).mesh.triangles;
+				circles[count].reset();
 				count++;
 			}
 		}
-		
-		//set the master mesh data
-		SetMasterMeshData();
+//		//reset circle mesh data to the base circles
+//		for (var circle : MeshCircle in circles)
+//		{
+//			circle.mesh.mesh.Clear();
+//			circle.mesh.sharedMesh.vertices = masterVerts;
+//			circle.mesh.sharedMesh.normals = masterNors;
+//			circle.mesh.sharedMesh.triangles = masterTris;
+//		}
 	}
+	
+	
+	//FOR TOMORROW! Stuff isn't updating. the final completed mesh isn't, and just in general the meshes aren't constantly checking and getting new updated data. so fix that.
+	
+	
 	else //not live combining
 	{
 		for (var child : Transform in transform)
@@ -224,9 +252,12 @@ function MeshAdd ()
 	//the rest of this stuff is for cleaning up the scene after the circles have been chained
 	
 	//unparent circles
-	for (var circle : MeshCircle in circles)
+	if (!LiveCombine)
 	{
-		circle.mesh.gameObject.transform.parent = null;
+		for (var circle : MeshCircle in circles)
+		{
+			circle.mesh.gameObject.transform.parent = null;
+		}
 	}
 	
 	//show circles that have been marked for live radii addition but aren't colliding with anything atm
@@ -236,7 +267,7 @@ function MeshAdd ()
 		{
 			circle.CheckCollidesForPastLife();
 		}
-	}	
+	}
 }
 
 //assigns the next member in the chain
@@ -295,16 +326,16 @@ function Revert()
 	} while(Camera.main.transform.Find("Sun"));
 }
 
-function WaitUntilInit() //yield until the level is set up to get init data
-{
-	//yield until level is set up (aka zooming is done)
-	do
-	{
-			yield;
-	} while (Camera.main.GetComponent(DragControlsPC).halt);
-	
-	SetMasterMeshData();
-}
+//function WaitUntilInit() //yield until the level is set up to get init data
+//{
+//	//yield until level is set up (aka zooming is done)
+//	do
+//	{
+//			yield;
+//	} while (Camera.main.GetComponent(DragControlsPC).halt);
+//	
+//	SetMasterMeshData();
+//}
 
 function SetMasterMeshData() //sets the master mesh data only once at the beginning of the level
 {

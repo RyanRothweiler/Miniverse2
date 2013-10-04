@@ -81,10 +81,8 @@ class MeshCircle
 	//set the endpoint variables using the end point circles
 	function SetEndPoints(ObjToCheck : GameObject, otherCircle : MeshCircle, DeathSphere : GameObject)
 	{
-//		Debug.Log(Time.realtimeSinceStartup);
-		
 		//get endpoints
-		for (i = 0; i < 2; i++) //probably need to go through this four times for non end circles
+		for (i = 0; i < 2; i++)
 		{
 			//find the point
 			var smallestDist = 10000.0;
@@ -93,9 +91,6 @@ class MeshCircle
 			{
 				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius+0.1)) //first rule out anything not within this circle
 				{
-//					Debug.Log("instantiating");
-//					GameObject.Instantiate(DeathSphere, ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), Quaternion.identity);
-//					yield WaitForSeconds(0.1);
 					if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center) < smallestDist) //now check if the distance is smaller than the smallest
 					{
 						if (endCircle)
@@ -116,9 +111,19 @@ class MeshCircle
 						}
 					}
 				}
-			}	
+			}
 			
+			
+//			var cir1 = new Circ(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[11]), 0.1);
+//			cir1.Visualize(DeathSphere);
+
+
 			//hold and organize the info
+			//top left most point is vertex 1, top right is 2, bottom left is 3, bottom right is 4. like you're reading a book in english
+			//quad 1
+			
+			
+			
 			var decided = false;
 			var cont = true;
 			//first set
@@ -211,28 +216,100 @@ class MeshCircle
 				}
 				cont = false;
 			}
-		}
+		}		
 		
-		
-		//top left most point is vertex 1, top right is 2, bottom left is 3, bottom right is 4. 
-		if (ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1Vertex1]).x > ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex1]).x) //check points 1 and 2
-		{
-			//save dummy
-			var save1 = endPoint1Vertex1;
-			var save2 = endPoint1Vertex2;
-			
-			//swap
-			endPoint1Vertex1 = endPoint2Vertex1;
-			endPoint1Vertex2 = endPoint2Vertex2;
-
-			
-			//set to dummy
-			endPoint2Vertex1 = save1;
-			endPoint2Vertex2 = save2;
-		}
+//		//top left most point is vertex 1, top right is 2, bottom left is 3, bottom right is 4.
+//		var save1 : int;
+//		var save2 : int;
+//		//horizontally check endpoints 1 and 2 
+//		if (ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1Vertex1]).x > circle.center.x) //check points 1 and 2
+//		{
+//			//switch 1 and 2
+//			
+//			//save dummy
+//			save1 = endPoint1Vertex1;
+//			save2 = endPoint1Vertex2;
+//			
+//			//swap
+//			endPoint1Vertex1 = endPoint2Vertex1;
+//			endPoint1Vertex2 = endPoint2Vertex2;
+//
+//			//set to dummy
+//			endPoint2Vertex1 = save1;
+//			endPoint2Vertex2 = save2;
+//		}
+//		//horizontally check endpoints 3 and 4
+//		if ((endPoint3Vertex1 != 1000) && (endPoint4Vertex1 != 1000) && ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint3Vertex1]).x > circle.center.x) //check points 3 and 4
+//		{
+//			//switch 3 and 4
+//			
+//			//save dummy
+//			save1 = endPoint3Vertex1;
+//			save2 = endPoint3Vertex2;
+//			
+//			//swap
+//			endPoint3Vertex1 = endPoint4Vertex1;
+//			endPoint3Vertex2 = endPoint4Vertex2;
+//
+//			//set to dummy
+//			endPoint4Vertex1 = save1;
+//			endPoint4Vertex2 = save2;
+//		}
+//		//vertically check endpoints 1 and 3
+//		if ((endPoint3Vertex1 != 1000) && ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1Vertex1]).y < circle.center.y)
+//		{
+//			//switch 1 and 3
+//			
+//			//save dummy
+//			save1 = endPoint3Vertex1;
+//			save2 = endPoint3Vertex2;
+//			
+//			//swap
+//			endPoint3Vertex1 = endPoint1Vertex1;
+//			endPoint3Vertex2 = endPoint1Vertex2;
+//
+//			//set to dummy
+//			endPoint1Vertex1 = save1;
+//			endPoint1Vertex2 = save2;
+//		}
+//		//vertically check endpoints 2 and 4
+//		if ((endPoint4Vertex1 != 1000) && ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex1]).y < circle.center.y)
+//		{
+//			//switch 2 and 4
+//			
+//			//save dummy
+//			save1 = endPoint4Vertex1;
+//			save2 = endPoint4Vertex2;
+//			
+//			//swap
+//			endPoint4Vertex1 = endPoint2Vertex1;
+//			endPoint4Vertex2 = endPoint2Vertex2;
+//
+//			//set to dummy
+//			endPoint2Vertex1 = save1;
+//			endPoint2Vertex2 = save2;
+//		}
+//		//if there isn't a point 3 then make sure 1 is in the right spot
+//		if (endPoint3Vertex1 == 1000 && ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1Vertex1]).y < circle.center.y)
+//		{
+//			endPoint3Vertex1 = endPoint1Vertex1;
+//			endPoint3Vertex2 = endPoint1Vertex2;
+//			
+//			endPoint1Vertex1 = 1000;
+//			endPoint1Vertex2 = 1000;
+//		}
+//		//if there isn't a point 4 then make sure 2 is in the right spot
+//		if (endPoint4Vertex1 == 1000 && ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex1]).y < circle.center.y)
+//		{
+//			endPoint4Vertex1 = endPoint1Vertex1;
+//			endPoint4Vertex2 = endPoint1Vertex2;
+//			
+//			endPoint2Vertex1 = 1000;
+//			endPoint2Vertex2 = 1000;
+//		}
 		
 		//set locations after everything settles.
-		if (endPoint1Vertex1 != 1000)
+		if (endPoint1Vertex1 != 1000) //1
 		{
 			endPoint1Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1Vertex1]; 
 		}
@@ -240,13 +317,29 @@ class MeshCircle
 		{
 			endPoint1Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1Vertex2];  
 		}
-		if (endPoint2Vertex1 != 1000)
+		if (endPoint2Vertex1 != 1000) //2
 		{
 			endPoint2Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex1]; 
 		}
 		if (endPoint2Vertex2 != 1000)
 		{
-			endPoint2Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex2]; 
+			endPoint2Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2Vertex2];
+		}
+		if (endPoint3Vertex1 != 1000) //3
+		{
+			endPoint3Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint3Vertex1]; 
+		}
+		if (endPoint3Vertex2 != 1000)
+		{
+			endPoint3Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint3Vertex2];  
+		}
+		if (endPoint4Vertex1 != 1000)//4
+		{
+			endPoint4Vertex1Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint4Vertex1]; 
+		}
+		if (endPoint4Vertex2 != 1000)
+		{
+			endPoint4Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint4Vertex2];
 		}
 		
 		//check black hole shenanigans
@@ -271,11 +364,34 @@ class MeshCircle
 			endPoint2Vertex2 = 1000;
 		}
 		
-		var cir1 = new Circ(endPoint1Vertex1Loc, 0.1);
-//		Debug.Log(endPoint1Vertex1);
+		
+//		var cir1 = new Circ(Vector3.zero, 0);
+//		if (endPoint1Vertex1 != 1000)
+//		{
+//			cir1 = new Circ(endPoint1Vertex1Loc, 0.1);
+////			Debug.Log(endPoint1Vertex1);
+//			cir1.Visualize(DeathSphere);
+//		}
+//		if (endPoint2Vertex1 != 1000)
+//		{
+//			cir1 = new Circ(endPoint2Vertex1Loc, 0.1);
+////			Debug.Log(endPoint2Vertex1);
+//			cir1.Visualize(DeathSphere);
+//		}
+//		if (endPoint3Vertex1 != 1000)
+//		{
+//			cir1 = new Circ(endPoint3Vertex1Loc, 0.1);
+////			Debug.Log(endPoint3Vertex1);
+//			cir1.Visualize(DeathSphere);
+//		}
+//		if (endPoint4Vertex1 != 1000)
+//		{
+//			cir1 = new Circ(endPoint4Vertex1Loc, 0.1);
+////			Debug.Log(endPoint2Vertex1);
+//			cir1.Visualize(DeathSphere);
+//		}
 //		var cir2 = new Circ(endPoint1Vertex2Loc, 0.1);
 //		Debug.Log(endPoint2Vertex2);
-		cir1.Visualize(DeathSphere);
 //		cir2.Visualize(DeathSphere);
 		
 		
@@ -293,5 +409,23 @@ class MeshCircle
 		{
 			pastLife.GetComponent(MeshRenderer).enabled = false;
 		}
+	}
+	
+	//resets the variables here to default
+	function reset()
+	{
+		this.endCircle = false;
+		
+		endPoint1Vertex1 = 1000;
+		endPoint1Vertex2 = 1000;
+		
+		endPoint2Vertex1 = 1000;
+		endPoint2Vertex2 = 1000;
+		
+		endPoint3Vertex1 = 1000;
+		endPoint3Vertex2 = 1000;
+		
+		endPoint4Vertex1 = 1000;
+		endPoint4Vertex2 = 1000;
 	}
 }
