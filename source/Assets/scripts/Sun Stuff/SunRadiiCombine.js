@@ -57,6 +57,7 @@ function Start ()
 	objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 	if (!LiveCombine)
 	{
+		//parent all the objects to this object
 		for (var circle : GameObject in objects) 
 		{
 			circle.transform.parent = this.transform;
@@ -79,7 +80,7 @@ function Start ()
 			MeshAdd();
 		}
 	}
-	else //eles then it is live combining and I should set up the circle list
+	else //else then it is live combining and I should set up the circle list
 	{
 		//get circles and set them once and for all 
 		//get information about all circles, duplicating all sun chain circles and parenting them to this
@@ -102,12 +103,8 @@ function Start ()
 				var newCirc = GameObject.Instantiate(circle, circle.transform.position, circle.transform.rotation);
 				newCirc.transform.parent = this.transform;
 				
-//				Debug.Log(circle.GetComponent(MeshFilter).sharedMesh.vertices.Length);
-				
 				//create mesh circle data
-				circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);
-//				circles[count].mesh.sharedMesh.Clear();
-				
+				circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);				
 				count++;
 			}
 		}
@@ -123,7 +120,7 @@ function Update ()
 	}
 }
 
-//add all child meshes into one and delete internal points
+//splice the chains together
 function MeshAdd ()
 {
 	//reset
@@ -134,17 +131,25 @@ function MeshAdd ()
 	//only for live combining, reset the circles but don't delete them, because that takes a lot of resources.
 	if (LiveCombine)
 	{
+		//get all the clone objects
 		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 		for (var circle : GameObject in objects)
 		{
 			if (circle.name != "SunChainCircle(Clone)" && circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
 			{
-				circles[count].mesh.gameObject.transform.localScale = circle.transform.localScale; //set scale
-				circles[count].mesh.mesh.Clear(); //set mesh data
-				circles[count].mesh.mesh.vertices = circle.GetComponent(MeshFilter).mesh.vertices;
-				circles[count].mesh.mesh.normals = circle.GetComponent(MeshFilter).mesh.normals;
-				circles[count].mesh.mesh.triangles = circle.GetComponent(MeshFilter).mesh.triangles;
+				//set mesh data first
+				circles[count].mesh.mesh = circle.GetComponent(MeshFilter).mesh;
+				
+				//set transform
+				circles[count].mesh.gameObject.transform.localScale = circle.transform.localScale;
+				circles[count].mesh.gameObject.transform.position = circle.transform.parent.position;
+				
+				//set circle center and reset the other data
 				circles[count].reset();
+				circles[count].circle.center = circle.transform.localScale;
+				circles[count].center = circle.transform.TransformPoint(circle.transform.localScale);
+				circles[count].radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
+
 				count++;
 			}
 		}
@@ -156,12 +161,7 @@ function MeshAdd ()
 //			circle.mesh.sharedMesh.normals = masterNors;
 //			circle.mesh.sharedMesh.triangles = masterTris;
 //		}
-	}
-	
-	
-	//FOR TOMORROW! Stuff isn't updating. the final completed mesh isn't, and just in general the meshes aren't constantly checking and getting new updated data. so fix that.
-	
-	
+	}	
 	else //not live combining
 	{
 		for (var child : Transform in transform)
@@ -175,6 +175,11 @@ function MeshAdd ()
 			count++;
 		}
 	}
+	
+	
+	
+	
+	//FOR TOMORROW >>> the distance is to high. dunno why.
 
 	//mark the end circles
 	for (var circle1 : MeshCircle in circles)
@@ -183,6 +188,7 @@ function MeshAdd ()
 		{
 			d = Vector3.Distance(circle2.center, circle1.center); //find distance
 			//check if they intersect at all and the two circles are not the same
+			Debug.Log(d);
 			if ((circle1.circle.radius + circle2.circle.radius > d) && (circle1 != circle2))
 			{
 				//this is used only for making the end points
@@ -231,6 +237,7 @@ function MeshAdd ()
 			}
 		}
 	}
+
 	//set end circles... again
 	for (var circle : MeshCircle in circles)
 	{
