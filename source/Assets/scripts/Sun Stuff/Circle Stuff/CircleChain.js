@@ -145,6 +145,10 @@ class CircleChain
 		members[members.Count-1].SetEndPoints(parentObj, members[i-1], DeathSphere);
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere);
 		
+		Debug.Log(members[0].endPoint1Vertex1);
+		var circ1 = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
+		circ1.Visualize(DeathSphere);
+		
 		//splice the circles together
 		
 //		Debug.Log(Time.realtimeSinceStartup);
@@ -405,15 +409,15 @@ class CircleChain
 	function RemoveInternalPoints(baseCircle : MeshCircle, otherCircle : MeshCircle, DeathSphere : GameObject)
 	{
 //		Debug.Log(Time.realtimeSinceStartup);
-	
+
 		//create intersection circle
 		var intersectCirc = Circ(Vector3.zero, 0);
 		var intersectPoints = baseCircle.circle.FindIntersectPoints(otherCircle.circle);
 		
 		//set intersection circle
-		if (baseCircle.center.x > otherCircle.center.x)
+		if (baseCircle.circle.center.x > otherCircle.circle.center.x)
 		{
-			if (baseCircle.center.y > otherCircle.center.y)
+			if (baseCircle.circle.center.y > otherCircle.circle.center.y)
 			{
 				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}
@@ -424,7 +428,7 @@ class CircleChain
 		}
 		else
 		{
-			if (baseCircle.center.y > otherCircle.center.y)
+			if (baseCircle.circle.center.y > otherCircle.circle.center.y)
 			{
 				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
 			}

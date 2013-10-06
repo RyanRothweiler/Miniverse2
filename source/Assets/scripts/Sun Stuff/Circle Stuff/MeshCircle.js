@@ -6,9 +6,9 @@ class MeshCircle
 	//variables
 	var mesh : MeshFilter;
 	var pastLife : GameObject; //this is the original circle that this one was cloned from
-	var center : Vector3;
+//	var center : Vector3;
 	var circle : Circ; //the circle bounding this mesh
-	var radius : float;
+//	var radius : float;
 	var collides = false; //if the circle collides with any circle at all
 	
 	var masterTris : int[]; //a dummy list holding the new list of vertices
@@ -54,9 +54,9 @@ class MeshCircle
 		this.circle = Circ(center, radius);
 		this.circle.center.z = 15;
 		this.mesh = mesh;
-		this.center = center;
-		this.center.z = 15;
-		this.radius = radius;
+//		this.center = center;
+//		this.center.z = 15;
+//		this.radius = radius;
 		this.endCircle = false;
 		this.pastLife = pastLife;
 		
@@ -78,6 +78,10 @@ class MeshCircle
 		endPoint4Vertex2 = 1000;
 	}
 	
+	
+	//FOR TOMORROW >>> It doesn't find endpoints correctly but just chooses the center endpoint. why?
+	
+	
 	//set the endpoint variables using the end point circles
 	function SetEndPoints(ObjToCheck : GameObject, otherCircle : MeshCircle, DeathSphere : GameObject)
 	{
@@ -87,17 +91,17 @@ class MeshCircle
 			//find the point
 			var smallestDist = 10000.0;
 			var smallestPoint = 0;
-			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length; j++)
+			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).mesh.vertices.Length; j++)
 			{
-				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), center) < (circle.radius+0.1)) //first rule out anything not within this circle
+				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), circle.center) < (circle.radius+0.1)) //first rule out anything not within this circle
 				{
-					if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center) < smallestDist) //now check if the distance is smaller than the smallest
+					if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center) < smallestDist) //now check if the distance is smaller than the smallest
 					{
 						if (endCircle)
 						{
 							if ((endPoint1Vertex1 == 1000 || endPoint2Vertex1 == 1000)  && endPoint1Vertex1 != j && endPoint1Vertex2 != j && endPoint2Vertex1 != j && endPoint2Vertex2 != j)
 							{
-								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center);
+								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center);
 								smallestPoint = j;
 							}
 						}
@@ -105,25 +109,15 @@ class MeshCircle
 						{
 							if ((endPoint1Vertex1 == 1000 || endPoint2Vertex1 == 1000 || endPoint3Vertex1 == 1000 || endPoint4Vertex1 == 1000) && endPoint1Vertex1 != j && endPoint1Vertex2 != j && endPoint2Vertex1 != j && endPoint2Vertex2 != j && endPoint3Vertex1 != j && endPoint3Vertex2 != j && endPoint4Vertex1 != j && endPoint4Vertex2 != j)
 							{
-								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.center);
+								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center);
 								smallestPoint = j;
 							}
 						}
 					}
 				}
 			}
-			
-			
-//			var cir1 = new Circ(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[11]), 0.1);
-//			cir1.Visualize(DeathSphere);
-
 
 			//hold and organize the info
-			//top left most point is vertex 1, top right is 2, bottom left is 3, bottom right is 4. like you're reading a book in english
-			//quad 1
-			
-			
-			
 			var decided = false;
 			var cont = true;
 			//first set
@@ -415,6 +409,9 @@ class MeshCircle
 	function reset()
 	{
 		this.endCircle = false;
+		
+		this.hitOnce = false;
+		this.hitTwice = false;
 		
 		endPoint1Vertex1 = 1000;
 		endPoint1Vertex2 = 1000;

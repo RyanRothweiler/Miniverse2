@@ -146,9 +146,10 @@ function MeshAdd ()
 				
 				//set circle center and reset the other data
 				circles[count].reset();
-				circles[count].circle.center = circle.transform.localScale;
-				circles[count].center = circle.transform.TransformPoint(circle.transform.localScale);
-				circles[count].radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
+				circles[count].circle.center = circle.transform.position;
+				circles[count].circle.radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
+//				circles[count].center = circle.transform.position;
+//				circles[count].radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
 
 				count++;
 			}
@@ -175,20 +176,14 @@ function MeshAdd ()
 			count++;
 		}
 	}
-	
-	
-	
-	
-	//FOR TOMORROW >>> the distance is to high. dunno why.
 
 	//mark the end circles
 	for (var circle1 : MeshCircle in circles)
 	{
 		for (var circle2 : MeshCircle in circles)
 		{
-			d = Vector3.Distance(circle2.center, circle1.center); //find distance
+			d = Vector3.Distance(circle2.circle.center, circle1.circle.center); //find distance
 			//check if they intersect at all and the two circles are not the same
-			Debug.Log(d);
 			if ((circle1.circle.radius + circle2.circle.radius > d) && (circle1 != circle2))
 			{
 				//this is used only for making the end points
