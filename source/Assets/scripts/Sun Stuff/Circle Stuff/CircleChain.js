@@ -135,7 +135,7 @@ class CircleChain
 			parentObj.GetComponent(MeshFilter).mesh.CombineMeshes(combine);
 		}
 		
-		//set new endpoints using the CombinedMesh THIS SLOWS THINGS DOWN A LOT OPTIMIZE HERE FIRST
+		//set new endpoints using the CombinedMesh
 		for (i = 1; i < members.Count - 1; i++)
 		{
 			members[i].SetEndPoints(parentObj, members[i+1], DeathSphere);
@@ -145,9 +145,10 @@ class CircleChain
 		members[members.Count-1].SetEndPoints(parentObj, members[i-1], DeathSphere);
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere);
 		
-		Debug.Log(members[0].endPoint1Vertex1);
-		var circ1 = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
-		circ1.Visualize(DeathSphere);
+		var vizCirc = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
+		vizCirc.Visualize(DeathSphere);
+//		vizCirc = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
+//		vizCirc.Visualize(DeathSphere);
 		
 		//splice the circles together
 		
@@ -442,7 +443,7 @@ class CircleChain
 		//go through triangles and add the ones that are not inside the intersect circle to dumTris list
 		dumTris.Clear();
 		dumVerts.Clear();
-		for (x = 0; x < baseCircle.mesh.mesh.triangles.Length-3; x += 3)
+		for (x = 0; x < baseCircle.mesh.mesh.triangles.Length; x += 3)
 		{
 			//if all three of the triangle's vertices are not inside the intersection circle then add them to the new tris list (dumTris)
 			if (!(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.mesh.vertices[baseCircle.mesh.mesh.triangles[x]]))) && !(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.mesh.vertices[baseCircle.mesh.mesh.triangles[x+1]]))) && !(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.mesh.vertices[baseCircle.mesh.mesh.triangles[x+2]]))))
@@ -462,7 +463,7 @@ class CircleChain
 			}
 			else
 			{
-				dumVerts.Add(Vector3.zero);
+				dumVerts.Add(Vector3(0,0,100));
 			}
 		}
 	
@@ -514,6 +515,7 @@ class CircleChain
 	//splice two meshes together. holy arguments batman
 	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle, intersectCirc : Circ, vertices : Vector3[], triangles : int[], uvs : Vector2[], startIndex : int)
 	{
+		Debug.Log("splicing");	
 		//first make sure the points have been set
 		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
 		{		

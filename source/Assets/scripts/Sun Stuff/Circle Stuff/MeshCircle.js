@@ -76,11 +76,7 @@ class MeshCircle
 		
 		endPoint4Vertex1 = 1000;
 		endPoint4Vertex2 = 1000;
-	}
-	
-	
-	//FOR TOMORROW >>> It doesn't find endpoints correctly but just chooses the center endpoint. why?
-	
+	}	
 	
 	//set the endpoint variables using the end point circles
 	function SetEndPoints(ObjToCheck : GameObject, otherCircle : MeshCircle, DeathSphere : GameObject)
@@ -89,12 +85,17 @@ class MeshCircle
 		for (i = 0; i < 2; i++)
 		{
 			//find the point
-			var smallestDist = 10000.0;
+			var smallestDist = 100000.0;
 			var smallestPoint = 0;
 			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).mesh.vertices.Length; j++)
 			{
-				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), circle.center) < (circle.radius+0.1)) //first rule out anything not within this circle
+				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), circle.center) < (circle.radius+0.05)) //first rule out anything not within this circle
 				{
+//					if (j == 59)
+//					{
+//						Debug.Log("FUCK");
+//					}
+					
 					if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center) < smallestDist) //now check if the distance is smaller than the smallest
 					{
 						if (endCircle)
@@ -116,6 +117,12 @@ class MeshCircle
 					}
 				}
 			}
+			
+			//FOR TOMORROW >>> why is it adding one to the saved point? It finds the point and then increments it by one after it saves it.
+			
+			Debug.Log("------------------");
+			Debug.Log(smallestPoint);
+			Debug.Log(">>>");
 
 			//hold and organize the info
 			var decided = false;
@@ -124,13 +131,13 @@ class MeshCircle
 			if (endPoint1Vertex1 == 1000)
 			{
 				decided = false;
-				if ((smallestPoint - 30) < 0)
+				if ((smallestPoint - 30) < 0) //if can't go lower then add
 				{
 					decided = true;
 					endPoint1Vertex2 = smallestPoint;
 					endPoint1Vertex1 = smallestPoint + 30;
 				}
-				if (!decided && (smallestPoint + 30 > ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length-1))
+				if (!decided && (smallestPoint + 30 > ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length-1)) //if can't go higher than sub
 				{
 					decided = true;
 					endPoint1Vertex2 = smallestPoint;
@@ -336,27 +343,29 @@ class MeshCircle
 			endPoint4Vertex2Loc = ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint4Vertex2];
 		}
 		
-		//check black hole shenanigans
-		//endpoint1vertex1
-		if ((endPoint1Vertex1Loc.x == circle.center.x) && (endPoint1Vertex1Loc.y == circle.center.y))
-		{
-			endPoint1Vertex1 = 1000;
-		}
-		//endpoint1vertex2
-		if ((endPoint1Vertex2Loc.x == circle.center.x) && (endPoint1Vertex2Loc.y == circle.center.y))
-		{
-			endPoint1Vertex2 = 1000;
-		}
-		//endpoint2vertex1
-		if ((endPoint2Vertex1Loc.x == circle.center.x) && (endPoint2Vertex1Loc.y == circle.center.y))
-		{
-			endPoint2Vertex1 = 1000;
-		}
-		//endpoint2vertex2
-		if ((endPoint2Vertex2Loc.x == circle.center.x) && (endPoint2Vertex2Loc.y == circle.center.y))
-		{
-			endPoint2Vertex2 = 1000;
-		}
+//		//check black hole shenanigans
+//		//endpoint1vertex1
+//		if ((endPoint1Vertex1Loc.x == circle.center.x) && (endPoint1Vertex1Loc.y == circle.center.y))
+//		{
+//			endPoint1Vertex1 = 1000;
+//		}
+//		//endpoint1vertex2
+//		if ((endPoint1Vertex2Loc.x == circle.center.x) && (endPoint1Vertex2Loc.y == circle.center.y))
+//		{
+//			endPoint1Vertex2 = 1000;
+//		}
+//		//endpoint2vertex1
+//		if ((endPoint2Vertex1Loc.x == circle.center.x) && (endPoint2Vertex1Loc.y == circle.center.y))
+//		{
+//			endPoint2Vertex1 = 1000;
+//		}
+//		//endpoint2vertex2
+//		if ((endPoint2Vertex2Loc.x == circle.center.x) && (endPoint2Vertex2Loc.y == circle.center.y))
+//		{
+//			endPoint2Vertex2 = 1000;
+//		}
+
+		Debug.Log(endPoint1Vertex1);
 		
 		
 //		var cir1 = new Circ(Vector3.zero, 0);
@@ -412,6 +421,11 @@ class MeshCircle
 		
 		this.hitOnce = false;
 		this.hitTwice = false;
+		
+		this.endPoint1Spliced = false;
+		this.endPoint2Spliced = false;
+		this.endPoint3Spliced = false;
+		this.endPoint4Spliced = false;
 		
 		endPoint1Vertex1 = 1000;
 		endPoint1Vertex2 = 1000;
