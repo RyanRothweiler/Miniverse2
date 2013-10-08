@@ -147,6 +147,8 @@ class CircleChain
 		
 		var vizCirc = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
 		vizCirc.Visualize(DeathSphere);
+		vizCirc = new Circ(members[0].endPoint1Vertex2Loc, 0.1);
+		vizCirc.Visualize(DeathSphere);
 //		vizCirc = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
 //		vizCirc.Visualize(DeathSphere);
 		
