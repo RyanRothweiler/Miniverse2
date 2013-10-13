@@ -142,13 +142,14 @@ class CircleChain
 			members[i].SetEndPoints(parentObj, members[i-1], DeathSphere);
 		}
 		//catch the last circle and the first circle
-		members[members.Count-1].SetEndPoints(parentObj, members[i-1], DeathSphere);
+		members[members.Count-1].SetEndPoints(parentObj, members[members.Count-2], DeathSphere);
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere);
 		
-		var vizCirc = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
+		var vizCirc = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
 		vizCirc.Visualize(DeathSphere);
-		vizCirc = new Circ(members[0].endPoint1Vertex2Loc, 0.1);
+		vizCirc = new Circ(members[0].endPoint2Vertex2Loc, 0.1);
 		vizCirc.Visualize(DeathSphere);
+//		Debug.Log(members[0].endPoint1Vertex2);
 //		vizCirc = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
 //		vizCirc.Visualize(DeathSphere);
 		
