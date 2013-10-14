@@ -146,7 +146,7 @@ function MeshAdd ()
 				
 				//set circle center and reset the other data
 				circles[count].reset();
-				circles[count].circle.center = circle.transform.position;
+				circles[count].circle.center = circle.transform.parent.position;
 				circles[count].circle.radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
 //				circles[count].center = circle.transform.position;
 //				circles[count].radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;

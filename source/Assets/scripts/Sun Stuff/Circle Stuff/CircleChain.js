@@ -138,17 +138,18 @@ class CircleChain
 		//set new endpoints using the CombinedMesh
 		for (i = 1; i < members.Count - 1; i++)
 		{
-			members[i].SetEndPoints(parentObj, members[i+1], DeathSphere);
-			members[i].SetEndPoints(parentObj, members[i-1], DeathSphere);
+			members[i].SetEndPoints(parentObj, members[i+1], DeathSphere, false);
+			members[i].SetEndPoints(parentObj, members[i-1], DeathSphere, false);
 		}
 		//catch the last circle and the first circle
-		members[members.Count-1].SetEndPoints(parentObj, members[members.Count-2], DeathSphere);
-		members[0].SetEndPoints(parentObj, members[1], DeathSphere);
+		members[members.Count-1].SetEndPoints(parentObj, members[members.Count-2], DeathSphere, false);
+		members[0].SetEndPoints(parentObj, members[1], DeathSphere, true);
 		
-		var vizCirc = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
-		vizCirc.Visualize(DeathSphere);
-		vizCirc = new Circ(members[0].endPoint2Vertex2Loc, 0.1);
-		vizCirc.Visualize(DeathSphere);
+//		var vizCirc = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
+//		vizCirc.Visualize(DeathSphere);
+//		vizCirc = new Circ(members[0].endPoint1Vertex2Loc, 0.1);
+//		vizCirc.Visualize(DeathSphere);
+
 //		Debug.Log(members[0].endPoint1Vertex2);
 //		vizCirc = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
 //		vizCirc.Visualize(DeathSphere);
@@ -409,6 +410,11 @@ class CircleChain
 		}
 	}
 	
+	
+	//FOR TOMORROW >>> I think you should make the sun circles render as some sort of wireframes with a glow. That would solve A LOT of problems and make this significantly more effecient.
+	
+	
+	
 	//removes the points from base circle which are inside otherCircle
 	function RemoveInternalPoints(baseCircle : MeshCircle, otherCircle : MeshCircle, DeathSphere : GameObject)
 	{
@@ -423,25 +429,27 @@ class CircleChain
 		{
 			if (baseCircle.circle.center.y > otherCircle.circle.center.y)
 			{
-				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
+				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.15);
 			}
 			else
 			{
-				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
+				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.15);
 			}
 		}
 		else
 		{
 			if (baseCircle.circle.center.y > otherCircle.circle.center.y)
 			{
-				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
+				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.15);
 			}
 			else
 			{
-				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.1);
+				intersectCirc = Circ(Vector3(((intersectPoints[0].x + intersectPoints[1].x)/2),((intersectPoints[0].y + intersectPoints[1].y)/2), 15), ((Vector2.Distance(intersectPoints[0], intersectPoints[1]))/2)+0.15);
 			}
 		}
 		intersectCircles.Add(intersectCirc); //save intersect circle
+		
+		intersectCirc.Visualize(DeathSphere);
 
 		//go through triangles and add the ones that are not inside the intersect circle to dumTris list
 		dumTris.Clear();
@@ -466,8 +474,16 @@ class CircleChain
 			}
 			else
 			{
-				dumVerts.Add(Vector3(0,0,100));
+//				var circ1 = new Circ(baseCircle.mesh.gameObject.transform.TransformPoint(baseCircle.mesh.mesh.vertices[x]), 0.1);
+//				circ1.Visualize(DeathSphere);
+				dumVerts.Add(Vector3(0,0,0));
 			}
+		}
+		
+		//check and make sure it worked correctly
+		if (dumVerts.Count%4 != 0)
+		{
+			Debug.Log("NOPE!");
 		}
 	
 		//update model
