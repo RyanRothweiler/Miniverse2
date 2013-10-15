@@ -148,8 +148,6 @@ function MeshAdd ()
 				circles[count].reset();
 				circles[count].circle.center = circle.transform.parent.position;
 				circles[count].circle.radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
-//				circles[count].center = circle.transform.position;
-//				circles[count].radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
 
 				count++;
 			}
@@ -270,6 +268,9 @@ function MeshAdd ()
 			circle.CheckCollidesForPastLife();
 		}
 	}
+	
+	//finally enable the wireframe renderer after all the mesh shenanigans is done
+	SunRadiiHolder.GetComponent(WireframeRender).Initialize();
 }
 
 //assigns the next member in the chain

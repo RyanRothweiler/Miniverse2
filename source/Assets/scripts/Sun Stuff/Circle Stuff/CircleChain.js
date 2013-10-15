@@ -163,7 +163,7 @@ class CircleChain
 		//get data and initialize
 		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * members.Count)];
 		var triangles = new int[parentObj.GetComponent(MeshFilter).sharedMesh.triangles.Length + (12 * members.Count)];
-		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.uv.Length + (2 * members.Count)];
+		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * members.Count)];
 		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length; i++)
 		{
 			vertices[i] = parentObj.GetComponent(MeshFilter).sharedMesh.vertices[i];
@@ -174,7 +174,7 @@ class CircleChain
 		}
 		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.uv.Length; i++)
 		{
-			uvs[i] = parentObj.GetComponent(MeshFilter).sharedMesh.uv[i];
+			uvs[i] = Vector2(1,1);
 		}
 			
 //		Debug.Log("-------------");
@@ -410,11 +410,6 @@ class CircleChain
 		}
 	}
 	
-	
-	//FOR TOMORROW >>> I think you should make the sun circles render as some sort of wireframes with a glow. That would solve A LOT of problems and make this significantly more effecient.
-	
-	
-	
 	//removes the points from base circle which are inside otherCircle
 	function RemoveInternalPoints(baseCircle : MeshCircle, otherCircle : MeshCircle, DeathSphere : GameObject)
 	{
@@ -448,8 +443,6 @@ class CircleChain
 			}
 		}
 		intersectCircles.Add(intersectCirc); //save intersect circle
-		
-		intersectCirc.Visualize(DeathSphere);
 
 		//go through triangles and add the ones that are not inside the intersect circle to dumTris list
 		dumTris.Clear();
@@ -478,12 +471,6 @@ class CircleChain
 //				circ1.Visualize(DeathSphere);
 				dumVerts.Add(Vector3(0,0,0));
 			}
-		}
-		
-		//check and make sure it worked correctly
-		if (dumVerts.Count%4 != 0)
-		{
-			Debug.Log("NOPE!");
 		}
 	
 		//update model
