@@ -145,10 +145,15 @@ class CircleChain
 		members[members.Count-1].SetEndPoints(parentObj, members[members.Count-2], DeathSphere, false);
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere, true);
 		
-//		var vizCirc = new Circ(members[0].endPoint1Vertex1Loc, 0.1);
-//		vizCirc.Visualize(DeathSphere);
-//		vizCirc = new Circ(members[0].endPoint1Vertex2Loc, 0.1);
-//		vizCirc.Visualize(DeathSphere);
+		var vizCirc = new Circ(members[0].endPoint1Loc, 0.1);
+		vizCirc.Visualize(DeathSphere);
+		vizCirc = new Circ(members[0].endPoint2Loc, 0.1);
+		vizCirc.Visualize(DeathSphere);
+		
+		
+		//FOR TONIGHT / TOMORRO >>> Changing everything over for only one vertex. So now there is only a need for one end point vertex instead of two. This basically changes the entire fucking game. Fix that.
+		
+		
 
 //		Debug.Log(members[0].endPoint1Vertex2);
 //		vizCirc = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
@@ -469,7 +474,7 @@ class CircleChain
 			{
 //				var circ1 = new Circ(baseCircle.mesh.gameObject.transform.TransformPoint(baseCircle.mesh.mesh.vertices[x]), 0.1);
 //				circ1.Visualize(DeathSphere);
-				dumVerts.Add(Vector3(0,0,0));
+				dumVerts.Add(Vector3(0,0,15));
 			}
 		}
 	
@@ -521,7 +526,6 @@ class CircleChain
 	//splice two meshes together. holy arguments batman
 	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle, intersectCirc : Circ, vertices : Vector3[], triangles : int[], uvs : Vector2[], startIndex : int)
 	{
-		Debug.Log("splicing");	
 		//first make sure the points have been set
 		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
 		{		

@@ -75,6 +75,7 @@ public var LevelSelectMovementController : GameObject; //the parent for all the 
 public var HumanPersonFab : GameObject; //the human person prefab
 public var PausePlane : GameObject; //the pause plane which will show when zoomed out
 public var ZoomStreaks : GameObject; //the star streaks which show when zooming
+public var DeathSphere : GameObject; //a sphere that dies after a time. used for debuging
 public var FailType : TextMesh; //the type which shows on level fail
 public var StarStreakMat : Material;
 public var KeyMat : Material; //the material used for the keys

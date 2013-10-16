@@ -1,11 +1,15 @@
-// attach to an object with a mesh filter 
- 
-var lineColor : Color; 
-var backgroundColor : Color; 
-var ZWrite = true; 
-var AWrite = true; 
-var blend = true; 
- 
+#pragma strict
+
+
+//public vars
+public var use : boolean;
+public var lineColor : Color; 
+public var backgroundColor : Color; 
+public var ZWrite = true; 
+public var AWrite = true; 
+public var blend = true; 
+
+//private 
 private var lines : Vector3[]; 
 private var linesArray : Array; 
 private var lineMaterial : Material; 
@@ -16,12 +20,15 @@ var initialized = false;
  
 function Start () 
 {
-	renderer.enabled = false;
+	if (use)
+	{
+		renderer.enabled = false;
+	}
 }
 
 function Initialize ()
 {
-	if (!initialized)
+	if (!initialized && use)
 	{
 		renderer.enabled = false;
 	    
@@ -63,7 +70,7 @@ function Initialize ()
  
 function OnRenderObject() 
 {
-	if (initialized)
+	if (initialized && use)
 	{
 	    meshRenderer.sharedMaterial.color = backgroundColor; 
 	    lineMaterial.SetPass(0); 
@@ -84,10 +91,19 @@ function OnRenderObject()
 //	       GL.Vertex(lines[i * 3 + 2]); 
 //	       GL.Vertex(lines[i * 3]); 
 //	    } 
-						
-		for (i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length; i++)
+		
+		Debug.Log(GetComponent(MeshFilter).sharedMesh.vertices.length);
+					
+		for (var i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
 		{
-			GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i]);
+			if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > 0)
+			{
+				if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 2)
+				{
+					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i]);
+					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i+1]);
+				}
+			}
 		}
 	  
 	    GL.End(); 
