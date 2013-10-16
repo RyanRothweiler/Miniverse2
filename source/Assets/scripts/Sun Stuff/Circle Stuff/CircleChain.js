@@ -145,20 +145,6 @@ class CircleChain
 		members[members.Count-1].SetEndPoints(parentObj, members[members.Count-2], DeathSphere, false);
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere, true);
 		
-		var vizCirc = new Circ(members[0].endPoint1Loc, 0.1);
-		vizCirc.Visualize(DeathSphere);
-		vizCirc = new Circ(members[0].endPoint2Loc, 0.1);
-		vizCirc.Visualize(DeathSphere);
-		
-		
-		//FOR TONIGHT / TOMORRO >>> Changing everything over for only one vertex. So now there is only a need for one end point vertex instead of two. This basically changes the entire fucking game. Fix that.
-		
-		
-
-//		Debug.Log(members[0].endPoint1Vertex2);
-//		vizCirc = new Circ(members[0].endPoint2Vertex1Loc, 0.1);
-//		vizCirc.Visualize(DeathSphere);
-		
 		//splice the circles together
 		
 //		Debug.Log(Time.realtimeSinceStartup);
@@ -166,8 +152,8 @@ class CircleChain
 //		Debug.Log(Time.realtimeSinceStartup);
 
 		//get data and initialize
-		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * members.Count)];
-		var triangles = new int[parentObj.GetComponent(MeshFilter).sharedMesh.triangles.Length + (12 * members.Count)];
+		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + 2]; //THIS MIGHT (WILL) NEED TO CHANGE WHEN USING MORE THAN TWO CIRCLES
+		var triangles = new int[parentObj.GetComponent(MeshFilter).sharedMesh.triangles.Length];
 		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * members.Count)];
 		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length; i++)
 		{
@@ -187,56 +173,50 @@ class CircleChain
 //		Debug.Log("done");
 //		Debug.Log(Time.realtimeSinceStartup);
 		
-//		//go through the members to get the information, but actually act on the parentObj mesh
-//		var splicedNum = 0;
-//		for (j = 0; j < members.Count-1	; j++) 
-//		{
-//			var ds = new Array();
-//			if (!members[j].endPoint1Spliced) //this whole entire if statement is probably more complicated than it needs to be
-//			{
-//				ds.Clear();
-//				//find point to splice
-//				ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
-//				ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
-//				if (members[j+1].endPoint3Vertex1 != 1000)
-//				{
-//					ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000)
-//				{
-//					ds.Add(Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
-//				}
-//				ds.Sort();
-//				//splice mesh
-//				if (ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint1Spliced = true;
-//					members[j+1].endPoint1Spliced = true;
-//					splicedNum++;
-//				}
-//				if (ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint1Spliced = true;
-//					members[j+1].endPoint2Spliced = true;
-//					splicedNum++;
-//				}
-//				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint1Spliced = true;
-//					members[j+1].endPoint3Spliced = true;
-//					splicedNum++;
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint1Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint1Vertex1, members[j].endPoint1Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint1Spliced = true;
-//					members[j+1].endPoint4Spliced = true;
-//					splicedNum++;
-//				}
-//			}
+		//go through the members to get the information, but actually act on the parentObj mesh
+		var splicedNum = 0;
+		for (j = 0; j < members.Count-1	; j++) 
+		{
+			if (!members[j].endPoint1Spliced) //this whole entire if statement is probably more complicated than it needs to be
+			{
+				//find which endpoints are closest
+				if (Vector3.Distance(members[j].endPoint1Loc, members[j+1].endPoint1Loc) < Vector3.Distance(members[j].endPoint1Loc, members[j+1].endPoint2Loc))
+				{
+					//splice endpoint1 and endpoint1
+					SpliceMesh(members[j].endPoint1, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum);
+					members[j].endPoint1Spliced = true;
+					members[j+1].endPoint1Spliced = true;
+					splicedNum++;
+				}
+				else
+				{
+					//splice endpoint1 and endpoint2
+					SpliceMesh(members[j].endPoint1, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum);
+					members[j].endPoint1Spliced = true;
+					members[j+1].endPoint2Spliced = true;
+					splicedNum++;
+				}
+			}
+			if (!members[j].endPoint2Spliced) //this whole entire if statement is probably more complicated than it needs to be
+			{
+				//find which endpoints are closest
+				if (Vector3.Distance(members[j].endPoint2Loc, members[j+1].endPoint1Loc) < Vector3.Distance(members[j].endPoint2Loc, members[j+1].endPoint2Loc))
+				{
+					//splice endpoint2 and endpoint1
+					SpliceMesh(members[j].endPoint2, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum);
+					members[j].endPoint2Spliced = true;
+					members[j+1].endPoint1Spliced = true;
+					splicedNum++;
+				}
+				else
+				{
+					//splice endpoint2 and endpoint2
+					SpliceMesh(members[j].endPoint2, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum);
+					members[j].endPoint2Spliced = true;
+					members[j+1].endPoint2Spliced = true;
+					splicedNum++;
+				}
+			}
 //			if (!members[j].endPoint2Spliced) //this whole entire if statement is probably more complicated than it needs to be
 //			{
 //				ds.Clear();
@@ -375,7 +355,7 @@ class CircleChain
 //					splicedNum++;					
 //				}
 //			}
-//		}
+		}
 		
 		//set the newly spliced circle only after all the splicing has been done
 		//if in editor than the stuff is baking, else it is running live
@@ -401,11 +381,11 @@ class CircleChain
 		}
 		else
 		{
-			parentObj.GetComponent(MeshFilter).mesh.Clear();
-
-			parentObj.GetComponent(MeshFilter).mesh.vertices = vertices;
-			parentObj.GetComponent(MeshFilter).mesh.uv = uvs;
-			parentObj.GetComponent(MeshFilter).mesh.triangles = triangles;
+//			parentObj.GetComponent(MeshFilter).mesh.Clear();
+//
+//			parentObj.GetComponent(MeshFilter).mesh.vertices = vertices;
+//			parentObj.GetComponent(MeshFilter).mesh.uv = uvs;
+//			parentObj.GetComponent(MeshFilter).mesh.triangles = triangles;
 		}
 		
 		//when everything is done disable the members
@@ -524,55 +504,27 @@ class CircleChain
 	}
 	
 	//splice two meshes together. holy arguments batman
-	function SpliceMesh(circle1EndVerts : int[], circle2EndVerts : int[], parentMesh : MeshFilter, circle1 : MeshCircle, circle2 : MeshCircle, intersectCirc : Circ, vertices : Vector3[], triangles : int[], uvs : Vector2[], startIndex : int)
+	//NOTE I BROKE SUN RADII BAKING (this no longer does anything with the mesh, though all that code should still work and is in github)
+	function SpliceMesh(circle1EndVert : int, circle2EndVert : int, parentMesh : MeshFilter, intersectCirc : Circ, startIndex : int)
 	{
 		//first make sure the points have been set
-		if (circle1EndVerts[0] != 1000 && circle1EndVerts[1] != 1000 && circle2EndVerts[0] != 1000 && circle2EndVerts[1] != 1000)
+		if (circle1EndVert != 1000  && circle2EndVert != 1000)
 		{		
-			var circle1EndVertLocs = [parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle1EndVerts[0]]), parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle1EndVerts[1]])];
-			var circle2EndVertLocs = [parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle2EndVerts[0]]), parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle2EndVerts[0]])];
+			var circle1EndVertLoc = parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle1EndVert]);
+			var circle2EndVertLoc = parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle2EndVert]);
+
+			//create new point 
+			var newPoint = Vector3((circle1EndVertLoc.x + circle2EndVertLoc.x) / 2, (circle1EndVertLoc.y + circle2EndVertLoc.y) / 2, (circle1EndVertLoc.z + circle2EndVertLoc.z) / 2);
 			
+			//move the pointe a little closer to the center
+			newPoint = Vector3.MoveTowards(newPoint, intersectCirc.center, 0.2);
 			
-			//create new points
-			var newPoint1 = Vector3((circle1EndVertLocs[0].x + circle2EndVertLocs[0].x) / 2, (circle1EndVertLocs[0].y + circle2EndVertLocs[0].y) / 2, (circle1EndVertLocs[0].z + circle2EndVertLocs[0].z) / 2);
-			var newPoint2 = Vector3((circle1EndVertLocs[1].x + circle2EndVertLocs[1].x) / 2, (circle1EndVertLocs[1].y + circle2EndVertLocs[1].y) / 2, (circle1EndVertLocs[1].z + circle2EndVertLocs[1].z) / 2);
+			//add the custom lines
+			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(circle1EndVertLoc);
+			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(newPoint);
 			
-			//move points a little closer to the intersection center while separating them a bit
-			if (Vector3.Distance(newPoint1, intersectCirc.center) < Vector3.Distance(newPoint2, intersectCirc.center))
-			{
-				newPoint1 = Vector3.MoveTowards(newPoint1, intersectCirc.center, 0.2);
-				newPoint2 = Vector3.MoveTowards(newPoint2, intersectCirc.center, 0.15);
-			}
-			else
-			{
-				newPoint1 = Vector3.MoveTowards(newPoint1, intersectCirc.center, 0.15);
-				newPoint2 = Vector3.MoveTowards(newPoint2, intersectCirc.center, 0.2);
-			}
-		
-			
-			//create new vertices
-			vertices[vertices.length - ((startIndex * 2) + 1)] = newPoint1; //1
-			vertices[vertices.length - ((startIndex * 2) + 2)] = newPoint2; //2
-			
-			//create triangles
-			//one side
-			triangles[triangles.Length - ((startIndex * 12) + 1)] = vertices.Length - ((startIndex * 2) + 1);
-			triangles[triangles.Length - ((startIndex * 12) + 2)] = circle1EndVerts[0];	
-			triangles[triangles.Length - ((startIndex * 12) + 3)] = circle1EndVerts[1];
-			triangles[triangles.Length - ((startIndex * 12) + 4)] = vertices.Length - ((startIndex * 2) + 1);
-			triangles[triangles.Length - ((startIndex * 12) + 5)] = vertices.Length - ((startIndex * 2) + 2);
-			triangles[triangles.Length - ((startIndex * 12) + 6)] = circle1EndVerts[1];
-			//the other side
-			triangles[triangles.Length - ((startIndex * 12) + 7)] = vertices.Length - ((startIndex * 2) + 1);
-			triangles[triangles.Length - ((startIndex * 12) + 8)] = circle2EndVerts[0];
-			triangles[triangles.Length - ((startIndex * 12) + 9)] = circle2EndVerts[1];
-			triangles[triangles.Length - ((startIndex * 12) + 10)] = vertices.Length - ((startIndex * 2) + 1);
-			triangles[triangles.Length - ((startIndex * 12) + 11)] = vertices.Length - ((startIndex * 2) + 2);
-			triangles[triangles.Length - ((startIndex * 12) + 12)] = circle2EndVerts[1];
-			
-			//create new uvs
-			uvs[uvs.length - ((startIndex * 2) + 1)] = Vector2(vertices[vertices.Length - ((startIndex * 2) + 1)].x, vertices[vertices.Length - ((startIndex * 2) + 1)].z);
-			uvs[uvs.length - ((startIndex * 2) + 2)] = Vector2(vertices[vertices.Length - ((startIndex * 2) + 2)].x, vertices[vertices.Length - ((startIndex * 2) + 2)].z);
+			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(newPoint);
+			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(circle2EndVertLoc);
 		}
 		else
 		{

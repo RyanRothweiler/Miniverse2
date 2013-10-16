@@ -105,14 +105,14 @@ class MeshCircle
 			cont = true;
 			if (endPoint1 == 1000)
 			{
-				endPoint1Vertex1 = smallestPoint;
-				endPoint1Vertex1Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1]);
+				endPoint1 = smallestPoint;
+				endPoint1Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1]);
 				cont = false;
 			}
 			if (cont && endPoint2 == 1000)
 			{
-				endPoint2Vertex1 = smallestPoint;
-				endPoint2Vertex1Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2]);
+				endPoint2 = smallestPoint;
+				endPoint2Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2]);
 				cont = false;
 			}
 			//WILL NEED TO EXPAND HERE TO ACOMMODATE NON ENDCIRCLES

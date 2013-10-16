@@ -8,6 +8,7 @@ public var backgroundColor : Color;
 public var ZWrite = true; 
 public var AWrite = true; 
 public var blend = true; 
+public var CustomLines = new List.<Vector3>(); //this will render these lines as well as the mesh on render.
 
 //private 
 private var lines : Vector3[]; 
@@ -71,7 +72,7 @@ function Initialize ()
 function OnRenderObject() 
 {
 	if (initialized && use)
-	{
+	{		
 	    meshRenderer.sharedMaterial.color = backgroundColor; 
 	    lineMaterial.SetPass(0); 
 	  
@@ -79,22 +80,15 @@ function OnRenderObject()
 	    GL.MultMatrix(transform.localToWorldMatrix); 
 	    GL.Begin(GL.LINES); 
 	    GL.Color(lineColor); 
-	  
-//	    for (i = 0; i < lines.length / 3; i++) 
-//	    { 
-//	       GL.Vertex(lines[i * 3]); 
-//	       GL.Vertex(lines[i * 3 + 1]); 
-//	  
-//	       GL.Vertex(lines[i * 3 + 1]); 
-//	       GL.Vertex(lines[i * 3 + 2]); 
-//	  
-//	       GL.Vertex(lines[i * 3 + 2]); 
-//	       GL.Vertex(lines[i * 3]); 
-//	    } 
 		
-		Debug.Log(GetComponent(MeshFilter).sharedMesh.vertices.length);
-					
-		for (var i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
+		//add the lines from the CustomLines
+		for (var i = 0; i < CustomLines.Count; i++)
+		{
+			GL.Vertex(CustomLines[i]);
+		}
+		
+		//create lines from mesh
+		for (i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
 		{
 			if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > 0)
 			{
@@ -108,5 +102,6 @@ function OnRenderObject()
 	  
 	    GL.End(); 
 	    GL.PopMatrix();
+	    CustomLines.Clear();
 	}
 }

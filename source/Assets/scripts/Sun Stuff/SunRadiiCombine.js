@@ -8,9 +8,7 @@ public var SunRadiiHolder : GameObject; //the object that holds the new added su
 public var combine : boolean;
 public var LiveCombine : boolean; //if the level needs live combination of circles
 public var circles : MeshCircle[]; //holds all sun radii circles. these circle objects should not be deleted, they are instantiated at the start of the level and only their mesh data is changed after that.
-public var dummyTriangles : int[]; //a dummy list holding the new list of vertices
-public var dumTris = new List.<int>(); 
-public var vertsToRemove = new List.<int>(); //list of vertices to remove from the circle
+public var dummyTriangles : int[]; //a dummy list holding the new list of verticesle
 public var spliceNum : int; //increments every time a splice circle file is saved
 
 var masterTris : int[]; //a dummy list holding the new list of vertices
