@@ -7,8 +7,8 @@ public var lineColor : Color;
 public var backgroundColor : Color; 
 public var ZWrite = true; 
 public var AWrite = true; 
-public var blend = true; 
-public var CustomLines = new List.<Vector3>(); //this will render these lines as well as the mesh on render.
+public var blend = true;
+public var CustomLines = new List.<Vector3>(); //custom lines to be rendered. Must be added in groups of 2.
 
 //private 
 private var lines : Vector3[]; 
@@ -79,29 +79,30 @@ function OnRenderObject()
 	    GL.PushMatrix(); 
 	    GL.MultMatrix(transform.localToWorldMatrix); 
 	    GL.Begin(GL.LINES); 
-	    GL.Color(lineColor); 
-		
-		//add the lines from the CustomLines
-		for (var i = 0; i < CustomLines.Count; i++)
-		{
-			GL.Vertex(CustomLines[i]);
-		}
+	    GL.Color(lineColor);
 		
 		//create lines from mesh
-		for (i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
+		for (var i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
 		{
-			if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > 0)
+			if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > 1)
 			{
-				if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 2)
+				if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 1)
 				{
 					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i]);
 					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i+1]);
+				
 				}
 			}
+		}
+		
+		//create lines from CustomLines
+		Debug.Log(CustomLines.Count);
+		for (i = 0; i < CustomLines.Count; i++)
+		{
+			GL.Vertex(CustomLines[i]);
 		}
 	  
 	    GL.End(); 
 	    GL.PopMatrix();
-	    CustomLines.Clear();
 	}
 }

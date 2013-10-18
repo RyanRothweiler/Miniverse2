@@ -23,7 +23,7 @@ class CircleChain
 	var tempMeshCircle : MeshCircle;
 	
 	public var dumTris = new List.<int>();
-	public var dumVerts = new List.<Vector3>(); 
+	public var dumVerts = new List.<Vector3>();
 	public var vertsToRemove = new List.<int>(); //list of vertices to remove from the circle
 	public var beenHit = new List.<int>();
 	var parentObj : GameObject; //an instance of SunRadiiHolder which holds the mesh of the chain
@@ -77,6 +77,7 @@ class CircleChain
 //		Debug.Log(Time.realtimeSinceStartup);
 //		Debug.Log("Removing Internal Points");
 //		Debug.Log(Time.realtimeSinceStartup);
+
 		//now remove all internal points and set endpoint circles
 		for (j = 0; j < members.Count; j++)
 		{
@@ -99,6 +100,24 @@ class CircleChain
 				RemoveInternalPoints(members[j], members[j-1], DeathSphere);
 			}
 		}
+		
+		
+		//FOR LATER >>> FIX THE SPLICING ISSUE. THIS IS REALLY CLOSE TO WORKING. ADDING THE CUSTOM LINES BEFORE COMBINING THE MESHES
+		
+		
+		//check if the beginning and the end of all members have not been removed, if they haven't then add their lines to the wireframe draw list.
+		GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Clear();
+		for (j = 0; j < members.Count; j++)
+		{
+//			if ((members[j].mesh.mesh.vertices[0].z > 0) && (members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length].z > 0))
+//			{
+				var vec = new Vector3(members[j].mesh.mesh.vertices[0].x, members[j].mesh.mesh.vertices[0].y, members[j].mesh.mesh.vertices[0].z);
+				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vec);
+				vec = new Vector3(members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].x, members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].y, members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].z);
+				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vec);
+//			}
+		}
+		
 //		Debug.Log("-----");
 //		Debug.Log(Time.realtimeSinceStartup);
 //		Debug.Log("setting endpoints");
@@ -154,7 +173,7 @@ class CircleChain
 		//get data and initialize
 		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + 2]; //THIS MIGHT (WILL) NEED TO CHANGE WHEN USING MORE THAN TWO CIRCLES
 		var triangles = new int[parentObj.GetComponent(MeshFilter).sharedMesh.triangles.Length];
-		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * members.Count)];
+		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + 2];
 		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length; i++)
 		{
 			vertices[i] = parentObj.GetComponent(MeshFilter).sharedMesh.vertices[i];
@@ -183,7 +202,7 @@ class CircleChain
 				if (Vector3.Distance(members[j].endPoint1Loc, members[j+1].endPoint1Loc) < Vector3.Distance(members[j].endPoint1Loc, members[j+1].endPoint2Loc))
 				{
 					//splice endpoint1 and endpoint1
-					SpliceMesh(members[j].endPoint1, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum);
+					SpliceMesh(members[j].endPoint1, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
 					members[j].endPoint1Spliced = true;
 					members[j+1].endPoint1Spliced = true;
 					splicedNum++;
@@ -191,7 +210,7 @@ class CircleChain
 				else
 				{
 					//splice endpoint1 and endpoint2
-					SpliceMesh(members[j].endPoint1, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum);
+					SpliceMesh(members[j].endPoint1, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
 					members[j].endPoint1Spliced = true;
 					members[j+1].endPoint2Spliced = true;
 					splicedNum++;
@@ -203,7 +222,7 @@ class CircleChain
 				if (Vector3.Distance(members[j].endPoint2Loc, members[j+1].endPoint1Loc) < Vector3.Distance(members[j].endPoint2Loc, members[j+1].endPoint2Loc))
 				{
 					//splice endpoint2 and endpoint1
-					SpliceMesh(members[j].endPoint2, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum);
+					SpliceMesh(members[j].endPoint2, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
 					members[j].endPoint2Spliced = true;
 					members[j+1].endPoint1Spliced = true;
 					splicedNum++;
@@ -211,156 +230,23 @@ class CircleChain
 				else
 				{
 					//splice endpoint2 and endpoint2
-					SpliceMesh(members[j].endPoint2, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum);
+					SpliceMesh(members[j].endPoint2, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
 					members[j].endPoint2Spliced = true;
 					members[j+1].endPoint2Spliced = true;
 					splicedNum++;
 				}
 			}
-//			if (!members[j].endPoint2Spliced) //this whole entire if statement is probably more complicated than it needs to be
-//			{
-//				ds.Clear();
-//				//get mesh to splice
-//				ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
-//				ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
-//				if (members[j+1].endPoint3Vertex1 != 1000)
-//				{
-//					ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000)
-//				{
-//					ds.Add(Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
-//				}
-//				ds.Sort();
-//				
-//				//splice mesh
-//				if (ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint2Spliced = true;
-//					members[j+1].endPoint1Spliced = true;
-//					splicedNum++;
-//				}
-//				if (ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint2Spliced = true;
-//					members[j+1].endPoint2Spliced = true;
-//					splicedNum++;
-//				}
-//				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint2Spliced = true;
-//					members[j+1].endPoint3Spliced = true;
-//					splicedNum++;				
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint2Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint2Vertex1, members[j].endPoint2Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint2Spliced = true;
-//					members[j+1].endPoint4Spliced = true;
-//					splicedNum++;
-//				}
-//			}
-//			if ((!members[j].endPoint3Spliced) && members[j].endPoint3Vertex1 != 1000) //this whole entire if statement is probably more complicated than it needs to be
-//			{
-//				ds.Clear();
-//				//get mesh to splice
-//				ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
-//				ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
-//				if (members[j+1].endPoint3Vertex1 != 1000)
-//				{
-//					ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000)
-//				{
-//					ds.Add(Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
-//				}
-//				ds.Sort();
-//				
-//				//splice mesh
-//				if (ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint3Spliced = true;
-//					members[j+1].endPoint1Spliced = true;
-//					splicedNum++;
-//				}
-//				if (ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint3Spliced = true;
-//					members[j+1].endPoint2Spliced = true;
-//					splicedNum++;
-//				}
-//				if (members[j+1].endPoint3Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint3Spliced = true;
-//					members[j+1].endPoint3Spliced = true;
-//					splicedNum++;
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint3Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint3Vertex1, members[j].endPoint3Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint3Spliced = true;
-//					members[j+1].endPoint4Spliced = true;
-//					splicedNum++;
-//				}
-//			}
-//			if ((!members[j].endPoint4Spliced) && members[j].endPoint4Vertex1 != 1000) //this whole entire if statement is probably more complicated than it needs to be
-//			{
-//				ds.Clear();
-//				//get mesh to splice
-//				ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint1Vertex1Loc));
-//				ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint2Vertex1Loc));
-//				if (members[j+1].endPoint3Vertex1 != 1000)
-//				{
-//					ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint3Vertex1Loc));
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000)
-//				{
-//					ds.Add(Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint4Vertex1Loc));
-//				}
-//				ds.Sort();
-//				
-//				//splice mesh
-//				if (ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint1Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint1Vertex1, members[j+1].endPoint1Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint4Spliced = true;
-//					members[j+1].endPoint1Spliced = true;
-//					splicedNum++;
-//				}
-//				if (ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint2Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint2Vertex1, members[j+1].endPoint2Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint4Spliced = true;
-//					members[j+1].endPoint2Spliced = true;
-//					splicedNum++;
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint3Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint3Vertex1, members[j+1].endPoint3Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint4Spliced = true;
-//					members[j+1].endPoint3Spliced = true;
-//					splicedNum++;
-//				}
-//				if (members[j+1].endPoint4Vertex1 != 1000 && ds[0] == Vector3.Distance(members[j].endPoint4Vertex1Loc, members[j+1].endPoint4Vertex1Loc)) 
-//				{
-//					SpliceMesh([members[j].endPoint4Vertex1, members[j].endPoint4Vertex2], [members[j+1].endPoint4Vertex1, members[j+1].endPoint4Vertex2], parentObj.GetComponent(MeshFilter), members[j], members[j+1], intersectCircles[j], vertices, triangles, uvs, splicedNum);
-//					members[j].endPoint4Spliced = true;
-//					members[j+1].endPoint4Spliced = true;
-//					splicedNum++;					
-//				}
-//			}
 		}
 		
 		//set the newly spliced circle only after all the splicing has been done
 		//if in editor than the stuff is baking, else it is running live
 		if (!Application.isPlaying)
 		{
+		
+			
+			//FOR SUN BAKING THIS NEEDS TO CHANGE
+			
+			
 			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
 			mi = new Mesh();
 			mi.vertices = vertices;
@@ -381,11 +267,11 @@ class CircleChain
 		}
 		else
 		{
-//			parentObj.GetComponent(MeshFilter).mesh.Clear();
-//
-//			parentObj.GetComponent(MeshFilter).mesh.vertices = vertices;
-//			parentObj.GetComponent(MeshFilter).mesh.uv = uvs;
-//			parentObj.GetComponent(MeshFilter).mesh.triangles = triangles;
+			parentObj.GetComponent(MeshFilter).mesh.Clear();
+
+			parentObj.GetComponent(MeshFilter).mesh.vertices = vertices;
+			parentObj.GetComponent(MeshFilter).mesh.uv = uvs;
+			parentObj.GetComponent(MeshFilter).mesh.triangles = triangles;
 		}
 		
 		//when everything is done disable the members
@@ -505,11 +391,11 @@ class CircleChain
 	
 	//splice two meshes together. holy arguments batman
 	//NOTE I BROKE SUN RADII BAKING (this no longer does anything with the mesh, though all that code should still work and is in github)
-	function SpliceMesh(circle1EndVert : int, circle2EndVert : int, parentMesh : MeshFilter, intersectCirc : Circ, startIndex : int)
-	{
+	function SpliceMesh(circle1EndVert : int, circle2EndVert : int, parentMesh : MeshFilter, intersectCirc : Circ, startIndex : int, vertices : Vector3[], DeathSphere : GameObject)
+	{		
 		//first make sure the points have been set
 		if (circle1EndVert != 1000  && circle2EndVert != 1000)
-		{		
+		{			
 			var circle1EndVertLoc = parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle1EndVert]);
 			var circle2EndVertLoc = parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle2EndVert]);
 
@@ -519,12 +405,14 @@ class CircleChain
 			//move the pointe a little closer to the center
 			newPoint = Vector3.MoveTowards(newPoint, intersectCirc.center, 0.2);
 			
-			//add the custom lines
-			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(circle1EndVertLoc);
-			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(newPoint);
+			//add new vertex and line
+			vertices[startIndex] = newPoint;
 			
-			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(newPoint);
-			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(circle2EndVertLoc);
+			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
+			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[circle1EndVert]);
+			
+			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[circle2EndVert]);
+			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
 		}
 		else
 		{
