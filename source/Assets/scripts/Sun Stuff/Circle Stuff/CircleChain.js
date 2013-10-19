@@ -99,23 +99,21 @@ class CircleChain
 			{
 				RemoveInternalPoints(members[j], members[j-1], DeathSphere);
 			}
-		}
-		
-		
-		//FOR LATER >>> FIX THE SPLICING ISSUE. THIS IS REALLY CLOSE TO WORKING. ADDING THE CUSTOM LINES BEFORE COMBINING THE MESHES
-		
+		}		
 		
 		//check if the beginning and the end of all members have not been removed, if they haven't then add their lines to the wireframe draw list.
 		GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Clear();
 		for (j = 0; j < members.Count; j++)
 		{
-//			if ((members[j].mesh.mesh.vertices[0].z > 0) && (members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length].z > 0))
-//			{
+			if ((members[j].mesh.gameObject.transform.TransformPoint(members[j].mesh.mesh.vertices[0]).z > 0) && (members[j].mesh.gameObject.transform.TransformPoint(members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1]).z > 0))
+			{
 				var vec = new Vector3(members[j].mesh.mesh.vertices[0].x, members[j].mesh.mesh.vertices[0].y, members[j].mesh.mesh.vertices[0].z);
+				vec = members[j].mesh.gameObject.transform.TransformPoint(vec);
 				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vec);
 				vec = new Vector3(members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].x, members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].y, members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].z);
+				vec = members[j].mesh.gameObject.transform.TransformPoint(vec);
 				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vec);
-//			}
+			}
 		}
 		
 //		Debug.Log("-----");
@@ -193,7 +191,7 @@ class CircleChain
 //		Debug.Log(Time.realtimeSinceStartup);
 		
 		//go through the members to get the information, but actually act on the parentObj mesh
-		var splicedNum = 0;
+		var splicedNum = vertices.Length-1;
 		for (j = 0; j < members.Count-1	; j++) 
 		{
 			if (!members[j].endPoint1Spliced) //this whole entire if statement is probably more complicated than it needs to be
@@ -205,7 +203,7 @@ class CircleChain
 					SpliceMesh(members[j].endPoint1, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
 					members[j].endPoint1Spliced = true;
 					members[j+1].endPoint1Spliced = true;
-					splicedNum++;
+					splicedNum--;
 				}
 				else
 				{
@@ -213,7 +211,7 @@ class CircleChain
 					SpliceMesh(members[j].endPoint1, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
 					members[j].endPoint1Spliced = true;
 					members[j+1].endPoint2Spliced = true;
-					splicedNum++;
+					splicedNum--;
 				}
 			}
 			if (!members[j].endPoint2Spliced) //this whole entire if statement is probably more complicated than it needs to be
@@ -225,7 +223,7 @@ class CircleChain
 					SpliceMesh(members[j].endPoint2, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
 					members[j].endPoint2Spliced = true;
 					members[j+1].endPoint1Spliced = true;
-					splicedNum++;
+					splicedNum--;
 				}
 				else
 				{
@@ -233,7 +231,7 @@ class CircleChain
 					SpliceMesh(members[j].endPoint2, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
 					members[j].endPoint2Spliced = true;
 					members[j+1].endPoint2Spliced = true;
-					splicedNum++;
+					splicedNum--;
 				}
 			}
 		}
@@ -273,7 +271,6 @@ class CircleChain
 			parentObj.GetComponent(MeshFilter).mesh.uv = uvs;
 			parentObj.GetComponent(MeshFilter).mesh.triangles = triangles;
 		}
-		
 		//when everything is done disable the members
 		for (i = 0; i < members.Count; i++)
 		{

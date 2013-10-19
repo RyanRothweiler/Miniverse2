@@ -67,10 +67,10 @@ function Initialize ()
     	initialized = true;
     }
 }
- 
- 
+
+//render the shit
 function OnRenderObject() 
-{
+{	
 	if (initialized && use)
 	{		
 	    meshRenderer.sharedMaterial.color = backgroundColor; 
@@ -84,8 +84,8 @@ function OnRenderObject()
 		//create lines from mesh
 		for (var i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
 		{
-			if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > 1)
-			{
+			if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > -1)
+			{	
 				if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 1)
 				{
 					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i]);
@@ -96,10 +96,16 @@ function OnRenderObject()
 		}
 		
 		//create lines from CustomLines
-		Debug.Log(CustomLines.Count);
 		for (i = 0; i < CustomLines.Count; i++)
 		{
 			GL.Vertex(CustomLines[i]);
+		}
+		
+		//if not live sun radii baking then splice the beginning and end points
+		if (gameObject.name == "SunChainCircle" && !transform.parent.GetComponent(SunController).LiveRadiiAddition)
+		{
+			GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[0]);
+			GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[GetComponent(MeshFilter).sharedMesh.vertices.length-1]);
 		}
 	  
 	    GL.End(); 

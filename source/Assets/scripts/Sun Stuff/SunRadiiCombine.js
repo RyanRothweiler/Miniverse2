@@ -90,6 +90,12 @@ function Start ()
 			{
 				size++;
 			}
+			
+			//if the sun is not using live radii addition then initialize its wireframe renderer
+			if (!obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+			{
+				obj.GetComponent(WireframeRender).Initialize();
+			}
 		}
 		circles = new MeshCircle[size];
 		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
@@ -150,14 +156,6 @@ function MeshAdd ()
 				count++;
 			}
 		}
-//		//reset circle mesh data to the base circles
-//		for (var circle : MeshCircle in circles)
-//		{
-//			circle.mesh.mesh.Clear();
-//			circle.mesh.sharedMesh.vertices = masterVerts;
-//			circle.mesh.sharedMesh.normals = masterNors;
-//			circle.mesh.sharedMesh.triangles = masterTris;
-//		}
 	}	
 	else //not live combining
 	{
