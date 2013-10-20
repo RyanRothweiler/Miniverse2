@@ -192,45 +192,29 @@ class CircleChain
 		
 		//go through the members to get the information, but actually act on the parentObj mesh
 		var splicedNum = vertices.Length-1;
-		for (j = 0; j < members.Count-1	; j++) 
+		for (j = 0; j < members.Count-1; j++) 
 		{
-			if (!members[j].endPoint1Spliced) //this whole entire if statement is probably more complicated than it needs to be
+			//go through each endPoint
+			for (var k = 0; k < members[j].endPointsSpliced.length; k++)
 			{
-				//find which endpoints are closest
-				if (Vector3.Distance(members[j].endPoint1Loc, members[j+1].endPoint1Loc) < Vector3.Distance(members[j].endPoint1Loc, members[j+1].endPoint2Loc))
+				//if the endpoint hasn't been spliced yet and there is an end point there
+				if ((members[j].endPoints[k] != 1000) && (members[j].endPointsSpliced[k] == false))
 				{
-					//splice endpoint1 and endpoint1
-					SpliceMesh(members[j].endPoint1, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
-					members[j].endPoint1Spliced = true;
-					members[j+1].endPoint1Spliced = true;
-					splicedNum--;
-				}
-				else
-				{
-					//splice endpoint1 and endpoint2
-					SpliceMesh(members[j].endPoint1, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
-					members[j].endPoint1Spliced = true;
-					members[j+1].endPoint2Spliced = true;
-					splicedNum--;
-				}
-			}
-			if (!members[j].endPoint2Spliced) //this whole entire if statement is probably more complicated than it needs to be
-			{
-				//find which endpoints are closest
-				if (Vector3.Distance(members[j].endPoint2Loc, members[j+1].endPoint1Loc) < Vector3.Distance(members[j].endPoint2Loc, members[j+1].endPoint2Loc))
-				{
-					//splice endpoint2 and endpoint1
-					SpliceMesh(members[j].endPoint2, members[j+1].endPoint1, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
-					members[j].endPoint2Spliced = true;
-					members[j+1].endPoint1Spliced = true;
-					splicedNum--;
-				}
-				else
-				{
-					//splice endpoint2 and endpoint2
-					SpliceMesh(members[j].endPoint2, members[j+1].endPoint2, parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
-					members[j].endPoint2Spliced = true;
-					members[j+1].endPoint2Spliced = true;
+					//find the nearest endpoint and splice em up!
+					var closest = 10000.0;
+					var clPoint = 0;
+					for (var l = 0; l < members[j+1].endPoints.Length; l++)
+					{
+						if (Vector3.Distance(members[j].endPointLocs[k], members[j+1].endPointLocs[l]) < closest)
+						{
+							closest = Vector3.Distance(members[j].endPointLocs[k], members[j+1].endPointLocs[l]);
+							clPoint = l;
+						}
+					}
+					
+					SpliceMesh(members[j].endPoints[k], members[j+1].endPoints[clPoint], parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
+					members[j].endPointsSpliced[k] = true;
+					members[j+1].endPointsSpliced[clPoint] = true;
 					splicedNum--;
 				}
 			}

@@ -15,6 +15,10 @@ class MeshCircle
 	var masterNors : Vector3[]; 
 	var masterVerts : Vector3[];
 	
+	var endPoints : int[]; //holds the endpoints
+	var endPointLocs : Vector3[]; //holds the endPointLocs
+	var endPointsSpliced : boolean[];
+	
 	var endPoint1 : int;
 	var endPoint1Loc : Vector3;
 	var endPoint1Spliced = false; //if the endpoint has been spliced to another
@@ -56,17 +60,21 @@ class MeshCircle
 		this.masterTris = mesh.sharedMesh.triangles;
 		this.masterVerts = mesh.sharedMesh.vertices;
 		
-		//init
-		endPoint1 = 1000;
-		endPoint2 = 1000;
-		endPoint3 = 1000;
-		endPoint4 = 1000;
+		this.endPoints = new int[4];
+		this.endPointLocs = new Vector3[4];
+		this.endPointsSpliced = new boolean[4];
+		
+//		//init
+//		endPoint1 = 1000;
+//		endPoint2 = 1000;
+//		endPoint3 = 1000;
+//		endPoint4 = 1000;
 	}	
 	
 	//set the endpoint variables using the end point circles
 	function SetEndPoints(ObjToCheck : GameObject, otherCircle : MeshCircle, DeathSphere : GameObject, debug : boolean)
-	{	
-		//get endpoints
+	{		
+		//find endpoints. 
 		for (i = 0; i < 2; i++)
 		{
 			//find the point
@@ -83,7 +91,7 @@ class MeshCircle
 					{
 						if (endCircle)
 						{
-							if ((endPoint1 == 1000 || endPoint2 == 1000)  && endPoint1 != j && endPoint2 != j)
+							if ((endPoints[0] == 1000 || endPoints[1] == 1000) && endPoints[0] != j && endPoints[1] != j)
 							{
 								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center);
 								smallestPoint = j;
@@ -91,7 +99,7 @@ class MeshCircle
 						}
 						else
 						{
-							if ((endPoint1 == 1000 || endPoint2 == 1000 ||  endPoint3 == 1000 || endPoint4 == 1000) && endPoint1 != j && endPoint2 != j && endPoint3 != j && endPoint4 != j)
+							if ((endPoints[0] == 1000 || endPoints[1] == 1000 ||  endPoints[2] == 1000 || endPoints[3] == 1000) && endPoints[0] != j && endPoints[1] != j && endPoints[2] != j && endPoints[3] != j)
 							{
 								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center);
 								smallestPoint = j;
@@ -101,21 +109,43 @@ class MeshCircle
 				}
 			}
 			
-			//hold the info
-			cont = true;
-			if (endPoint1 == 1000)
+			var found = false;
+			for (var n = 0; n < endPoints.Length; n++)
 			{
-				endPoint1 = smallestPoint;
-				endPoint1Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1]);
-				cont = false;
+				if (endPoints[n] == 1000 && !found)
+				{
+					endPoints[n] = smallestPoint;
+					endPointLocs[n] = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[smallestPoint]);
+					found = true;
+				}
 			}
-			if (cont && endPoint2 == 1000)
-			{
-				endPoint2 = smallestPoint;
-				endPoint2Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2]);
-				cont = false;
-			}
-			//WILL NEED TO EXPAND HERE TO ACOMMODATE NON ENDCIRCLES
+			
+//			//hold the info
+//			cont = true;
+//			if (endPoint1 == 1000)
+//			{
+//				endPoint1 = smallestPoint;
+//				endPoint1Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint1]);
+//				cont = false;
+//			}
+//			if (cont && endPoint2 == 1000)
+//			{
+//				endPoint2 = smallestPoint;
+//				endPoint2Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint2]);
+//				cont = false;
+//			}
+//			if (cont && endPoint3 == 1000)
+//			{
+//				endPoint3 = smallestPoint;
+//				endPoint3Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint3]);
+//				cont = false;
+//			}
+//			if (cont && endPoint4 == 1000)
+//			{
+//				endPoint4 = smallestPoint;
+//				endPoint4Loc = ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[endPoint4]);
+//				cont = false;
+//			}
 		}
 	}
 	
@@ -139,19 +169,11 @@ class MeshCircle
 		this.hitOnce = false;
 		this.hitTwice = false;
 		
-		this.endPoint1Spliced = false;
-		this.endPoint2Spliced = false;
-		this.endPoint3Spliced = false;
-		this.endPoint4Spliced = false;
-		
-		endPoint1 = 1000;		
-		endPoint2 = 1000;		
-		endPoint3 = 1000;		
-		endPoint4 = 1000;
-		
-		endPoint1Loc = Vector3.zero;		
-		endPoint2Loc = Vector3.zero;		
-		endPoint3Loc = Vector3.zero;		
-		endPoint4Loc = Vector3.zero;
+		for (var i = 0; i < endPoints.Length; i++)
+		{
+			endPoints[i] = 1000;
+			endPointLocs[i] = Vector3.zero;
+			endPointsSpliced[i] = false;
+		}
 	}
 }
