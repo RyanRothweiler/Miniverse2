@@ -169,9 +169,9 @@ class CircleChain
 //		Debug.Log(Time.realtimeSinceStartup);
 
 		//get data and initialize
-		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + 2]; //THIS MIGHT (WILL) NEED TO CHANGE WHEN USING MORE THAN TWO CIRCLES
+		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * (members.Count -1))];
 		var triangles = new int[parentObj.GetComponent(MeshFilter).sharedMesh.triangles.Length];
-		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + 2];
+		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * (members.Count -1))];
 		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length; i++)
 		{
 			vertices[i] = parentObj.GetComponent(MeshFilter).sharedMesh.vertices[i];

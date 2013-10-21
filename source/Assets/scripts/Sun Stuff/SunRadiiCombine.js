@@ -94,6 +94,7 @@ function Start ()
 			//if the sun is not using live radii addition then initialize its wireframe renderer
 			if (!obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
 			{
+//				Debug.Log("initializing");
 				obj.GetComponent(WireframeRender).Initialize();
 			}
 		}
@@ -132,6 +133,9 @@ function MeshAdd ()
 	var size = 0;
 	chains.Clear();
 	
+	
+	//FOR NEXT TIME >>> MUST FIGURE OUT WHEN A CIRCLE ISN'T COLLIDING WITH ANYTHING AND THEN REST THE APPROPRIATE CLONED CIRCLES MESH
+	
 	//only for live combining, reset the circles but don't delete them, because that takes a lot of resources.
 	if (LiveCombine)
 	{
@@ -154,6 +158,29 @@ function MeshAdd ()
 				circles[count].circle.radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
 
 				count++;
+			}
+		}
+		
+		//set collision status
+		for (var circle1 : MeshCircle in circles)
+		{
+			for (var circle2 : MeshCircle in circles)
+			{
+				if ((circle1 != circle2) && Vector3.Distance(circle1.circle.center, circle2.circle.center) < (circle1.circle.radius + circle2.circle.radius))
+				{
+					circle1.collides = true;
+					circle2.collides = true;
+				}
+			}
+		}
+		
+		//remove mesh data for the circles that are not colliding
+		for (var circle : MeshCircle in circles)
+		{
+			if (!circle.collides)
+			{
+				circle.mesh.mesh.Clear();
+				circle.pastLife.GetComponent(WireframeRender).SpliceOveride = true;
 			}
 		}
 	}	
@@ -200,7 +227,7 @@ function MeshAdd ()
 		}
 	}
 	
-	//go through the circles, find an endpoint, create a chain and revoke its circles endpoint status (its still an endpoint but I don't want to make a duplicate chain)
+	//go through the circles, find an endpoint, create a chain and revoke its circles endpoint status (it's still an endpoint but I don't want to make a duplicate chain)
 	for (var circle : MeshCircle in circles)
 	{
 		//if found an end point
@@ -227,7 +254,7 @@ function MeshAdd ()
 		}
 	}
 
-	//set end circles... again
+	//set end circles... again as well as set colliding status
 	for (var circle : MeshCircle in circles)
 	{
 		if (circle.hitOnce && !circle.hitTwice)
@@ -237,6 +264,7 @@ function MeshAdd ()
 	}
 	
 	//splice together all chains
+	SunRadiiHolder.GetComponent(MeshFilter).mesh.Clear(); //reset the mesh
 	for (i = 0; i < chains.Count; i++)
 	{
 		tempChain = chains[i];
@@ -263,6 +291,16 @@ function MeshAdd ()
 		{
 			circle.CheckCollidesForPastLife();
 		}
+	}
+	
+	//if there are no colliding circles then remove all custom lines in the sunradiiholder
+	if (chains.length == 0)
+	{
+		SunRadiiHolder.GetComponent(WireframeRender).SpliceOveride = true;
+	}
+	else
+	{
+		SunRadiiHolder.GetComponent(WireframeRender).SpliceOveride = false;
 	}
 	
 	//finally enable the wireframe renderer after all the mesh shenanigans is done
