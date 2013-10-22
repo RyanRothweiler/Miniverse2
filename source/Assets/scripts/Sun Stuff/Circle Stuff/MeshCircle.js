@@ -57,28 +57,35 @@ class MeshCircle
 		this.endPoints = new int[4];
 		this.endPointLocs = new Vector3[4];
 		this.endPointsSpliced = new boolean[4];
+		
+		for (var i = 0; i < endPoints.Length; i++)
+		{
+			endPoints[i] = 1000;
+			endPointLocs[i] = Vector3.zero;
+			endPointsSpliced[i] = false;
+		}
 	}	
 	
 	//set the endpoint variables using the end point circles
 	function SetEndPoints(ObjToCheck : GameObject, otherCircle : MeshCircle, DeathSphere : GameObject, debug : boolean)
-	{		
+	{
 		//find endpoints. 
 		for (i = 0; i < 2; i++)
 		{
 			//find the point
 			var smallestDist = 100000.0;
 			var smallestPoint = 1000;
-			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).mesh.vertices.Length; j++)
+			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length; j++)
 			{
-				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), circle.center) < (circle.radius+0.125)) //first rule out anything not within this circle
-				{					
-					if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center) < smallestDist) //now check if the distance is smaller than the smallest
+				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), circle.center) < (circle.radius+0.125)) //first rule out anything not within this circle
+				{
+					if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.circle.center) < smallestDist) //now check if the distance is smaller than the smallest
 					{
 						if (endCircle)
 						{
 							if ((endPoints[0] == 1000 || endPoints[1] == 1000) && endPoints[0] != j && endPoints[1] != j)
 							{
-								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center);
+								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.circle.center);
 								smallestPoint = j;
 							}
 						}
@@ -86,7 +93,7 @@ class MeshCircle
 						{
 							if ((endPoints[0] == 1000 || endPoints[1] == 1000 ||  endPoints[2] == 1000 || endPoints[3] == 1000) && endPoints[0] != j && endPoints[1] != j && endPoints[2] != j && endPoints[3] != j)
 							{
-								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).mesh.vertices[j]), otherCircle.circle.center);
+								smallestDist = Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), otherCircle.circle.center);
 								smallestPoint = j;
 							}
 						}

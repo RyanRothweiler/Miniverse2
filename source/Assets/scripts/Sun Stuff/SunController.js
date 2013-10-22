@@ -7,11 +7,11 @@ public var LiveRadiiAddition : boolean; //if this sun uses live radii addition
 
 function Start () 
 {
-	//if live radii in this scene then untag this sun chain circle
-	if (!LiveRadiiAddition && Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).combine)
-	{
-		transform.Find("SunChainCircle").tag = "Untagged";
-	}
+//	//if live radii in this scene then untag this sun chain circle
+//	if (!LiveRadiiAddition && Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).combine)
+//	{
+//		transform.Find("SunChainCircle").tag = "Untagged";
+//	}
 }
 
 function Update () 

@@ -35,29 +35,12 @@ class CircleChain
 		this.endCircle1 = endCircle1;
 		this.endCircle2 = endCircle2;
 		this.SunRadiiHolder = SunRadiiHolder;
-		
-		//if live combine then do different things
-		if (Liveing)
-		{
-			//set parent
-			parentObj = SunRadiiHolder;
-		}
-			
-			//clear the old mesh data
-			
-//			parentObj.AddComponent(TimeDeath);
-//			parentObj.GetComponent(TimeDeath).time = 0.1;
-//		}
-//		else
-//		{
-//			parentObj = SunRadiiHolder;
-//		}
+
+		parentObj = SunRadiiHolder;
 	}
 	
 	function SpliceTogether(DeathSphere : GameObject)
 	{
-//		Debug.Log("Starting----------------------------");
-//		Debug.Log(Time.realtimeSinceStartup);
 		//init file counters
 		fileNum = 0; 
 		combinedNum = 0;
@@ -67,16 +50,13 @@ class CircleChain
 		var levelName = pathList[0].Split("/"[0]);
 		var name = levelName[3];
 		
-		//if the directory doesn't exist then create it
-		if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !(System.IO.Directory.Exists("Assets/models/Sun Radii Stuff/"+name)))
+		//if the directory doesn't exist then create it (also creates a folder in the Resources folder
+		if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !(System.IO.Directory.Exists("Assets/models/Sun Radii Baking Stuff/"+name)))
 		{
 			Debug.Log("creating directory");
-			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Stuff", name); //create the folder
+			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Baking Stuff", name); //create the folder
+			GUID = AssetDatabase.CreateFolder("Assets/Resources", name); //create the folder
 		}
-		
-//		Debug.Log(Time.realtimeSinceStartup);
-//		Debug.Log("Removing Internal Points");
-//		Debug.Log(Time.realtimeSinceStartup);
 
 		//now remove all internal points and set endpoint circles
 		for (j = 0; j < members.Count; j++)
@@ -99,27 +79,22 @@ class CircleChain
 			{
 				RemoveInternalPoints(members[j], members[j-1], DeathSphere);
 			}
-		}		
+		}	
 		
 		//check if the beginning and the end of all members have not been removed, if they haven't then add their lines to the wireframe draw list.
 		GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Clear();
 		for (j = 0; j < members.Count; j++)
 		{
-			if ((members[j].mesh.gameObject.transform.TransformPoint(members[j].mesh.mesh.vertices[0]).z > 0) && (members[j].mesh.gameObject.transform.TransformPoint(members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1]).z > 0))
+			if ((members[j].mesh.gameObject.transform.TransformPoint(members[j].mesh.sharedMesh.vertices[0]).z > 0) && (members[j].mesh.gameObject.transform.TransformPoint(members[j].mesh.sharedMesh.vertices[members[j].mesh.sharedMesh.vertices.length-1]).z > 0))
 			{
-				var vec = new Vector3(members[j].mesh.mesh.vertices[0].x, members[j].mesh.mesh.vertices[0].y, members[j].mesh.mesh.vertices[0].z);
+				var vec = new Vector3(members[j].mesh.sharedMesh.vertices[0].x, members[j].mesh.sharedMesh.vertices[0].y, members[j].mesh.sharedMesh.vertices[0].z);
 				vec = members[j].mesh.gameObject.transform.TransformPoint(vec);
 				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vec);
-				vec = new Vector3(members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].x, members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].y, members[j].mesh.mesh.vertices[members[j].mesh.mesh.vertices.length-1].z);
+				vec = new Vector3(members[j].mesh.sharedMesh.vertices[members[j].mesh.sharedMesh.vertices.length-1].x, members[j].mesh.sharedMesh.vertices[members[j].mesh.sharedMesh.vertices.length-1].y, members[j].mesh.sharedMesh.vertices[members[j].mesh.sharedMesh.vertices.length-1].z);
 				vec = members[j].mesh.gameObject.transform.TransformPoint(vec);
 				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vec);
 			}
 		}
-		
-//		Debug.Log("-----");
-//		Debug.Log(Time.realtimeSinceStartup);
-//		Debug.Log("setting endpoints");
-//		Debug.Log(Time.realtimeSinceStartup);
 			
 		//splice together the chain
 		
@@ -135,7 +110,6 @@ class CircleChain
 		if (!Application.isPlaying)
 		{
 			var me : Mesh = new Mesh();
-	//		me = members[0].mesh.mesh;
 			me.CombineMeshes(combine);
 			
 			//set path for new asset
@@ -144,7 +118,7 @@ class CircleChain
 			name = levelName[3];
 			
 			//crate the asset and assign it to the circle
-			AssetDatabase.CreateAsset(me, "Assets/models/Sun Radii Stuff/"+name+"/combomesh.asset");
+			AssetDatabase.CreateAsset(me, "Assets/models/Sun Radii Baking Stuff/"+name+"/combomesh.asset");
 			parentObj.GetComponent(MeshFilter).mesh = me;
 		}
 		else
@@ -163,15 +137,10 @@ class CircleChain
 		members[0].SetEndPoints(parentObj, members[1], DeathSphere, true);
 		
 		//splice the circles together
-		
-//		Debug.Log(Time.realtimeSinceStartup);
-//		Debug.Log("splicing meshes");
-//		Debug.Log(Time.realtimeSinceStartup);
-
 		//get data and initialize
-		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * (members.Count -1))];
+		var vertices = new Vector3[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * (members.Count - 1))];
 		var triangles = new int[parentObj.GetComponent(MeshFilter).sharedMesh.triangles.Length];
-		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * (members.Count -1))];
+		var uvs = new Vector2[parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length + (2 * (members.Count - 1))];
 		for (i = 0; i < parentObj.GetComponent(MeshFilter).sharedMesh.vertices.Length; i++)
 		{
 			vertices[i] = parentObj.GetComponent(MeshFilter).sharedMesh.vertices[i];
@@ -184,14 +153,9 @@ class CircleChain
 		{
 			uvs[i] = Vector2(1,1);
 		}
-			
-//		Debug.Log("-------------");
-//		Debug.Log(Time.realtimeSinceStartup);
-//		Debug.Log("done");
-//		Debug.Log(Time.realtimeSinceStartup);
 		
 		//go through the members to get the information, but actually act on the parentObj mesh
-		var splicedNum = vertices.Length-1;
+		var sn = vertices.Length-1;
 		for (j = 0; j < members.Count-1; j++) 
 		{
 			//go through each endPoint
@@ -212,10 +176,10 @@ class CircleChain
 						}
 					}
 					
-					SpliceMesh(members[j].endPoints[k], members[j+1].endPoints[clPoint], parentObj.GetComponent(MeshFilter), intersectCircles[j], splicedNum, vertices, DeathSphere);
+					SpliceMesh(members[j].endPoints[k], members[j+1].endPoints[clPoint], parentObj.GetComponent(MeshFilter), intersectCircles[j], sn, vertices, DeathSphere);
 					members[j].endPointsSpliced[k] = true;
 					members[j+1].endPointsSpliced[clPoint] = true;
-					splicedNum--;
+					sn--;
 				}
 			}
 		}
@@ -223,12 +187,7 @@ class CircleChain
 		//set the newly spliced circle only after all the splicing has been done
 		//if in editor than the stuff is baking, else it is running live
 		if (!Application.isPlaying)
-		{
-		
-			
-			//FOR SUN BAKING THIS NEEDS TO CHANGE
-			
-			
+		{			
 			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
 			mi = new Mesh();
 			mi.vertices = vertices;
@@ -239,13 +198,24 @@ class CircleChain
 			pathList = EditorApplication.currentScene.Split("."[0]);
 			levelName = pathList[0].Split("/"[0]);
 			name = levelName[3];
-			var path = "Assets/models/Sun Radii Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
+			var path = "Assets/models/Sun Radii Baking Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
 			Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum++;
 			
 			//crate the asset and assign it to the circle
 			AssetDatabase.CreateAsset(mi, path);
-			parentMesh.sharedMesh.Clear();
-			parentMesh.sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
+			parentObj.GetComponent(MeshFilter).sharedMesh.Clear();
+			parentObj.GetComponent(MeshFilter).sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
+			
+			//also save the custom lines list to a mesh. this code is shit
+			var cl : Mesh = new Mesh();
+			var dt = new Vector3[Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Count];
+			for (x = 0; x < Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Count; x++)
+			{
+				dt[x] = Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines[x];
+			}
+			cl.vertices = dt;
+			path = "Assets/Resources/"+name+"/CustomListSave.asset";
+			AssetDatabase.CreateAsset(cl, path);
 		}
 		else
 		{
@@ -264,9 +234,7 @@ class CircleChain
 	
 	//removes the points from base circle which are inside otherCircle
 	function RemoveInternalPoints(baseCircle : MeshCircle, otherCircle : MeshCircle, DeathSphere : GameObject)
-	{
-//		Debug.Log(Time.realtimeSinceStartup);
-
+	{	
 		//create intersection circle
 		var intersectCirc = Circ(Vector3.zero, 0);
 		var intersectPoints = baseCircle.circle.FindIntersectPoints(otherCircle.circle);
@@ -299,10 +267,10 @@ class CircleChain
 		//go through triangles and add the ones that are not inside the intersect circle to dumTris list
 		dumTris.Clear();
 		dumVerts.Clear();
-		for (x = 0; x < baseCircle.mesh.mesh.triangles.Length; x += 3)
+		for (x = 0; x < baseCircle.mesh.sharedMesh.triangles.Length; x += 3)
 		{
 			//if all three of the triangle's vertices are not inside the intersection circle then add them to the new tris list (dumTris)
-			if (!(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.mesh.vertices[baseCircle.mesh.mesh.triangles[x]]))) && !(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.mesh.vertices[baseCircle.mesh.mesh.triangles[x+1]]))) && !(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.mesh.vertices[baseCircle.mesh.mesh.triangles[x+2]]))))
+			if (!(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[baseCircle.mesh.sharedMesh.triangles[x]]))) && !(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[baseCircle.mesh.sharedMesh.triangles[x+1]]))) && !(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[baseCircle.mesh.sharedMesh.triangles[x+2]]))))
 			{
 				dumTris.Add(baseCircle.mesh.sharedMesh.triangles[x]);
 				dumTris.Add(baseCircle.mesh.sharedMesh.triangles[x+1]);
@@ -311,16 +279,14 @@ class CircleChain
 		}
 		
 		//go through verts and move the ones inside the intersect circle to zero
-		for (x = 0; x < baseCircle.mesh.mesh.vertices.Length; x++)
+		for (x = 0; x < baseCircle.mesh.sharedMesh.vertices.Length; x++)
 		{
 			if (!(intersectCirc.Contains(baseCircle.mesh.transform.TransformPoint(baseCircle.mesh.sharedMesh.vertices[x]))))
 			{
-				dumVerts.Add(baseCircle.mesh.mesh.vertices[x]);
+				dumVerts.Add(baseCircle.mesh.sharedMesh.vertices[x]);
 			}
 			else
 			{
-//				var circ1 = new Circ(baseCircle.mesh.gameObject.transform.TransformPoint(baseCircle.mesh.mesh.vertices[x]), 0.1);
-//				circ1.Visualize(DeathSphere);
 				dumVerts.Add(Vector3(0,0,15));
 			}
 		}
@@ -342,7 +308,7 @@ class CircleChain
 		{
 			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
 			var m : Mesh = new Mesh();
-			m.vertices = baseCircle.mesh.sharedMesh.vertices;
+			m.vertices = dummyVertices;
 			m.uv = baseCircle.mesh.sharedMesh.uv;
 			m.normals = baseCircle.mesh.sharedMesh.normals;
 			m.triangles = dummyTriangles;
@@ -351,7 +317,7 @@ class CircleChain
 			var pathList = EditorApplication.currentScene.Split("."[0]);
 			var levelName = pathList[0].Split("/"[0]);
 			var name = levelName[3];
-			var path = "Assets/models/Sun Radii Stuff/"+name+"/file"+fileNum+".asset";
+			var path = "Assets/models/Sun Radii Baking Stuff/"+name+"/file"+fileNum+".asset";
 			fileNum++;
 			//crate the asset and assign it to the circle
 			AssetDatabase.CreateAsset(m, path);
@@ -363,22 +329,16 @@ class CircleChain
 			baseCircle.mesh.mesh.triangles = dummyTriangles;
 			baseCircle.mesh.mesh.vertices = dummyVertices;
 		}
-		
-
-		
-//		Debug.Log("-------------");
-//		Debug.Log(Time.realtimeSinceStartup);
 	}
 	
 	//splice two meshes together. holy arguments batman
-	//NOTE I BROKE SUN RADII BAKING (this no longer does anything with the mesh, though all that code should still work and is in github)
 	function SpliceMesh(circle1EndVert : int, circle2EndVert : int, parentMesh : MeshFilter, intersectCirc : Circ, startIndex : int, vertices : Vector3[], DeathSphere : GameObject)
 	{		
 		//first make sure the points have been set
 		if (circle1EndVert != 1000  && circle2EndVert != 1000)
 		{			
-			var circle1EndVertLoc = parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle1EndVert]);
-			var circle2EndVertLoc = parentMesh.transform.TransformPoint(parentMesh.mesh.vertices[circle2EndVert]);
+			var circle1EndVertLoc = parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle1EndVert]);
+			var circle2EndVertLoc = parentMesh.transform.TransformPoint(parentMesh.sharedMesh.vertices[circle2EndVert]);
 
 			//create new point 
 			var newPoint = Vector3((circle1EndVertLoc.x + circle2EndVertLoc.x) / 2, (circle1EndVertLoc.y + circle2EndVertLoc.y) / 2, (circle1EndVertLoc.z + circle2EndVertLoc.z) / 2);
@@ -389,11 +349,22 @@ class CircleChain
 			//add new vertex and line
 			vertices[startIndex] = newPoint;
 			
-			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
-			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[circle1EndVert]);
-			
-			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[circle2EndVert]);
-			GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
+			if (!Application.isPlaying)
+			{
+				Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[startIndex]));
+				Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[circle1EndVert]));
+				
+				Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[circle2EndVert]));
+				Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[startIndex]));
+			}
+			else
+			{
+				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
+				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[circle1EndVert]);
+				
+				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[circle2EndVert]);
+				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
+			}
 		}
 		else
 		{

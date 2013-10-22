@@ -21,6 +21,7 @@ private var meshRenderer : MeshRenderer;
  
 function Start () 
 {
+	Initialize();
 	if (use)
 	{
 		renderer.enabled = false;
@@ -46,6 +47,24 @@ function Initialize ()
 	  
 	    lineMaterial.hideFlags = HideFlags.HideAndDontSave; 
 	    lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
+	    
+	    
+	    //if not live combining them load custom lines from the CustomListSave mesh
+	    if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
+	    {
+	    	var pathList = EditorApplication.currentScene.Split("."[0]);
+			var levelName = pathList[0].Split("/"[0]);
+			var name = levelName[3];
+			
+	    	var m : Mesh = new Mesh();
+	    	m = Resources.Load(name+"/CustomListSave");
+	    	
+			CustomLines.Clear();
+			for (var i = 0; i < m.vertices.length; i++)
+			{
+				CustomLines.Add(m.vertices[i]);
+			}
+	    }
     }
 }
 
@@ -53,7 +72,7 @@ function Initialize ()
 function OnRenderObject() 
 {	
 	if (initialized && use)
-	{		
+	{
 	    meshRenderer.sharedMaterial.color = backgroundColor; 
 	    lineMaterial.SetPass(0); 
 	  
@@ -69,6 +88,7 @@ function OnRenderObject()
 			{	
 				if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 1)
 				{
+//					Debug.Log(GetComponent(MeshFilter).sharedMesh.vertices[i]);
 					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i]);
 					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i+1]);
 				
@@ -76,8 +96,8 @@ function OnRenderObject()
 			}
 		}
 		
-		//if not live sun radii baking then splice the beginning and end points, there is also a splice overide here
-		if ((gameObject.name == "SunChainCircle" && !transform.parent.GetComponent(SunController).LiveRadiiAddition) || SpliceOveride)
+		//if not live sun radii baking on this specific circle then splice the beginning and end points, there is also a splice overide here
+		if ((GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine) && (gameObject.name == "SunChainCircle" && !transform.parent.GetComponent(SunController).LiveRadiiAddition) || SpliceOveride)
 		{
 			if (gameObject.name != "SunRadiiHolder")
 			{

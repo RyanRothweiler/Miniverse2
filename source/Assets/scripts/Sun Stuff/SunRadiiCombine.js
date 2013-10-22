@@ -11,9 +11,9 @@ public var circles : MeshCircle[]; //holds all sun radii circles. these circle o
 public var dummyTriangles : int[]; //a dummy list holding the new list of verticesle
 public var spliceNum : int; //increments every time a splice circle file is saved
 
-var masterTris : int[]; //a dummy list holding the new list of vertices
-var masterNors : Vector3[]; 
-var masterVerts : Vector3[];
+//var masterTris : int[]; //a dummy list holding the new list of vertices
+//var masterNors : Vector3[]; 
+//var masterVerts : Vector3[];
 var objects : GameObject[];
 var sunsArchive : GameObject[];
 
@@ -53,28 +53,33 @@ function Start ()
 	
 	//organize all the circles and parent them to this object
 	objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
-	if (!LiveCombine)
+	if (!LiveCombine) //not livecombining
 	{
-		//parent all the objects to this object
-		for (var circle : GameObject in objects) 
-		{
-			circle.transform.parent = this.transform;
-		}
-		
-		//init
-		dummyTriangles = new int[108];
-		
-		
-		//now we may proceed
-		
 		if (combine)
 		{
-			//create master mesh data
-			masterMeshSet = true;
-			masterTris = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.triangles.Clone();
-			masterNors = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.normals.Clone();
-			masterVerts = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.vertices.Clone();
+			//intialize circle array size using the circles that are not live adding
+			spliceNum = 0;
+			var size : int;
+			for (var obj : GameObject in objects)
+			{
+				if (obj.name != "SunChainCircle(Clone)" && !obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+				{
+					size++;
+				}
+			}
+			circles = new MeshCircle[size];
 			
+			//parent all the objects to this object
+			for (var circle : GameObject in objects) 
+			{
+				circle.transform.parent = this.transform;
+			}
+			
+			//init
+			dummyTriangles = new int[108];
+			
+			//now we may proceed
+			masterMeshSet = true;
 			MeshAdd();
 		}
 	}
@@ -83,12 +88,12 @@ function Start ()
 		//get circles and set them once and for all 
 		//get information about all circles, duplicating all sun chain circles and parenting them to this
 		//first find the number of circles we're dealing with
-		var size : int;
+		var size2 : int;
 		for (var obj : GameObject in objects)
 		{
 			if (obj.name != "SunChainCircle(Clone)" && obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
 			{
-				size++;
+				size2++;
 			}
 			
 			//if the sun is not using live radii addition then initialize its wireframe renderer
@@ -98,7 +103,7 @@ function Start ()
 				obj.GetComponent(WireframeRender).Initialize();
 			}
 		}
-		circles = new MeshCircle[size];
+		circles = new MeshCircle[size2];
 		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 		for (var circle : GameObject in objects)
 		{
@@ -132,9 +137,6 @@ function MeshAdd ()
 	count = 0;
 	var size = 0;
 	chains.Clear();
-	
-	
-	//FOR NEXT TIME >>> MUST FIGURE OUT WHEN A CIRCLE ISN'T COLLIDING WITH ANYTHING AND THEN REST THE APPROPRIATE CLONED CIRCLES MESH
 	
 	//only for live combining, reset the circles but don't delete them, because that takes a lot of resources.
 	if (LiveCombine)
@@ -184,16 +186,12 @@ function MeshAdd ()
 			}
 		}
 	}	
-	else //not live combining
+	else //if not live combining them create the circle list
 	{
 		for (var child : Transform in transform)
 		{
 			//create mesh circle data
 			circles[count] = new MeshCircle(child.GetComponent(MeshFilter).sharedMesh.vertices[0].y * child.localScale.x, transform.TransformPoint(child.position), child.GetComponent(MeshFilter), null);
-			circles[count].mesh.sharedMesh.Clear();
-			circles[count].mesh.sharedMesh.vertices = masterVerts;
-			circles[count].mesh.sharedMesh.normals = masterNors;
-			circles[count].mesh.sharedMesh.triangles = masterTris;
 			count++;
 		}
 	}
@@ -264,7 +262,10 @@ function MeshAdd ()
 	}
 	
 	//splice together all chains
-	SunRadiiHolder.GetComponent(MeshFilter).mesh.Clear(); //reset the mesh
+	if (SunRadiiHolder.GetComponent(MeshFilter).sharedMesh)
+	{
+		SunRadiiHolder.GetComponent(MeshFilter).sharedMesh.Clear(); //reset the mesh
+	}
 	for (i = 0; i < chains.Count; i++)
 	{
 		tempChain = chains[i];
@@ -304,7 +305,10 @@ function MeshAdd ()
 	}
 	
 	//finally enable the wireframe renderer after all the mesh shenanigans is done
-	SunRadiiHolder.GetComponent(WireframeRender).Initialize();
+//	if (LiveCombine)
+//	{
+//		SunRadiiHolder.GetComponent(WireframeRender).Initialize();
+//	}
 }
 
 //assigns the next member in the chain
@@ -361,26 +365,4 @@ function Revert()
 		Camera.main.transform.Find("Sun").gameObject.SetActiveRecursively(true); //activate sun
 		Camera.main.transform.Find("Sun").parent = null; //unparent it
 	} while(Camera.main.transform.Find("Sun"));
-}
-
-//function WaitUntilInit() //yield until the level is set up to get init data
-//{
-//	//yield until level is set up (aka zooming is done)
-//	do
-//	{
-//			yield;
-//	} while (Camera.main.GetComponent(DragControlsPC).halt);
-//	
-//	SetMasterMeshData();
-//}
-
-function SetMasterMeshData() //sets the master mesh data only once at the beginning of the level
-{
-	if (!masterMeshSet)
-	{
-		masterMeshSet = true;
-		masterTris = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.triangles.Clone();
-		masterNors = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.normals.Clone();
-		masterVerts = transform.GetChild(0).GetComponent(MeshFilter).sharedMesh.vertices.Clone();	
-	}
 }
