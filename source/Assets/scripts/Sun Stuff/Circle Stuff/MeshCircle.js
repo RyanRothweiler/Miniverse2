@@ -16,22 +16,6 @@ class MeshCircle
 	var endPointLocs : Vector3[]; //holds the endPointLocs
 	var endPointsSpliced : boolean[];
 	
-//	var endPoint1 : int;
-//	var endPoint1Loc : Vector3;
-//	var endPoint1Spliced = false; //if the endpoint has been spliced to another
-//	
-//	var endPoint2 : int;
-//	var endPoint2Loc : Vector3;
-//	var endPoint2Spliced = false; //if the endpoint has been spliced to another
-//	
-//	var endPoint3 : int;
-//	var endPoint3Loc : Vector3;
-//	var endPoint3Spliced = false; //if the endpoint has been spliced to another
-//	
-//	var endPoint4 : int;
-//	var endPoint4Loc : Vector3;
-//	var endPoint4Spliced = false; //if the endpoint has been spliced to another
-	
 	var lineNext : MeshCircle; //the circle intersecting this one which is the next in the chain line
 	var hitOnce : boolean; //if the circle intersects with one circle
 	var hitTwice : boolean; //if the circle intersects with two circles
@@ -75,6 +59,7 @@ class MeshCircle
 			//find the point
 			var smallestDist = 100000.0;
 			var smallestPoint = 1000;
+			
 			for (j = 0; j < ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices.Length; j++)
 			{
 				if (Vector3.Distance(ObjToCheck.transform.TransformPoint(ObjToCheck.GetComponent(MeshFilter).sharedMesh.vertices[j]), circle.center) < (circle.radius+0.125)) //first rule out anything not within this circle

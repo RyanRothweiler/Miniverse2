@@ -14,6 +14,7 @@ public var SpliceOveride = false;
 
 //private 
 private var lines : Vector3[]; 
+private var cachedLines : Vector3[];
 private var linesArray : Array; 
 private var lineMaterial : Material; 
 private var meshRenderer : MeshRenderer;
@@ -49,20 +50,106 @@ function Initialize ()
 	    lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
 	    
 	    
-	    //if not live combining them load custom lines from the CustomListSave mesh
+	    //if not live combining but this level has been baked then load custom lines from the CustomListSave mesh
 	    if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
 	    {
-	    	var pathList = EditorApplication.currentScene.Split("."[0]);
-			var levelName = pathList[0].Split("/"[0]);
-			var name = levelName[3];
+	    	var name = Camera.main.GetComponent(DragControlsPC).Level;
 			
 	    	var m : Mesh = new Mesh();
 	    	m = Resources.Load(name+"/CustomListSave");
 	    	
-			CustomLines.Clear();
-			for (var i = 0; i < m.vertices.length; i++)
+	    	if (m)
+	    	{
+				CustomLines.Clear();
+				for (var i = 0; i < m.vertices.length; i++)
+				{
+					CustomLines.Add(m.vertices[i]);
+				}
+			}
+			else
 			{
-				CustomLines.Add(m.vertices[i]);
+				Debug.Log("There is no CustomListSave to load. This sometimes happens when the level isn't loaded from the level select scene, so don't freak out just yet.");
+			}
+	    }
+	    
+	    //cache all the lines
+	    if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
+	    {
+	    	//figure out how many lines
+	    	var size = 0;
+	    	//from mesh
+	    	for (i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
+			{
+				if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > -1)
+				{	
+					if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 1)
+					{
+						size += 2;
+					}
+				}
+			}
+			//from splicing the end and beginning
+			if ((GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine) && (gameObject.name == "SunChainCircle" && !transform.parent.GetComponent(SunController).LiveRadiiAddition) || SpliceOveride)
+			{
+				if (gameObject.name != "SunRadiiHolder")
+				{
+					size += 2;
+				}
+				
+				//if splice overide the also clear the custom lines since this circle isn't colliding with anything
+				if (SpliceOveride)
+				{
+					CustomLines.Clear();
+				}
+			}
+			//from custom lines
+			for (i = 0; i < CustomLines.Count; i++)
+			{
+				size++;
+			}
+			
+			//create cache array(list?)
+	    	cachedLines = new Vector3[size];
+	    	
+			//create lines from mesh
+			var cacheNum = 0;
+			for (i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
+			{
+				if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > -1)
+				{	
+					if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 1)
+					{
+						cachedLines[cacheNum] = GetComponent(MeshFilter).sharedMesh.vertices[i];
+						cacheNum++;
+						cachedLines[cacheNum] = GetComponent(MeshFilter).sharedMesh.vertices[i+1];
+						cacheNum++;
+					}
+				}
+			}
+			
+			//if not live sun radii baking on this specific circle then splice the beginning and end points, there is also a splice overide here
+			if ((GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine) && (gameObject.name == "SunChainCircle" && !transform.parent.GetComponent(SunController).LiveRadiiAddition) || SpliceOveride)
+			{
+				if (gameObject.name != "SunRadiiHolder")
+				{
+					cachedLines[cacheNum] = GetComponent(MeshFilter).sharedMesh.vertices[0];
+					cacheNum++;
+					cachedLines[cacheNum] = GetComponent(MeshFilter).sharedMesh.vertices[GetComponent(MeshFilter).sharedMesh.vertices.length-1];
+					cacheNum++;
+				}
+				
+				//if splice overide the also clear the custom lines since this circle isn't colliding with anything
+				if (SpliceOveride)
+				{
+					CustomLines.Clear();
+				}
+			}
+			
+			//create lines from CustomLines
+			for (i = 0; i < CustomLines.Count; i++)
+			{
+				cachedLines[cacheNum] = CustomLines[i];
+				cacheNum++;
 			}
 	    }
     }
@@ -70,7 +157,7 @@ function Initialize ()
 
 //render the shit
 function OnRenderObject() 
-{	
+{
 	if (initialized && use)
 	{
 	    meshRenderer.sharedMaterial.color = backgroundColor; 
@@ -80,42 +167,54 @@ function OnRenderObject()
 	    GL.MultMatrix(transform.localToWorldMatrix); 
 	    GL.Begin(GL.LINES); 
 	    GL.Color(lineColor);
-		
-		//create lines from mesh
-		for (var i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
+	    
+	    var i = 0;
+	    
+	    //use chached lines if not live combining
+	    if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
+	    {
+		    for (i = 0; i < cachedLines.Length; i++)
+		    {
+		    	GL.Vertex(cachedLines[i]);
+		    }
+		}
+		else //otherwise update every cycle
 		{
-			if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > -1)
-			{	
-				if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 1)
-				{
-//					Debug.Log(GetComponent(MeshFilter).sharedMesh.vertices[i]);
-					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i]);
-					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i+1]);
-				
+			//create lines from mesh
+			for (i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
+			{
+				if (GetComponent(MeshFilter).sharedMesh.vertices[i].z > -1)
+				{	
+					if (Vector3.Distance(GetComponent(MeshFilter).sharedMesh.vertices[i], GetComponent(MeshFilter).sharedMesh.vertices[i+1]) < 1)
+					{
+						GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i]);
+						GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i+1]);
+					
+					}
 				}
 			}
-		}
-		
-		//if not live sun radii baking on this specific circle then splice the beginning and end points, there is also a splice overide here
-		if ((GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine) && (gameObject.name == "SunChainCircle" && !transform.parent.GetComponent(SunController).LiveRadiiAddition) || SpliceOveride)
-		{
-			if (gameObject.name != "SunRadiiHolder")
+			
+			//if not live sun radii baking on this specific circle then splice the beginning and end points, there is also a splice overide here
+			if ((GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine) && (gameObject.name == "SunChainCircle" && !transform.parent.GetComponent(SunController).LiveRadiiAddition) || SpliceOveride)
 			{
-				GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[0]);
-				GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[GetComponent(MeshFilter).sharedMesh.vertices.length-1]);
+				if (gameObject.name != "SunRadiiHolder")
+				{
+					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[0]);
+					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[GetComponent(MeshFilter).sharedMesh.vertices.length-1]);
+				}
+				
+				//if splice overide the also clear the custom lines since this circle isn't colliding with anything
+				if (SpliceOveride)
+				{
+					CustomLines.Clear();
+				}
 			}
 			
-			//if splice overide the also clear the custom lines since this circle isn't colliding with anything
-			if (SpliceOveride)
+			//create lines from CustomLines
+			for (i = 0; i < CustomLines.Count; i++)
 			{
-				CustomLines.Clear();
+				GL.Vertex(CustomLines[i]);
 			}
-		}
-		
-		//create lines from CustomLines
-		for (i = 0; i < CustomLines.Count; i++)
-		{
-			GL.Vertex(CustomLines[i]);
 		}
 	  
 	    GL.End(); 

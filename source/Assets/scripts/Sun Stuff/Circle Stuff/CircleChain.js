@@ -51,7 +51,7 @@ class CircleChain
 		var name = levelName[3];
 		
 		//if the directory doesn't exist then create it (also creates a folder in the Resources folder
-		if (Camera.main.GetComponent(DragControlsPC).PlatformPC && !(System.IO.Directory.Exists("Assets/models/Sun Radii Baking Stuff/"+name)))
+		if (Application.isEditor && !(System.IO.Directory.Exists("Assets/models/Sun Radii Baking Stuff/"+name)))
 		{
 			Debug.Log("creating directory");
 			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Baking Stuff", name); //create the folder
@@ -322,6 +322,7 @@ class CircleChain
 			//crate the asset and assign it to the circle
 			AssetDatabase.CreateAsset(m, path);
 			baseCircle.mesh.mesh = m;
+			baseCircle.mesh.gameObject.GetComponent(WireframeRender).use = false;
 		}
 		else
 		{

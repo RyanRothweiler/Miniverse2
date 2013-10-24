@@ -142,7 +142,7 @@ private var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
 
 //Strings
-private var Level : String;
+static var Level : String;
 private var str : String;
 
 //other... things...
