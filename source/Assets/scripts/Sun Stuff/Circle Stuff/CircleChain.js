@@ -39,7 +39,7 @@ class CircleChain
 		parentObj = SunRadiiHolder;
 	}
 	
-	function SpliceTogether(DeathSphere : GameObject)
+	function SpliceTogether(chainNum : int, DeathSphere : GameObject)
 	{
 		//init file counters
 		fileNum = 0; 
@@ -82,17 +82,17 @@ class CircleChain
 		}	
 		
 		//check if the beginning and the end of all members have not been removed, if they haven't then add their lines to the wireframe draw list.
-		GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Clear();
+		SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Clear();
 		for (j = 0; j < members.Count; j++)
 		{
 			if ((members[j].mesh.gameObject.transform.TransformPoint(members[j].mesh.sharedMesh.vertices[0]).z > 0) && (members[j].mesh.gameObject.transform.TransformPoint(members[j].mesh.sharedMesh.vertices[members[j].mesh.sharedMesh.vertices.length-1]).z > 0))
 			{
 				var vec = new Vector3(members[j].mesh.sharedMesh.vertices[0].x, members[j].mesh.sharedMesh.vertices[0].y, members[j].mesh.sharedMesh.vertices[0].z);
 				vec = members[j].mesh.gameObject.transform.TransformPoint(vec);
-				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vec);
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(vec);
 				vec = new Vector3(members[j].mesh.sharedMesh.vertices[members[j].mesh.sharedMesh.vertices.length-1].x, members[j].mesh.sharedMesh.vertices[members[j].mesh.sharedMesh.vertices.length-1].y, members[j].mesh.sharedMesh.vertices[members[j].mesh.sharedMesh.vertices.length-1].z);
 				vec = members[j].mesh.gameObject.transform.TransformPoint(vec);
-				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vec);
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(vec);
 			}
 		}
 			
@@ -208,13 +208,13 @@ class CircleChain
 			
 			//also save the custom lines list to a mesh. this code is shit
 			var cl : Mesh = new Mesh();
-			var dt = new Vector3[Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Count];
-			for (x = 0; x < Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Count; x++)
+			var dt = new Vector3[SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Count];
+			for (x = 0; x < SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Count; x++)
 			{
-				dt[x] = Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines[x];
+				dt[x] = SunRadiiHolder.GetComponent(WireframeRender).CustomLines[x];
 			}
 			cl.vertices = dt;
-			path = "Assets/Resources/"+name+"/CustomListSave.asset";
+			path = "Assets/Resources/"+name+"/CustomListSave"+chainNum+".asset";
 			AssetDatabase.CreateAsset(cl, path);
 		}
 		else
@@ -352,19 +352,19 @@ class CircleChain
 			
 			if (!Application.isPlaying)
 			{
-				Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[startIndex]));
-				Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[circle1EndVert]));
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[startIndex]));
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[circle1EndVert]));
 				
-				Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[circle2EndVert]));
-				Camera.main.transform.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[startIndex]));
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[circle2EndVert]));
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(parentObj.transform.TransformPoint(vertices[startIndex]));
 			}
 			else
 			{
-				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
-				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[circle1EndVert]);
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(vertices[circle1EndVert]);
 				
-				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[circle2EndVert]);
-				GameObject.Find("SunRadiiHolder").GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(vertices[circle2EndVert]);
+				SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Add(vertices[startIndex]);
 			}
 		}
 		else

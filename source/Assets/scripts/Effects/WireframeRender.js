@@ -54,9 +54,10 @@ function Initialize ()
 	    if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
 	    {
 	    	var name = Camera.main.GetComponent(DragControlsPC).Level;
+	    	var num = GetComponent(MeshFilter).mesh.name[11];
 			
 	    	var m : Mesh = new Mesh();
-	    	m = Resources.Load(name+"/CustomListSave");
+	    	m = Resources.Load(name+"/CustomListSave"+num);
 	    	
 	    	if (m)
 	    	{

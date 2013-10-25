@@ -4,7 +4,8 @@
 
 
 //public vars
-public var SunRadiiHolder : GameObject; //the object that holds the new added sun radii
+public var LiveSunRadiiHolder : GameObject; //this object holds the live addition suns. baked radii holders are instantiated
+public var SunRadiiHolderFab : GameObject; //the prefab that holds the baked sun radii chains
 public var combine : boolean;
 public var LiveCombine : boolean; //if the level needs live combination of circles
 public var circles : MeshCircle[]; //holds all sun radii circles. these circle objects should not be deleted, they are instantiated at the start of the level and only their mesh data is changed after that.
@@ -57,6 +58,9 @@ function Start ()
 	{
 		if (combine)
 		{
+			//diable live sun radii holder
+			LiveSunRadiiHolder.active = false;
+			
 			//intialize circle array size using the circles that are not live adding
 			spliceNum = 0;
 			var size : int;
@@ -232,8 +236,10 @@ function MeshAdd ()
 		if (circle.endCircle)
 		{
 			circle.endCircle = false;
+			//create a holder
+			var newHolder = GameObject.Instantiate(SunRadiiHolderFab, Vector3.zero, Quaternion.identity);
 			//create a chain
-			chains.Add(CircleChain(circle, null, SunRadiiHolder, LiveCombine));
+			chains.Add(CircleChain(circle, null, newHolder, LiveCombine));
 			tempChain = chains[chains.Count - 1];
 
 			//start chain
@@ -262,14 +268,14 @@ function MeshAdd ()
 	}
 	
 	//splice together all chains
-	if (SunRadiiHolder.GetComponent(MeshFilter).sharedMesh)
+	if (LiveSunRadiiHolder.GetComponent(MeshFilter).sharedMesh)
 	{
-		SunRadiiHolder.GetComponent(MeshFilter).sharedMesh.Clear(); //reset the mesh
+		LiveSunRadiiHolder.GetComponent(MeshFilter).sharedMesh.Clear(); //reset the mesh
 	}
 	for (i = 0; i < chains.Count; i++)
 	{
 		tempChain = chains[i];
-		tempChain.SpliceTogether(DeathSphere);
+		tempChain.SpliceTogether(i, DeathSphere);
 	}
 	
 	
@@ -294,21 +300,18 @@ function MeshAdd ()
 		}
 	}
 	
+	//THIS MIGHT NEED TO CHANGE FOR MULTIPLE CHAINS
 	//if there are no colliding circles then remove all custom lines in the sunradiiholder
 	if (chains.length == 0)
 	{
-		SunRadiiHolder.GetComponent(WireframeRender).SpliceOveride = true;
+		LiveSunRadiiHolder.GetComponent(WireframeRender).SpliceOveride = true;
 	}
 	else
 	{
-		SunRadiiHolder.GetComponent(WireframeRender).SpliceOveride = false;
+		LiveSunRadiiHolder.GetComponent(WireframeRender).SpliceOveride = false;
 	}
 	
-	//finally enable the wireframe renderer after all the mesh shenanigans is done
-//	if (LiveCombine)
-//	{
-//		SunRadiiHolder.GetComponent(WireframeRender).Initialize();
-//	}
+	
 }
 
 //assigns the next member in the chain
@@ -340,11 +343,14 @@ function SetNextMember(chain : CircleChain, currentCircle : MeshCircle) : boolea
 
 function Revert()
 {
+	//enable LiveSunRadiiHolder
+	LiveSunRadiiHolder.active = true;
+	
 	//ddestroy sundradiiholders
 	do
 	{
-		GameObject.DestroyImmediate(GameObject.Find("SunRadiiHolder(Clone)"));
-	} while(GameObject.Find("SunRadiiHolder(Clone)"));
+		GameObject.DestroyImmediate(GameObject.Find("BakedSunRadiiHolder(Clone)"));
+	} while(GameObject.Find("BakedSunRadiiHolder(Clone)"));
 	
 	//destroy sunchaincricles
 	do

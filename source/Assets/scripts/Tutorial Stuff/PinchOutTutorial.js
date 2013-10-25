@@ -56,7 +56,6 @@ function Update ()
 	//hiding round two
 	if (dragControls.canMoveToWorld && RoundTwo && !IntroStop)
 	{
-		print("hiding two");
 		RoundTwo = false;
 		RoundOne = false;
 		StopAllCoroutines();
@@ -95,7 +94,6 @@ function Type(text : String) //an effect of typing in something
 //hiding for round one and showing round one two
 function RoundOneHiding()
 {
-	print("hiding one");
 	RoundOne = false;
 	RoundTwo = true;
 	ShowVirgin = true;
@@ -116,8 +114,7 @@ function RoundOneHiding()
 
 //show round two
 function RoundTwoShowing()
-{
-	print("showing two");	
+{	
 	ShowVirgin = false;
 	IntroStop = false;
 	

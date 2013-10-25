@@ -293,10 +293,10 @@ function Start ()
 			{
 				objects[i].transform.parent = SceneScaleController.transform;
 			}
-//			if (objects[i].name == "SunChainCircle")
-//			{
-//				objects[i].transform.parent = SceneScaleController.transform;
-//			}
+			if (objects[i].name == "SunChainCircle")
+			{
+				objects[i].transform.parent = SceneScaleController.transform;
+			}
 			//debris
 			if (objects[i].tag == "Debris")
 			{
