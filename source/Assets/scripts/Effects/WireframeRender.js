@@ -3,11 +3,6 @@
 
 //public vars
 public var use : boolean;
-public var lineColor : Color; 
-public var backgroundColor : Color; 
-public var ZWrite = true; 
-public var AWrite = true; 
-public var blend = true;
 public var CustomLines = new List.<Vector3>(); //custom lines to be rendered. Must be added in groups of 2.
 public var initialized = false;
 public var SpliceOveride = false;
@@ -15,10 +10,7 @@ public var SpliceOveride = false;
 //private 
 private var lines : Vector3[]; 
 private var cachedLines : Vector3[];
-private var linesArray : Array; 
-private var lineMaterial : Material; 
-private var meshRenderer : MeshRenderer;
- 
+private var linesArray : Array;  
  
 function Start () 
 {
@@ -35,19 +27,10 @@ function Initialize ()
 	{
 		renderer.enabled = false;
 		initialized = true;
-	    
-	    meshRenderer = GetComponent(MeshRenderer); 
-	    if(!meshRenderer) 
-	    {
-	    	meshRenderer = gameObject.AddComponent(MeshRenderer);
-	    }	
-	   	meshRenderer.material = new Material("Shader \"Lines/Background\" { Properties { _Color (\"Main Color\", Color) = (1,1,1,1) } SubShader { Pass {" + (ZWrite ? " ZWrite on " : " ZWrite off ") + (blend ? " Blend SrcAlpha OneMinusSrcAlpha" : " ") + (AWrite ? " Colormask RGBA " : " ") + "Lighting Off Offset 1, 1 Color[_Color] }}}");
-	 
-		//New Syntax with Bind : 
-	    lineMaterial = new Material("Shader \"Lines/Colored Blended\" { SubShader { Pass { Blend SrcAlpha OneMinusSrcAlpha BindChannels { Bind \"Color\",color } ZWrite On Cull Front Fog { Mode Off } } } }"); 
-	  
-	    lineMaterial.hideFlags = HideFlags.HideAndDontSave; 
-	    lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
+	  	
+	  	//adjust the rendering a bit... honestly I don't know what this does.  
+	    GetComponent(MeshRenderer).material.hideFlags = HideFlags.HideAndDontSave; 
+	    GetComponent(MeshRenderer).material.shader.hideFlags = HideFlags.HideAndDontSave;
 	    
 	    
 	    //if not live combining but this level has been baked then load custom lines from the CustomListSave mesh
@@ -161,13 +144,12 @@ function OnRenderObject()
 {
 	if (initialized && use)
 	{
-	    meshRenderer.sharedMaterial.color = backgroundColor; 
-	    lineMaterial.SetPass(0); 
+		//set the pass
+	    GetComponent(MeshRenderer).material.SetPass(0); 
 	  
 	    GL.PushMatrix(); 
 	    GL.MultMatrix(transform.localToWorldMatrix); 
-	    GL.Begin(GL.LINES); 
-	    GL.Color(lineColor);
+	    GL.Begin(GL.LINES);
 	    
 	    var i = 0;
 	    
