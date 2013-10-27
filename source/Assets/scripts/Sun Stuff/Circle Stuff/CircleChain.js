@@ -40,7 +40,7 @@ class CircleChain
 	}
 	
 	function SpliceTogether(chainNum : int, DeathSphere : GameObject)
-	{
+	{	
 		//init file counters
 		fileNum = 0; 
 		combinedNum = 0;
@@ -57,7 +57,7 @@ class CircleChain
 			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Baking Stuff", name); //create the folder
 			GUID = AssetDatabase.CreateFolder("Assets/Resources", name); //create the folder
 		}
-
+		
 		//now remove all internal points and set endpoint circles
 		for (j = 0; j < members.Count; j++)
 		{
@@ -323,6 +323,7 @@ class CircleChain
 			AssetDatabase.CreateAsset(m, path);
 			baseCircle.mesh.mesh = m;
 			baseCircle.mesh.gameObject.GetComponent(WireframeRender).use = false;
+			baseCircle.mesh.gameObject.tag = "Untagged";
 		}
 		else
 		{

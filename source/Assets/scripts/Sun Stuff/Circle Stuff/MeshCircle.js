@@ -103,11 +103,13 @@ class MeshCircle
 	{
 		if (!collides)
 		{
+			pastLife.GetComponent(WireframeRender).use = true;
 			pastLife.GetComponent(WireframeRender).Initialize();
 		}
 		else
 		{
 			pastLife.GetComponent(WireframeRender).initialized = false;
+			mesh.gameObject.GetComponent(WireframeRender).initialized = false;
 		}
 	}
 	

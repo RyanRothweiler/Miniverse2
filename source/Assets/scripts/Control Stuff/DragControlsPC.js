@@ -293,10 +293,13 @@ function Start ()
 			{
 				objects[i].transform.parent = SceneScaleController.transform;
 			}
-			if (objects[i].name == "SunChainCircle")
-			{
-				objects[i].transform.parent = SceneScaleController.transform;
-			}
+//			if (objects[i].name == "SunChainCircle")
+//			{
+//				if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition)
+//				{
+//					objects[i].transform.parent = SceneScaleController.transform;
+//				}
+//			}
 			//debris
 			if (objects[i].tag == "Debris")
 			{

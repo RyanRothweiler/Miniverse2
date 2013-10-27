@@ -32,9 +32,8 @@ function Initialize ()
 	    GetComponent(MeshRenderer).material.hideFlags = HideFlags.HideAndDontSave; 
 	    GetComponent(MeshRenderer).material.shader.hideFlags = HideFlags.HideAndDontSave;
 	    
-	    
 	    //if not live combining but this level has been baked then load custom lines from the CustomListSave mesh
-	    if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
+	    if (this.name == "BakedSunRadiiHolder(Clone)")
 	    {
 	    	var name = Camera.main.GetComponent(DragControlsPC).Level;
 	    	var num = GetComponent(MeshFilter).mesh.name[11];
@@ -54,11 +53,10 @@ function Initialize ()
 			{
 				Debug.Log("There is no CustomListSave to load. This sometimes happens when the level isn't loaded from the level select scene, so don't freak out just yet.");
 			}
-	    }
-	    
-	    //cache all the lines
-	    if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
-	    {
+			
+			
+			//cache the lines
+			
 	    	//figure out how many lines
 	    	var size = 0;
 	    	//from mesh
@@ -154,7 +152,7 @@ function OnRenderObject()
 	    var i = 0;
 	    
 	    //use chached lines if not live combining
-	    if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
+	    if (this.name == "BakedSunRadiiHolder(Clone)")
 	    {
 		    for (i = 0; i < cachedLines.Length; i++)
 		    {
@@ -172,7 +170,6 @@ function OnRenderObject()
 					{
 						GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i]);
 						GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[i+1]);
-					
 					}
 				}
 			}
@@ -180,7 +177,7 @@ function OnRenderObject()
 			//if not live sun radii baking on this specific circle then splice the beginning and end points, there is also a splice overide here
 			if ((GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine) && (gameObject.name == "SunChainCircle" && !transform.parent.GetComponent(SunController).LiveRadiiAddition) || SpliceOveride)
 			{
-				if (gameObject.name != "SunRadiiHolder")
+				if (gameObject.name != "SunRadiiHolder" && gameObject.name != "LiveSunRadiiHolder")
 				{
 					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[0]);
 					GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[GetComponent(MeshFilter).sharedMesh.vertices.length-1]);

@@ -45,16 +45,19 @@ function Start ()
 		objects = GameObject.FindGameObjectsWithTag("sun");
 		for (i = 0; i < objects.Length; i++)
 		{
-			var dumbObj = GameObject.Instantiate(objects[i], objects[i].transform.position, objects[i].transform.rotation);
-			dumbObj.transform.parent = Camera.main.transform;
-			dumbObj.name = "Sun";
-			dumbObj.SetActiveRecursively(false);
+			if (!objects[i].GetComponent(SunController).LiveRadiiAddition)
+			{
+				var dumbObj = GameObject.Instantiate(objects[i], objects[i].transform.position, objects[i].transform.rotation);
+				dumbObj.transform.parent = Camera.main.transform;
+				dumbObj.name = "Sun";
+				dumbObj.SetActiveRecursively(false);
+			}
 		}
 	}
 	
 	//organize all the circles and parent them to this object
 	objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
-	if (!LiveCombine) //not livecombining
+	if (!GameObject.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
 	{
 		if (combine)
 		{
@@ -76,19 +79,27 @@ function Start ()
 			//parent all the objects to this object
 			for (var circle : GameObject in objects) 
 			{
-				circle.transform.parent = this.transform;
+				if (!circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+				{
+					circle.transform.parent = this.transform;
+				}
 			}
-			
+						
 			//init
 			dummyTriangles = new int[108];
 			
 			//now we may proceed
 			masterMeshSet = true;
 			MeshAdd();
+			Debug.Log("All done motherfucker.");
 		}
 	}
 	else //else then it is live combining and I should set up the circle list
 	{
+		//init
+		circles = new MeshCircle[0];
+		LiveSunRadiiHolder.active = true;
+		
 		//get circles and set them once and for all 
 		//get information about all circles, duplicating all sun chain circles and parenting them to this
 		//first find the number of circles we're dealing with
@@ -149,7 +160,7 @@ function MeshAdd ()
 		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 		for (var circle : GameObject in objects)
 		{
-			if (circle.name != "SunChainCircle(Clone)" && circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+			if (circle.name == "SunChainCircle" && circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
 			{
 				//set mesh data first
 				circles[count].mesh.mesh = circle.GetComponent(MeshFilter).mesh;
@@ -166,7 +177,6 @@ function MeshAdd ()
 				count++;
 			}
 		}
-		
 		//set collision status
 		for (var circle1 : MeshCircle in circles)
 		{
@@ -234,12 +244,18 @@ function MeshAdd ()
 	{
 		//if found an end point
 		if (circle.endCircle)
-		{
-			circle.endCircle = false;
-			//create a holder
-			var newHolder = GameObject.Instantiate(SunRadiiHolderFab, Vector3.zero, Quaternion.identity);
-			//create a chain
-			chains.Add(CircleChain(circle, null, newHolder, LiveCombine));
+		{			
+			//if not live combining then create a holder and a chain, if live combining then use the linked holder
+			if (!LiveCombine)
+			{
+				var newHolder = GameObject.Instantiate(SunRadiiHolderFab, Vector3.zero, Quaternion.identity);
+				chains.Add(CircleChain(circle, null, newHolder, LiveCombine));
+			}
+			else
+			{
+				chains.Add(CircleChain(circle, null, LiveSunRadiiHolder, LiveCombine));
+			}
+			
 			tempChain = chains[chains.Count - 1];
 
 			//start chain
@@ -251,6 +267,7 @@ function MeshAdd ()
 				//check if they intersect at all and the two circles are not the same
 				if ((circle.circle.radius + circle2.circle.radius > d) && (circle != circle2))
 				{
+					circle2.endCircle = false;
 					tempChain.members.Add(circle2);
 					SetNextMember(chains[chains.Count - 1], circle2);
 				}
@@ -278,8 +295,6 @@ function MeshAdd ()
 		tempChain.SpliceTogether(i, DeathSphere);
 	}
 	
-	
-	
 	//the rest of this stuff is for cleaning up the scene after the circles have been chained
 	
 	//unparent circles
@@ -287,7 +302,10 @@ function MeshAdd ()
 	{
 		for (var circle : MeshCircle in circles)
 		{
-			circle.mesh.gameObject.transform.parent = null;
+			if (circle.mesh.transform.parent.name != "Sun") //make sure the circle isn't parent to a sun
+			{
+				circle.mesh.gameObject.transform.parent = null;
+			}
 		}
 	}
 	
@@ -300,7 +318,6 @@ function MeshAdd ()
 		}
 	}
 	
-	//THIS MIGHT NEED TO CHANGE FOR MULTIPLE CHAINS
 	//if there are no colliding circles then remove all custom lines in the sunradiiholder
 	if (chains.length == 0)
 	{
@@ -353,16 +370,23 @@ function Revert()
 	} while(GameObject.Find("BakedSunRadiiHolder(Clone)"));
 	
 	//destroy sunchaincricles
-	do
+	var sirs = GameObject.FindObjectsOfType(SunChainCircleController);
+	for (var i = 0; i < sirs.Length; i++)
 	{
-		GameObject.DestroyImmediate(GameObject.Find("SunChainCircle"));
-	} while(GameObject.Find("SunChainCircle"));
+		if (sirs[i].transform.parent == null)
+		{		
+			GameObject.DestroyImmediate(sirs[i].gameObject);
+		}
+	}
 	
 	//destroy old suns
 	objects = GameObject.FindGameObjectsWithTag("sun");
 	for (var sun : GameObject in objects) 
 	{
-		GameObject.DestroyImmediate(sun);
+		if (!sun.GetComponent(SunController).LiveRadiiAddition)
+		{
+			GameObject.DestroyImmediate(sun);
+		}
 	}
 	
 	//instantiate sun archive
