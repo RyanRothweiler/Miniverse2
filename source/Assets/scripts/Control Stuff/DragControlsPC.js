@@ -2222,7 +2222,7 @@ function DepressLevelTag(info : RaycastHit, isLevelTag : boolean)
 		//things to do when not depressing a level tag... aka when doing something in the main menu
 		if (!isLevelTag)
 		{
-			info.collider.transform.Find("text").renderer.material.color.a = 0.4;
+			info.collider.transform.Find("text").renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,0.4));
 		}
 	}
 	
@@ -2251,8 +2251,8 @@ function UnpressLevelTag(info : RaycastHit, isLevelTag : boolean)
 		//things to do when not depressing a level tag... aka when doing something in the main menu
 		if (!isLevelTag)
 		{
-			info.collider.transform.localScale = Vector3(1.0, 1.0, 1.0); //tag scale
-			info.collider.transform.Find("text").renderer.material.color.a = 1;
+			info.collider.transform.localScale = Vector3(2.0, 2.0, 2.0); //tag scale
+			info.collider.transform.Find("text").renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,1));
 		}
 	}
 	
