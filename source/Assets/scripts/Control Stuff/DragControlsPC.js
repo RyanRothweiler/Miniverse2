@@ -2151,6 +2151,48 @@ function LevelWon()
 		FailType.GetComponent(TextTypeEffect).TextToType = "COMPLETED";
 		FailType.GetComponent(TextTypeEffect).Done = false;
 		FailType.transform.parent = null; //unparent
+		
+		//set level win level select variables
+		if (Application.loadedLevelName == "intro to moving people - The The Impotence")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level1 = true;
+		}
+		if (Application.loadedLevelName == "intro to sun radii - Pi")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level2 = true;
+		}
+		if (Application.loadedLevelName == "intro to moving the camera - Eyes")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level3 = true;
+		}
+		if (Application.loadedLevelName == "very first planet race - Race")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level4 = true;
+		}
+		if (Application.loadedLevelName == "moving people between sun radii - Pi x Pi")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level5 = true;
+		}
+		if (Application.loadedLevelName == "multiple sun radii people moving - 2PiR(ate)")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level6 = true;
+		}
+		if (Application.loadedLevelName == "intro to zoom scrolling - Pinch")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level7 = true;
+		}
+		if (Application.loadedLevelName == "intro to sun radii shrinking - (2PiR) - t")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level8 = true;
+		}
+		if (Application.loadedLevelName == "teach different planet life speeds - Color of Decay")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level9 = true;
+		}
+		if (Application.loadedLevelName == "transporter planet is by the ship - Heron")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level10 = true;
+		}
 	}
 }
  

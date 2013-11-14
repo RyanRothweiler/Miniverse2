@@ -67,13 +67,12 @@
      <Compile Include="Assets\scripts\Key Stuff\KeyPiece.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyPositions.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyShowController.js" />
-     <Compile Include="Assets\scripts\Level Select Stuff\LevelColorator.js" />
-     <Compile Include="Assets\scripts\Level Select Stuff\LevelCompletedC.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\LevelNumberTypeEffect.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\LevelProgress.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\LevelSelectObject.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\LevelSelectPlanetController.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\LevelTimeType.js" />
+     <Compile Include="Assets\scripts\Level Select Stuff\LevelsCompleted.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\BossLevelLocking.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\Distress Camera Stuff\DistressArrowController.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\Distress Camera Stuff\DistressCameraController.js" />
