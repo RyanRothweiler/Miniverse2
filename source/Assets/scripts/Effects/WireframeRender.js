@@ -32,6 +32,11 @@ function Initialize ()
 	    GetComponent(MeshRenderer).material.hideFlags = HideFlags.HideAndDontSave; 
 	    GetComponent(MeshRenderer).material.shader.hideFlags = HideFlags.HideAndDontSave;
 	    
+	    //key initializing
+	    if (int.Parse(this.name))
+	    {
+	    }
+	    
 	    //if not live combining but this level has been baked then load custom lines from the CustomListSave mesh
 	    if (this.name == "BakedSunRadiiHolder(Clone)")
 	    {
@@ -159,7 +164,7 @@ function OnRenderObject()
 		    	GL.Vertex(cachedLines[i]);
 		    }
 		}
-		else //otherwise update every cycle
+		else if(!(int.Parse(this.name))) //otherwise if not being used on the level select screen update every cycle
 		{
 			//create lines from mesh
 			for (i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
@@ -194,6 +199,15 @@ function OnRenderObject()
 			for (i = 0; i < CustomLines.Count; i++)
 			{
 				GL.Vertex(CustomLines[i]);
+			}
+		}
+		
+		//this means it is being used on the level select screen
+		if (int.Parse(this.gameObject.name))
+		{
+			for (i = 0; i < GetComponent(MeshFilter).sharedMesh.triangles.length; i++)
+			{
+				GL.Vertex(GetComponent(MeshFilter).sharedMesh.vertices[GetComponent(MeshFilter).sharedMesh.triangles[i]]);
 			}
 		}
 	  

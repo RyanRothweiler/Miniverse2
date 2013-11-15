@@ -1,26 +1,37 @@
 #pragma strict
 
 //public vars
+public var DeathSphere : GameObject;
+
+//holds the object being mated to
 public var Mate1 : GameObject;
 public var Mate2 : GameObject;
 public var Mate3 : GameObject;
 public var Mate4 : GameObject;
 
+//holds the point associated with the object that determines when to snap and where to snap
 public var MatePoint1 : GameObject;
 public var MatePoint2 : GameObject;
 public var MatePoint3 : GameObject;
 public var MatePoint4 : GameObject;
 
+//if the two objects have been mated
 public var Mated1 = false;
 public var Mated2 = false;
 public var Mated3 = false;
 public var Mated4 = false;
 
-
+//the difference between the two objects, tells the piece where it should be in relation to the other piece
 public var Mate1Offset : Vector3;
 public var Mate2Offset : Vector3;
 public var Mate3Offset : Vector3;
 public var Mate4Offset : Vector3;
+
+//holds the sphere of vertices which to remove when that number has been mated
+public var Mate1S : GameObject;
+public var Mate2S : GameObject;
+public var Mate3S : GameObject;
+public var Mate4S : GameObject;
 
 //private vars
 private var DragControls : DragControlsPC;
@@ -29,7 +40,7 @@ private var FirstGrab = true;
 private var Selected = false;
 private var offSet : Vector3;
 private var oldPos : Vector3;
-private var SnapDistance = 0.1;
+private var SnapDistance = 0.1; //the range for which to snap
 private var done : boolean;
 
 function Start () 
@@ -105,6 +116,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint1.transform.position, Mate1.GetComponent(KeyPiece).MatePoint1.transform.position) < SnapDistance)
 		{
 			Snap(1);
+			CheckOverlapingVerts(Mate1, Mate1S, DeathSphere);
 		}
 	}
 	if (Mate2 != null && !Mated2)//mate 2
@@ -112,6 +124,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint2.transform.position, Mate2.GetComponent(KeyPiece).MatePoint2.transform.position) < SnapDistance)
 		{
 			Snap(2);
+			CheckOverlapingVerts(Mate2, Mate2S, DeathSphere);
 		}
 	}
 	if (Mate3 != null && !Mated3)//mate 3
@@ -119,6 +132,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint3.transform.position, Mate3.GetComponent(KeyPiece).MatePoint3.transform.position) < SnapDistance)
 		{
 			Snap(3);
+			CheckOverlapingVerts(Mate3, Mate3S, DeathSphere);
 		}
 	}
 	if (Mate4 != null && !Mated4)//mate 4
@@ -126,6 +140,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint4.transform.position, Mate4.GetComponent(KeyPiece).MatePoint4.transform.position) < SnapDistance)
 		{
 			Snap(4);
+			CheckOverlapingVerts(Mate4, Mate4S, DeathSphere);
 		}
 	}
 }
@@ -233,6 +248,20 @@ function Snap(numFrom : int)
 				Mate3.GetComponent(KeyPiece).Snap(3);
 			}
 		}
-	}
+	}	
 	done = false;
+}
+
+//checks any vertices that overlap with the mated key and remove this objects vertices
+function CheckOverlapingVerts(mate : GameObject, mateS : GameObject, DeathSphere : GameObject)
+{
+	var keyMesh = this.GetComponentsInChildren(MeshRenderer, false)[0].gameObject;
+	for (var i = 0; i < keyMesh.GetComponent(MeshFilter).sharedMesh.vertices.length; i++)
+	{
+		if (Vector3.Distance(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).sharedMesh.vertices[i]), mateS.transform.TransformPoint(mateS.GetComponent(SphereCollider).center)) < mateS.GetComponent(SphereCollider).radius)
+		{
+			var sir = new Circ(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).sharedMesh.vertices[i]), 0);
+			sir.Visualize(DeathSphere);
+		}
+	}
 }

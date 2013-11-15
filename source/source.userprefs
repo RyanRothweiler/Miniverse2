@@ -1,12 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyShowController.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyPiece.js">
     <Files>
-      <File FileName="Assets\scripts\Effects\WireframeRender.js" Line="20" Column="28" />
       <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="247" Column="6" />
-      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="267" Column="3" />
-      <File FileName="Assets\scripts\Key Stuff\KeyLockingController.js" Line="28" Column="3" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="1" Column="1" />
+      <File FileName="Assets\editor\KeyOffsetControls.js" Line="25" Column="11" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="243" Column="5" />
+      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\MeshCircle.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Sun Stuff\SunRadiiCombine.js" Line="22" Column="1" />
+      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\CircleChain.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

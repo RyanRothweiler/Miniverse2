@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\editor\CameraCustomControls.js" />
+     <Compile Include="Assets\editor\KeyOffsetControls.js" />
      <Compile Include="Assets\editor\SunRadiiBaking.js" />
      <None Include="Assets\shaders\RampRim.shader" />
      <None Include="Assets\shaders\CustFontShader.shader" />
