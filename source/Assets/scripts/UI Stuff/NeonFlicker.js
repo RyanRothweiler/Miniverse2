@@ -10,102 +10,133 @@ private var speed = 0.02;
 private var target = 0.8;
 private var cont = true;
 private var intro = true;
+private var Going = false;
+private var virgin = true;
+private var LightIntensity = 0.0;
 
 function Start () 
-{
+{	
 	speed = Random.Range(0.09, 0.15);
+	
+	renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,0));
+	if (Light1)
+	{
+		LightIntensity = Light1.light.intensity;
+		Light1.light.intensity = 0;
+	}
+	if (Light2)
+	{
+		LightIntensity = Light2.light.intensity;
+		Light2.light.intensity = 0;
+	}
 }
 
 function Update()
 {
-	//intro flickering
-	if (intro)
+	//if the level is done introing
+	if (!transform.parent.parent && virgin)
 	{
-		//fade the alpha around
-		if (!((alpha < target+0.1) && (alpha > target-0.1)) && (alpha > -1) && (alpha < 1))
-		{
-			alpha += speed;
-		}
-		else
-		{
-			target = Random.Range(0.1,0.9);
-			if (target > alpha)
-			{
-				speed = Random.Range(0.09, 0.15);
-			}
-			else if (speed > 0)
-			{
-				speed = speed = Random.Range(0.09, 0.15) * -1;
-			}
-		}
-		
-		//randomly clear the alpha
-		if (Random.Range(0,100) < 0)
-		{
-			alpha = 0.1;
-		}
-		
-		//set the alpha and lights
-		renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,alpha));
-		if (Light1)
-		{
-			Light1.light.intensity = 3 * alpha;
-		}
-		if (Light2)
-		{
-			Light2.light.intensity = 3 * alpha;
-		}
-		
-		//check if going to continue
-		if ((Random.Range(0,100) > 30) && (alpha > 0.8))
-		{
-			intro = false;
-		}
+		virgin = false;
+		WaitABit();
 	}
 	
-	//random flickering after the intro
-	if ((Random.Range(0,100) > 98) || cont)
+	if (Going)
 	{
-		cont = true;
-		//fade the alpha around
-		if (!((alpha < target+0.1) && (alpha > target-0.1)) && (alpha > -1) && (alpha < 1))
+		//intro flickering
+		if (intro)
 		{
-			alpha += speed;
-		}
-		else
-		{
-			target = Random.Range(0.1,0.9);
-			if (target > alpha)
+			//fade the alpha around
+			if (!((alpha < target+0.1) && (alpha > target-0.1)) && (alpha > -1) && (alpha < 1))
 			{
-				speed = Random.Range(0.1, 0.15);
+				alpha += speed;
 			}
-			else if (speed > 0)
+			else
 			{
-				speed = speed = Random.Range(0.1, 0.15) * -1;
+				target = Random.Range(0.1,0.9);
+				if (target > alpha)
+				{
+					speed = Random.Range(0.09, 0.15);
+				}
+				else if (speed > 0)
+				{
+					speed = speed = Random.Range(0.09, 0.15) * -1;
+				}
+			}
+			
+			//randomly clear the alpha
+			if (Random.Range(0,100) < 0)
+			{
+				alpha = 0.1;
+			}
+			
+			//set the alpha and lights
+			renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,alpha));
+			if (Light1)
+			{
+				Light1.light.intensity = LightIntensity * alpha;
+			}
+			if (Light2)
+			{
+				Light2.light.intensity = LightIntensity * alpha;
+			}
+			
+			//check if going to continue
+			if ((Random.Range(0,100) > 30) && (alpha > 0.8))
+			{
+				intro = false;
 			}
 		}
 		
-		//randomly clear the alpha
-		if (Random.Range(0,100) < 0)
+		//random flickering after the intro
+		if ((Random.Range(0,100) > 98) || cont)
 		{
-			alpha = 0.1;
-		}
-		
-		//set the alpha
-		renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,alpha));
-		if (Light1)
-		{
-			Light1.light.intensity = 3 * alpha;
-		}
-		if (Light2)
-		{
-			Light2.light.intensity = 3 * alpha;
-		}
-		
-		//check if going to continue
-		if ((Random.Range(0,100) > 10) && (alpha > 0.8))
-		{
-			cont = false;
+			cont = true;
+			//fade the alpha around
+			if (!((alpha < target+0.1) && (alpha > target-0.1)) && (alpha > -1) && (alpha < 1))
+			{
+				alpha += speed;
+			}
+			else
+			{
+				target = Random.Range(0.1,0.9);
+				if (target > alpha)
+				{
+					speed = Random.Range(0.1, 0.15);
+				}
+				else if (speed > 0)
+				{
+					speed = speed = Random.Range(0.1, 0.15) * -1;
+				}
+			}
+			
+			//randomly clear the alpha
+			if (Random.Range(0,100) < 0)
+			{
+				alpha = 0.1;
+			}
+			
+			//set the alpha
+			renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,alpha));
+			if (Light1)
+			{
+				Light1.light.intensity = LightIntensity * alpha;
+			}
+			if (Light2)
+			{
+				Light2.light.intensity = LightIntensity * alpha;
+			}
+			
+			//check if going to continue
+			if ((Random.Range(0,100) > 10) && (alpha > 0.8))
+			{
+				cont = false;
+			}
 		}
 	}
+}
+
+function WaitABit()
+{
+	yield WaitForSeconds(Random.Range(0.2,0.75));
+	Going = true;
 }

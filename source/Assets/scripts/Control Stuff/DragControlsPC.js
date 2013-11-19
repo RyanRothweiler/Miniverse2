@@ -252,11 +252,11 @@ function Start ()
 	}
 	
 	//other menu inits
-	if (isMainMenu || isSettingsMenu || isContactMenu)
-	{
-		//instant zoom
-		transform.position.z = camZStopPos;
-	}
+//	if (isMainMenu || isSettingsMenu || isContactMenu)
+//	{
+//		//instant zoom
+//		transform.position.z = camZStopPos;
+//	}
 	
 	objects = GameObject.FindObjectsOfType(GameObject);
 	worldObjects = GameObject.FindGameObjectsWithTag("world");
@@ -264,7 +264,7 @@ function Start ()
 	personObjects = GameObject.FindGameObjectsWithTag("humanPerson");
 
 	//This is kinda important, it keeps everything properly parented so this sorting step is necessary
-	if (!isLevelSelect && !isMainMenu && !isSettingsMenu && !isContactMenu)
+	if (!isLevelSelect )
 	{
 		for (i = 0; i < objects.length; i++)
 		{	
@@ -315,7 +315,7 @@ function Start ()
 	peopleAlive = personObjects.length;
 	
 	//scale down
-	if (!isLevelSelect && !isMainMenu && !isSettingsMenu && !isContactMenu && !skipZoom) 
+	if (!isLevelSelect && !skipZoom) 
 	{
 		SceneScaleController.transform.localScale = Vector3(0,0,0);
 //		Camera.main.fieldOfView = 100; 
@@ -1369,29 +1369,52 @@ function SettingsMenu()
 		{
 			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 			{
+				//back arrow
 				if (objectInfo.collider.name == "BackArrow")
 				{
 					tagPressed = true;
 					DepressLevelTag(objectInfo, false);
-				}	
+				}
+				
+				//volume slider
+				if (objectInfo.collider.name == "volume marker")
+				{
+					worldSelected = true;
+					selectedWorld = objectInfo;
+					offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z));
+				}
 			}			
 		}
-		
 		//when letting go of the mouse then do stuff
-		if (Input.GetMouseButtonUp(0) && tagPressed)
+		if (Input.GetMouseButtonUp(0))
 		{
 			StopAllCoroutines();
 			if (tagPressed)
 			{
 				UnpressLevelTag(objectInfo, false);
 			}
-			//reset tag pressed
-			tagPressed = false;
 			
-			//move back to main menu
-			nextLevel = true;
-			toMainMenu = true;
-		}		
+			if (worldSelected && selectedWorld.collider.name == "BackArrow")
+			{
+				//reset tag pressed
+				tagPressed = false;
+				
+				//move back to main menu
+				nextLevel = true;
+				toMainMenu = true;
+			}
+			worldSelected = false;
+		}
+		
+		//if object selected
+		if (worldSelected && selectedWorld.collider.name == "volume marker")	
+		{
+			var target = (Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet).x;
+			if ((target > -0.55) && (target < 3.06))
+			{
+				selectedWorld.collider.transform.position.x = target;
+			}
+		}
 	}
 	
 	//if ios platform
@@ -1554,10 +1577,11 @@ function MainMenu()
 		//selecting level select objects
 		if(Input.GetMouseButtonDown(0))
 		{
-			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, (WorldZDepth+10) - Camera.main.transform.position.z)), objectInfo))
 			{
-				if (objectInfo.collider.tag == "LevelTag")
+				if (objectInfo.collider.tag == "ui")
 				{
+					Debug.Log("found");
 					tagPressed = true;
 					DepressLevelTag(objectInfo, false);
 				}	
@@ -1565,7 +1589,7 @@ function MainMenu()
 		}
 		
 		//when letting go of the mouse then do stuff
-		if (Input.GetMouseButtonUp(0) && objectInfo.collider.tag == "LevelTag")
+		if (tagPressed && Input.GetMouseButtonUp(0) && objectInfo.collider.tag == "ui")
 		{
 			StopAllCoroutines();
 			if (tagPressed)
@@ -2007,11 +2031,7 @@ function OnGUI()
 {
 	if (isSettingsMenu)
 	{
-		//world dragging inverting toggle
-		WorldDraggingInverted = GUI.Toggle(Rect(280,250,200,30), WorldDraggingInverted, "Invert View Dragging");
-		
-		//tilt speed
-		this.GetComponent(TiltControls).Speed = GUI.HorizontalSlider (Rect (280, 300, 100, 30), this.GetComponent(TiltControls).Speed, 20.0, 50.0);
+		//slider dragging
 	}
 	
 	if (!isLevelSelect)
@@ -2249,7 +2269,7 @@ function MoveTo(time : float, target : Vector3)
 //depress a level tag
 function DepressLevelTag(info : RaycastHit, isLevelTag : boolean) 
 {
-	if (info.collider.tag == "LevelTag")
+	if (info.collider.tag == "LevelTag" || info.collider.tag == "ui")
 	{
 		FadeLevelTagSize(info.collider.transform.localScale.x); //fade tag size
 		

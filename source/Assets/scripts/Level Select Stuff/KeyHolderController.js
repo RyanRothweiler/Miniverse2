@@ -3,13 +3,10 @@
 //public vars
 
 //private vars
-public var target : Vector3;
-private var acceleration = 1.01; //how fast to increase the velocity
-private var velocityCap = 0.5; //
-public var velocity : Vector3; //how fast the holder is moving
-private var offset : Vector3; //the difference between the level tags controller position and key holder position
-private var decelSpeed : double;
-private var first = true;
+private var target : Vector3;
+private var velocity : Vector3;
+private var offset : Vector3;
+
 function Start () 
 {
 	//set offset
