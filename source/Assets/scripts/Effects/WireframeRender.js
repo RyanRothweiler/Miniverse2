@@ -32,11 +32,6 @@ function Initialize ()
 	    GetComponent(MeshRenderer).material.hideFlags = HideFlags.HideAndDontSave; 
 	    GetComponent(MeshRenderer).material.shader.hideFlags = HideFlags.HideAndDontSave;
 	    
-	    //key initializing
-	    if (int.Parse(this.name))
-	    {
-	    }
-	    
 	    //if not live combining but this level has been baked then load custom lines from the CustomListSave mesh
 	    if (this.name == "BakedSunRadiiHolder(Clone)")
 	    {
@@ -149,12 +144,13 @@ function OnRenderObject()
 	{
 		//set the pass
 	    GetComponent(MeshRenderer).material.SetPass(0); 
-	  
+	  	
 	    GL.PushMatrix(); 
 	    GL.MultMatrix(transform.localToWorldMatrix); 
 	    GL.Begin(GL.LINES);
 	    
 	    var i = 0;
+	    var dummyint = 0;
 	    
 	    //use chached lines if not live combining
 	    if (this.name == "BakedSunRadiiHolder(Clone)")
@@ -164,7 +160,7 @@ function OnRenderObject()
 		    	GL.Vertex(cachedLines[i]);
 		    }
 		}
-		else if(!(int.Parse(this.name))) //otherwise if not being used on the level select screen update every cycle
+		else if(!(int.TryParse(this.name, dummyint))) //otherwise if not being used on the level select screen update every cycle
 		{
 			//create lines from mesh
 			for (i = 0; i < GetComponent(MeshFilter).sharedMesh.vertices.length-1; i++)
@@ -203,7 +199,7 @@ function OnRenderObject()
 		}
 		
 		//this means it is being used on the level select screen
-		if (int.Parse(this.gameObject.name))
+		if (int.TryParse(this.gameObject.name, dummyint))
 		{
 			for (i = 0; i < GetComponent(MeshFilter).sharedMesh.triangles.length; i++)
 			{
