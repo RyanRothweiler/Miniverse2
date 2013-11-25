@@ -46,17 +46,17 @@ class CircleChain
 		combinedNum = 0;
 		
 		//first create directory to save these new circles. unity is a dick
-		var pathList = EditorApplication.currentScene.Split("."[0]);
-		var levelName = pathList[0].Split("/"[0]);
-		var name = levelName[3];
-		
-		//if the directory doesn't exist then create it (also creates a folder in the Resources folder
-		if (Application.isEditor && !(System.IO.Directory.Exists("Assets/models/Sun Radii Baking Stuff/"+name)))
-		{
-			Debug.Log("creating directory");
-			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Baking Stuff", name); //create the folder
-			GUID = AssetDatabase.CreateFolder("Assets/Resources", name); //create the folder
-		}
+//		var pathList = EditorApplication.currentScene.Split("."[0]);
+//		var levelName = pathList[0].Split("/"[0]);
+//		var name = levelName[3];
+//		
+//		//if the directory doesn't exist then create it (also creates a folder in the Resources folder
+//		if (Application.isEditor && !(System.IO.Directory.Exists("Assets/models/Sun Radii Baking Stuff/"+name)))
+//		{
+//			Debug.Log("creating directory");
+//			var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Baking Stuff", name); //create the folder
+//			GUID = AssetDatabase.CreateFolder("Assets/Resources", name); //create the folder
+//		}
 		
 		//now remove all internal points and set endpoint circles
 		for (j = 0; j < members.Count; j++)
@@ -109,17 +109,17 @@ class CircleChain
 		//if in editor than the stuff is baking, else it is running live
 		if (!Application.isPlaying)
 		{
-			var me : Mesh = new Mesh();
-			me.CombineMeshes(combine);
-			
-			//set path for new asset
-			pathList = EditorApplication.currentScene.Split("."[0]);
-			levelName = pathList[0].Split("/"[0]);
-			name = levelName[3];
-			
-			//crate the asset and assign it to the circle
-			AssetDatabase.CreateAsset(me, "Assets/models/Sun Radii Baking Stuff/"+name+"/combomesh.asset");
-			parentObj.GetComponent(MeshFilter).mesh = me;
+//			var me : Mesh = new Mesh();
+//			me.CombineMeshes(combine);
+//			
+//			//set path for new asset
+//			pathList = EditorApplication.currentScene.Split("."[0]);
+//			levelName = pathList[0].Split("/"[0]);
+//			name = levelName[3];
+//			
+//			//crate the asset and assign it to the circle
+//			AssetDatabase.CreateAsset(me, "Assets/models/Sun Radii Baking Stuff/"+name+"/combomesh.asset");
+//			parentObj.GetComponent(MeshFilter).mesh = me;
 		}
 		else
 		{
@@ -189,33 +189,33 @@ class CircleChain
 		if (!Application.isPlaying)
 		{			
 			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
-			mi = new Mesh();
-			mi.vertices = vertices;
-			mi.uv = uvs;
-			mi.triangles = triangles;
-		
-			//set path for new asset
-			pathList = EditorApplication.currentScene.Split("."[0]);
-			levelName = pathList[0].Split("/"[0]);
-			name = levelName[3];
-			var path = "Assets/models/Sun Radii Baking Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
-			Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum++;
-			
-			//crate the asset and assign it to the circle
-			AssetDatabase.CreateAsset(mi, path);
-			parentObj.GetComponent(MeshFilter).sharedMesh.Clear();
-			parentObj.GetComponent(MeshFilter).sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
-			
-			//also save the custom lines list to a mesh. this code is shit
-			var cl : Mesh = new Mesh();
-			var dt = new Vector3[SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Count];
-			for (x = 0; x < SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Count; x++)
-			{
-				dt[x] = SunRadiiHolder.GetComponent(WireframeRender).CustomLines[x];
-			}
-			cl.vertices = dt;
-			path = "Assets/Resources/"+name+"/CustomListSave"+chainNum+".asset";
-			AssetDatabase.CreateAsset(cl, path);
+//			mi = new Mesh();
+//			mi.vertices = vertices;
+//			mi.uv = uvs;
+//			mi.triangles = triangles;
+//		
+//			//set path for new asset
+//			pathList = EditorApplication.currentScene.Split("."[0]);
+//			levelName = pathList[0].Split("/"[0]);
+//			name = levelName[3];
+//			var path = "Assets/models/Sun Radii Baking Stuff/"+name+"/splicedMesh"+Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum+".asset";
+//			Camera.main.transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).spliceNum++;
+//			
+//			//crate the asset and assign it to the circle
+//			AssetDatabase.CreateAsset(mi, path);
+//			parentObj.GetComponent(MeshFilter).sharedMesh.Clear();
+//			parentObj.GetComponent(MeshFilter).sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
+//			
+//			//also save the custom lines list to a mesh. this code is shit
+//			var cl : Mesh = new Mesh();
+//			var dt = new Vector3[SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Count];
+//			for (x = 0; x < SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Count; x++)
+//			{
+//				dt[x] = SunRadiiHolder.GetComponent(WireframeRender).CustomLines[x];
+//			}
+//			cl.vertices = dt;
+//			path = "Assets/Resources/"+name+"/CustomListSave"+chainNum+".asset";
+//			AssetDatabase.CreateAsset(cl, path);
 		}
 		else
 		{
@@ -306,24 +306,24 @@ class CircleChain
 		//if in editor than the stuff is baking, else it is running live
 		if (!Application.isPlaying)
 		{
-			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
-			var m : Mesh = new Mesh();
-			m.vertices = dummyVertices;
-			m.uv = baseCircle.mesh.sharedMesh.uv;
-			m.normals = baseCircle.mesh.sharedMesh.normals;
-			m.triangles = dummyTriangles;
-			
-			//set path for new asset
-			var pathList = EditorApplication.currentScene.Split("."[0]);
-			var levelName = pathList[0].Split("/"[0]);
-			var name = levelName[3];
-			var path = "Assets/models/Sun Radii Baking Stuff/"+name+"/file"+fileNum+".asset";
-			fileNum++;
-			//crate the asset and assign it to the circle
-			AssetDatabase.CreateAsset(m, path);
-			baseCircle.mesh.mesh = m;
-			baseCircle.mesh.gameObject.GetComponent(WireframeRender).use = false;
-			baseCircle.mesh.gameObject.tag = "Untagged";
+//			//create an asset for the new mesh and add it to the project as well as assigning it to the circle
+//			var m : Mesh = new Mesh();
+//			m.vertices = dummyVertices;
+//			m.uv = baseCircle.mesh.sharedMesh.uv;
+//			m.normals = baseCircle.mesh.sharedMesh.normals;
+//			m.triangles = dummyTriangles;
+//			
+//			//set path for new asset
+//			var pathList = EditorApplication.currentScene.Split("."[0]);
+//			var levelName = pathList[0].Split("/"[0]);
+//			var name = levelName[3];
+//			var path = "Assets/models/Sun Radii Baking Stuff/"+name+"/file"+fileNum+".asset";
+//			fileNum++;
+//			//crate the asset and assign it to the circle
+//			AssetDatabase.CreateAsset(m, path);
+//			baseCircle.mesh.mesh = m;
+//			baseCircle.mesh.gameObject.GetComponent(WireframeRender).use = false;
+//			baseCircle.mesh.gameObject.tag = "Untagged";
 		}
 		else
 		{
