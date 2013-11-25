@@ -1884,22 +1884,22 @@ function LevelSelect()
 					 
 					MovementControllerOldPos = LevelOffset;
 					//limit movement 
-					if (transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -1) //left side 
+					if (transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate < 1) //left side 
 					{ 
-						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate * -1;
+						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
 					}
 					else 
 					{
 						LevelOffset.x = 0; 
 						return; //then kick out
 					}
-					if (transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate < 146) //right side
+					if (transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -146) //right side
 					{ 
-						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate * -1;
+						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
 					}
 					else 
 					{
-						LevelOffset.x = 146; 
+						LevelOffset.x = -147; 
 						return; //kick out
 					}
 						
@@ -1935,21 +1935,21 @@ function LevelSelect()
 			if (Touch1Move)
 			{				
 				//limit movement
-				if (LevelOffset.x - Movement1Delta.x > -1) //left side
+				if (LevelOffset.x - Movement1Delta.x > -146) //left side
 				{ 
 					LevelOffset.x -= (Movement1Delta.x);
 				}
 				else
 				{
 					//end the flick
-					LevelOffset.x = 0;
+					LevelOffset.x = -145;
 					
 					Touch1StartPos = Vector2(0,0);
 					Touch1EndPos = Vector2(1000,1000);		
 					Movement1Delta.x = 0;
 					Touch1Move = false;
 				}
-				if (LevelOffset.x - Movement1Delta.x < 146) //right side 
+				if (LevelOffset.x - Movement1Delta.x < 1) //right side 
 				{
 					LevelOffset.x -= (Movement1Delta.x); 
 				}
@@ -1957,7 +1957,7 @@ function LevelSelect()
 				{
 					//end the flick
 					print("limiting and ending the flick");
-					LevelOffset.x = 146;
+					LevelOffset.x = 0;
 					
 					Touch1StartPos = Vector2(0,0);
 					Touch1EndPos = Vector2(1000,1000);		
