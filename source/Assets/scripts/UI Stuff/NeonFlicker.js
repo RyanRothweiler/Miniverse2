@@ -18,7 +18,7 @@ function Start ()
 {	
 	speed = Random.Range(0.09, 0.15);
 	
-	renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,0));
+	renderer.material.SetColor("_Color", Color(0,0,0,0));
 	if (Light1)
 	{
 		LightIntensity = Light1.light.intensity;
@@ -70,7 +70,7 @@ function Update()
 			}
 			
 			//set the alpha and lights
-			renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,alpha));
+			renderer.material.SetColor("_Color", Color(1,1,1,alpha));
 			if (Light1)
 			{
 				Light1.light.intensity = LightIntensity * alpha;
@@ -116,7 +116,7 @@ function Update()
 			}
 			
 			//set the alpha
-			renderer.material.SetColor("_TintColor", Color(0.5,0.5,0.5,alpha));
+			renderer.material.SetColor("_Color", Color(1,1,1,alpha));
 			if (Light1)
 			{
 				Light1.light.intensity = LightIntensity * alpha;
