@@ -10,13 +10,13 @@ private var offset : Vector3;
 function Start () 
 {
 	//set offset
-	offset = Camera.main.transform.parent.position - transform.position;
+	offset = Camera.main.transform.position - transform.position;
 }
 
 function Update () 
 {
 	//update target
-	target = Camera.main.transform.parent.position - offset;
+	target = Camera.main.transform.position - offset;
 	target.y = transform.position.y;
 	target.z = transform.position.z;
 	

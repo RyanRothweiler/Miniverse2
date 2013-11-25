@@ -71,7 +71,7 @@ public var NebulaBackground : GameObject; // the background nebula
 public var TransitionStars : GameObject; //the transition star plane
 public var SceneScaleController : GameObject; // controls the scale of all notBackground objects in the scene.
 public var PlanetExplosion : GameObject;
-public var LevelSelectMovementController : GameObject; //the parent for all the level select objects
+//public var LevelSelectMovementController : GameObject; //the parent for all the level select objects
 public var HumanPersonFab : GameObject; //the human person prefab
 public var PausePlane : GameObject; //the pause plane which will show when zoomed out
 public var ZoomStreaks : GameObject; //the star streaks which show when zooming
@@ -79,6 +79,7 @@ public var DeathSphere : GameObject; //a sphere that dies after a time. used for
 public var FailType : TextMesh; //the type which shows on level fail
 public var StarStreakMat : Material;
 public var KeyMat : Material; //the material used for the keys
+public var LevelOffsetController : GameObject; //the level select object to move when scrolling level select stuff
 
 
 
@@ -264,7 +265,7 @@ function Start ()
 	personObjects = GameObject.FindGameObjectsWithTag("humanPerson");
 
 	//This is kinda important, it keeps everything properly parented so this sorting step is necessary
-	if (!isLevelSelect )
+	if (true)
 	{
 		for (i = 0; i < objects.length; i++)
 		{	
@@ -315,7 +316,7 @@ function Start ()
 	peopleAlive = personObjects.length;
 	
 	//scale down
-	if (!isLevelSelect && !skipZoom) 
+	if (!skipZoom) 
 	{
 		SceneScaleController.transform.localScale = Vector3(0,0,0);
 //		Camera.main.fieldOfView = 100; 
@@ -367,7 +368,7 @@ function Update ()
 	if(isLevelSelect)
 	{
 		LevelSelect();
-		LevelSelectMovementController.transform.position = PrevLevelLoc + LevelOffset;
+		LevelOffsetController.transform.position = PrevLevelLoc + LevelOffset;
 	}
 	else
 	{
@@ -981,10 +982,10 @@ function Update ()
 		SceneScaleController.transform.DetachChildren();
 		this.transform.DetachChildren();
 		
-		if (!isLevelSelect) 
-		{
+//		if (!isLevelSelect) 
+//		{
 			halt = false;
-		}
+//		}
 		
 		//if start zoomed out and paused
 		if (StartZoomedOut)
@@ -1581,7 +1582,6 @@ function MainMenu()
 			{
 				if (objectInfo.collider.tag == "ui")
 				{
-					Debug.Log("found");
 					tagPressed = true;
 					DepressLevelTag(objectInfo, false);
 				}	
@@ -1729,10 +1729,14 @@ function LevelSelect()
 	
 	if (PlatformPC)
 	{
+		//for horizontal scrolling
+		LevelOffset.x += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 1000;
+		
 		//selecting level select objects
 		if(Input.GetMouseButtonDown(0))
 		{
-			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+			var ray = Camera.main.ScreenPointToRay(Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
+			if(Physics.Raycast(ray, objectInfo, 40))
 			{
 				//if clicked a level tag
 				if (objectInfo.collider.tag == "LevelTag")
@@ -1795,7 +1799,7 @@ function LevelSelect()
 						//initialize information for next go around
 						previousLevel = 20;
 						Level = objectInfo.collider.name;
-						PrevLevelLoc = LevelSelectMovementController.transform.position;
+						PrevLevelLoc = transform.position;
 						LevelOffset = Vector3.zero;
 						nextLevel = true;
 						toLevel = true;
@@ -1816,7 +1820,7 @@ function LevelSelect()
 					//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
 					previousLevel = int.Parse(objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text);
 					Level = objectInfo.collider.name;
-					PrevLevelLoc = LevelSelectMovementController.transform.position;
+					PrevLevelLoc = transform.position;
 					LevelOffset = Vector3.zero;
 					nextLevel = true;
 					toLevel = true;
@@ -1826,11 +1830,7 @@ function LevelSelect()
 					fromLSelect = true;
 				}
 			}
-		}
-
-		//for horizontal scrolling
-		LevelOffset.x += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 1000;
-		
+		}		
 	}
 	
 	if (PlatformIOS)
@@ -1884,7 +1884,7 @@ function LevelSelect()
 					 
 					MovementControllerOldPos = LevelOffset;
 					//limit movement 
-					if (LevelSelectMovementController.transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -1) //left side 
+					if (transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -1) //left side 
 					{ 
 						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate * -1;
 					}
@@ -1893,7 +1893,7 @@ function LevelSelect()
 						LevelOffset.x = 0; 
 						return; //then kick out
 					}
-					if (LevelSelectMovementController.transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate < 146) //right side
+					if (transform.position.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate < 146) //right side
 					{ 
 						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate * -1;
 					}
