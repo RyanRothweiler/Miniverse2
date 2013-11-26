@@ -161,7 +161,7 @@ private var dummyVector3 : Vector3;
 private var dummyVector2 : Vector2;
 //private var PrevLevelNum : GameObject; //when moving back to the level select screen, this holds the level num of the level which the player came from
 private static var PrevLevelLoc : Vector3; //the previous level tag's location
-private var LevelOffset : Vector3; 
+private var LevelOffset = Vector3(-7.5,0,0); 
 private var shipLoc : Vector3; //the location of the ship
 private var Timer : LevelTimer; //the script which controls the level times
 private var dummyObj : GameObject; //a dummy game object
@@ -249,7 +249,7 @@ function Start ()
 		FadeInKeys();
 		
 		//instant zoom
-		transform.position.z = camZStopPos;
+//		transform.position.z = camZStopPos;
 	}
 	
 	//other menu inits
@@ -332,14 +332,14 @@ function Start ()
 	}
 	else
 	{
-		print("IOS");
-		DragRate = 0.02;
-		PlatformIOS = true;
-		PlatformPC = false;
-//		print("PC");
-//		PlatformPC = true;
-//		PlatformIOS = false;
-//		WorldDraggingInverted = true;
+//		print("IOS");
+//		DragRate = 0.02;
+//		PlatformIOS = true;
+//		PlatformPC = false;
+		print("PC");
+		PlatformPC = true;
+		PlatformIOS = false;
+		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -966,7 +966,6 @@ function Update ()
 	{
 		halt = true;
 		SceneScaleController.transform.localScale += Vector3(CameraScaleSpeed * Time.deltaTime,CameraScaleSpeed * Time.deltaTime,CameraScaleSpeed * Time.deltaTime);
-//		Camera.main.fieldOfView -= 30 * Time.deltaTime;		
 	}
 	else if(CanZoom && ZoomVirgin)
 	{
@@ -1374,6 +1373,8 @@ function SettingsMenu()
 				if (objectInfo.collider.name == "BackArrow")
 				{
 					tagPressed = true;
+					worldSelected = true;
+					selectedWorld = objectInfo;
 					DepressLevelTag(objectInfo, false);
 				}
 				
@@ -1486,11 +1487,12 @@ function ContactMenu()
 		{
 			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 			{
-				if (objectInfo.collider.name == "BackArrow")
+				//back arrow
+				if (objectInfo.collider.name == "BackArrow" || objectInfo.collider.name == "twitter" || objectInfo.collider.name == "facebook")
 				{
 					tagPressed = true;
 					DepressLevelTag(objectInfo, false);
-				}	
+				}
 			}			
 		}
 		
@@ -1505,9 +1507,25 @@ function ContactMenu()
 			//reset tag pressed
 			tagPressed = false;
 			
-			//move back to main menu
-			nextLevel = true;
-			toMainMenu = true;
+			//back arrow
+			if (objectInfo.collider.name == "BackArrow")
+			{
+				//move back to main menu
+				nextLevel = true;
+				toMainMenu = true;
+			}
+			
+			//twitter button
+			if (objectInfo.collider.name == "twitter")
+			{
+				Application.OpenURL("https://twitter.com/RytGames");
+			}
+			
+			//twitter button
+			if (objectInfo.collider.name == "facebook")
+			{
+				Application.OpenURL("https://www.facebook.com/Miniverse");
+			}
 		}		
 	}
 	
@@ -1558,10 +1576,26 @@ function ContactMenu()
 			{
 				iosTagDepress = false;
 				UnpressLevelTag(depressedTag, false);
-				
+			}
+			
+			//back arrow
+			if (objectInfo.collider.name == "BackArrow")
+			{
 				//move back to main menu
 				nextLevel = true;
 				toMainMenu = true;
+			}
+			
+			//twitter button
+			if (objectInfo.collider.name == "twitter")
+			{
+				Application.OpenURL("https://twitter.com/RytGames");
+			}
+			
+			//twitter button
+			if (objectInfo.collider.name == "facebook")
+			{
+				Application.OpenURL("https://www.facebook.com/Miniverse");
 			}
 		}
 	}
@@ -1799,7 +1833,7 @@ function LevelSelect()
 						//initialize information for next go around
 						previousLevel = 20;
 						Level = objectInfo.collider.name;
-						PrevLevelLoc = transform.position;
+						PrevLevelLoc = LevelOffsetController.transform.position;
 						LevelOffset = Vector3.zero;
 						nextLevel = true;
 						toLevel = true;
@@ -1820,7 +1854,7 @@ function LevelSelect()
 					//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
 					previousLevel = int.Parse(objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text);
 					Level = objectInfo.collider.name;
-					PrevLevelLoc = transform.position;
+					PrevLevelLoc = LevelOffsetController.transform.position;
 					LevelOffset = Vector3.zero;
 					nextLevel = true;
 					toLevel = true;

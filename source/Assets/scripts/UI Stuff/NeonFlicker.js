@@ -34,7 +34,7 @@ function Start ()
 function Update()
 {
 	//if the level is done introing
-	if (!transform.parent.parent && virgin)
+	if ((!transform.parent.parent || this.name == "Number" || this.name == "CompletedPlane") && virgin)
 	{
 		virgin = false;
 		WaitABit();
@@ -135,8 +135,15 @@ function Update()
 	}
 }
 
+//wait a bit before flickering in the texture
 function WaitABit()
 {
 	yield WaitForSeconds(Random.Range(0.2,0.75));
 	Going = true;
+}
+
+//flicker the texture out
+function FlickerOut()
+{
+
 }

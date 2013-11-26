@@ -7,7 +7,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key1 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key1 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key1 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key1;
 		}
 		else
@@ -19,7 +19,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key2 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key2 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key2 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key2;
 		}
 		else
@@ -31,7 +31,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key3 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key3 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key3 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key3;
 		}
 		else
@@ -43,7 +43,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key4 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key4 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key4 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key4;
 		}
 		else
@@ -55,7 +55,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key5 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key5 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key5 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key5;
 		}
 		else
@@ -67,7 +67,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key6 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key6 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key6 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key6;
 		}
 		else
@@ -79,7 +79,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key7 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key7 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key7 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key7;
 		}
 		else
@@ -91,7 +91,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key8 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key8 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key8 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key8;
 		}
 		else
@@ -103,7 +103,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key9 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key9 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key9 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key9;
 		}
 		else
@@ -115,7 +115,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key10 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key10 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key10 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key10;
 		}
 		else
@@ -127,7 +127,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key11 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key11 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key11 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key11;
 		}
 		else
@@ -139,7 +139,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key12 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key12 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key12 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key12;
 		}
 		else
@@ -151,7 +151,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key13 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key13 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key13 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key13;
 		}
 		else
@@ -163,7 +163,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key14 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key14 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key14 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key14;
 		}
 		else
@@ -175,7 +175,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key15 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key15 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key15 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key15;
 		}
 		else
@@ -187,7 +187,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key16 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key16 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key16 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key16;
 		}
 		else
@@ -199,7 +199,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key17 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key17 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key17 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key17;
 		}
 		else
@@ -211,7 +211,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key18 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key18 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key18 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key18;
 		}
 		else
@@ -223,7 +223,7 @@ function Start ()
 	{
 		if (Camera.main.GetComponent(KeyPositions).key19 == Vector3.zero)
 		{
-			Camera.main.GetComponent(KeyPositions).key19 = Key.transform.position;
+			Camera.main.GetComponent(KeyPositions).key19 = Key.transform.localPosition;
 			Key.transform.localPosition = Camera.main.GetComponent(KeyPositions).key19;
 		}
 		else

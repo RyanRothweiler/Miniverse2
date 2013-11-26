@@ -78,7 +78,8 @@ function Start ()
     	numbers[i].GetComponent(TextMesh).text = ""; //turn off number
     	numbers[i].transform.parent.Find("Name").GetComponent(TextMesh).text = ""; //turn off name
     	numbers[i].transform.parent.Find("Time").GetComponent(TextMesh).text = ""; //turn off time
-    	numbers[i].transform.parent.transform.Find("CompletedPlane").GetComponent(TextMesh).text = ""; //turn off completed plane
+//    	numbers[i].transform.parent.transform.Find("CompletedPlane").GetComponent(TextMesh).text = ""; //turn off completed plane
+    	numbers[i].transform.parent.transform.Find("CompletedPlane").active = false; //turn off the completed plane
     }  
     
     //start typing the levels out
@@ -135,10 +136,10 @@ function TypeStart (object : GameObject, num : int, name : String, time : String
 	yield StartCoroutine(Type(num.ToString(), object)); //type number
 	yield StartCoroutine(Type(name, object.transform.parent.transform.Find("Name").gameObject)); //type level name
 	yield StartCoroutine(Type(time, object.transform.parent.transform.Find("Time").gameObject)); //type the level time
-	if (object.transform.parent.transform.Find("CompletedPlane").gameObject.active)
-	{
-		yield StartCoroutine(Type("COMPLETED", object.transform.parent.transform.Find("CompletedPlane").gameObject)); //type "completed"
-	}
+//	if (object.transform.parent.transform.Find("CompletedPlane").gameObject.active)
+//	{
+//		yield StartCoroutine(Type("COMPLETED", object.transform.parent.transform.Find("CompletedPlane").gameObject)); //type "completed"
+//	}
 	Running = false;
 } 
 
@@ -147,10 +148,10 @@ function TypeStartAway (object : GameObject, num : int, name : String, time : St
 	FadeOut(object);
 	yield StartCoroutine(UnType(name, object.transform.parent.transform.Find("Name").gameObject, name.Length)); //type level name
 	yield StartCoroutine(UnType(time, object.transform.parent.transform.Find("Time").gameObject, time.Length)); //type the level time
-	if (object.transform.parent.transform.Find("CompletedPlane").gameObject.active)
-	{
-		yield StartCoroutine(UnType("COMPLETED", object.transform.parent.transform.Find("CompletedPlane").gameObject, "COMPLETED".Length)); //type "completed"
-	}
+//	if (object.transform.parent.transform.Find("CompletedPlane").gameObject.active)
+//	{
+//		yield StartCoroutine(UnType("COMPLETED", object.transform.parent.transform.Find("CompletedPlane").gameObject, "COMPLETED".Length)); //type "completed"
+//	}
 	Running = false;
 }
 
@@ -159,6 +160,7 @@ function Type(text : String, object : GameObject) //an effect of typing in somet
 	//var str : String;
 	for (i = 0; i < text.Length; i++)
 	{
+//		Debug.Log(object.name);
 		object.GetComponent(TextMesh).text = object.GetComponent(TextMesh).text + text[i];
 		yield;
 		//yield WaitForSeconds(0.01);
