@@ -17,11 +17,13 @@ function Update ()
 	if (transform.parent == null && !dragControls.levelWon)
 	{
 		transform.parent = Camera.main.transform;
+		GetComponent(NeonFlicker).Going = false;
 	}
 	
 	//unparenting on level win
 	if (dragControls.levelWon)
 	{
 		transform.parent == null;
+		GetComponent(NeonFlicker).Going = true;
 	}
 }

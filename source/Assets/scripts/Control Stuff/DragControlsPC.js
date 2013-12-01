@@ -76,7 +76,7 @@ public var HumanPersonFab : GameObject; //the human person prefab
 public var PausePlane : GameObject; //the pause plane which will show when zoomed out
 public var ZoomStreaks : GameObject; //the star streaks which show when zooming
 public var DeathSphere : GameObject; //a sphere that dies after a time. used for debuging
-public var FailType : TextMesh; //the type which shows on level fail
+public var FailType : GameObject; //the type which shows on level fail
 public var StarStreakMat : Material;
 public var KeyMat : Material; //the material used for the keys
 public var LevelOffsetController : GameObject; //the level select object to move when scrolling level select stuff
@@ -161,7 +161,7 @@ private var dummyVector3 : Vector3;
 private var dummyVector2 : Vector2;
 //private var PrevLevelNum : GameObject; //when moving back to the level select screen, this holds the level num of the level which the player came from
 private static var PrevLevelLoc : Vector3; //the previous level tag's location
-private var LevelOffset = Vector3(-7.5,0,0); 
+private var LevelOffset = Vector3(-2,0,0); 
 private var shipLoc : Vector3; //the location of the ship
 private var Timer : LevelTimer; //the script which controls the level times
 private var dummyObj : GameObject; //a dummy game object
@@ -221,7 +221,7 @@ function Start ()
 	halt = true;
 	cont = false;
 	f = 0;
-	LevelOffset = Vector3.zero;
+//	LevelOffset = Vector3.zero;
 	Timer = GetComponent(LevelTimer); //get the level timer 
 	TutorialTypeSpeed = 0.03;
 	levelFinishCamZoomMultiplier = 0;
@@ -1025,9 +1025,10 @@ function Update ()
 			Application.LoadLevel(Application.loadedLevelName);
 		}
 	}
-	if (FailType.text.Length > 0) {
-		halt = true;
-	}
+//	if (FailType.text.Length > 0) //idk what the fuck this does
+//	{
+//		halt = true;
+//	}
 	
 	//if the level has been beat
 	if (nextLevel)
@@ -1097,6 +1098,13 @@ function Update ()
 	if(sunShrink == true)
 	{
 		shrinkCheck();
+	}
+	
+	//make sure the levelfail plane doesn't show until the level has actually been completed
+	if (!levelWon)
+	{
+		FailType.GetComponent(NeonFlicker).Going = false;
+		FailType.renderer.material.SetColor("_Color", Color(0,0,0,0));
 	}
 }
  
@@ -2058,24 +2066,6 @@ function LevelSelect()
 			}
 		}
 	}
-}
-
-//gui
-function OnGUI()
-{
-	if (isSettingsMenu)
-	{
-		//slider dragging
-	}
-	
-	if (!isLevelSelect)
-	{
-		//back to level select button
-		if (GUI.Button(Rect(10,10,50,30),"Back"))
-		{
-			peopleGoal = 0;
-		}
-	}
 } 
 
 //zoom world out and pause everything. go to world view. PinchIn
@@ -2174,19 +2164,19 @@ function LevelLose()
 	
 	yield WaitForSeconds(1.5);
 	
-	//type fail text
-	LevelLost = true;
-	str = FailType.text;
-	j = str.Length;
-	for (i = 0; i < j; i++)
-	{
-		if (str.Length > 0)
-		{
-			str = str.Substring(0, str.Length - 1);
-			FailType.text = str;
-			yield WaitForSeconds(0.05);
-		}
-	}
+	//type fail text PUT LEVEL LOSE UI HERE
+//	LevelLost = true;
+//	str = FailType.text;
+//	j = str.Length;
+//	for (i = 0; i < j; i++)
+//	{
+//		if (str.Length > 0)
+//		{
+//			str = str.Substring(0, str.Length - 1);
+//			FailType.text = str;
+//			yield WaitForSeconds(0.05);
+//		}
+//	}
 }
 
 //if the level is won
@@ -2200,10 +2190,14 @@ function LevelWon()
 		toLevelSelect = true;
 		yield WaitForSeconds(1);
 		
+		//flicker out things
+		transform.Find("BackArrow").GetComponent(NeonFlicker).FlickerOut = true;
+		
 		//start level winning type
-		FailType.GetComponent(TextTypeEffect).ParentCheck = false;
-		FailType.GetComponent(TextTypeEffect).TextToType = "COMPLETED";
-		FailType.GetComponent(TextTypeEffect).Done = false;
+//		FailType.GetComponent(TextTypeEffect).ParentCheck = false;
+//		FailType.GetComponent(TextTypeEffect).TextToType = "COMPLETED";
+//		FailType.GetComponent(TextTypeEffect).Done = false;
+		FailType.GetComponent(NeonFlicker).Going = true;
 		FailType.transform.parent = null; //unparent
 		
 		//set level win level select variables
