@@ -265,51 +265,48 @@ function Start ()
 	personObjects = GameObject.FindGameObjectsWithTag("humanPerson");
 
 	//This is kinda important, it keeps everything properly parented so this sorting step is necessary
-	if (true)
-	{
-		for (i = 0; i < objects.length; i++)
-		{	
-			//if tagged as a world
-			if (objects[i].tag == "world")
-			{
-				objects[i].transform.parent = SceneScaleController.transform;
-			}
-			//if tagged as a sun
-			if (objects[i].tag == "sun")
-			{
-				objects[i].transform.parent = SceneScaleController.transform;
-			}
-			//if tagged as ui
-			if (objects[i].tag == "ui")
-			{
-				objects[i].transform.parent = SceneScaleController.transform;
-			}
-			//if an asteroid
-			if (objects[i].name == "Asteroid")
-			{
-				objects[i].transform.parent = SceneScaleController.transform;
-			}
-			//SunRadiiController
-			if (objects[i].name == "SunRadiiHolder(Clone)")
-			{
-				objects[i].transform.parent = SceneScaleController.transform;
-			}
-//			if (objects[i].name == "SunChainCircle")
-//			{
-//				if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition)
-//				{
-//					objects[i].transform.parent = SceneScaleController.transform;
-//				}
-//			}
-			//debris
-			if (objects[i].tag == "Debris")
-			{
-				objects[i].transform.parent = SceneScaleController.transform;
-			}
-			//red asteroids
-	//		if (objects[i].name == "RedAsteroid")
-	//			objects[i].transform.parent = SceneScaleController.transform;
+	for (i = 0; i < objects.length; i++)
+	{	
+		//if tagged as a world
+		if (objects[i].tag == "world")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
 		}
+		//if tagged as a sun
+		if (objects[i].tag == "sun")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
+		//if tagged as ui
+		if (objects[i].tag == "ui")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
+		//if an asteroid
+		if (objects[i].name == "Asteroid")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
+		//SunRadiiController
+		if (objects[i].name == "SunRadiiHolder(Clone)")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
+		if (objects[i].name == "SunChainCircle")
+		{
+//			if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition)
+//			{
+				objects[i].transform.parent = SceneScaleController.transform;
+//			}
+		}
+		//debris
+		if (objects[i].tag == "Debris")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
+		//red asteroids
+//		if (objects[i].name == "RedAsteroid")
+//			objects[i].transform.parent = SceneScaleController.transform;
 	}
 
 	peopleGoal = personObjects.length;

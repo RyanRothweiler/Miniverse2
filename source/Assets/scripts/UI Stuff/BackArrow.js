@@ -19,11 +19,11 @@ function Start ()
 function Update () 
 {
 //
-//	//parent to camera
-//	if (transform.parent == null)
-//	{
-//		transform.parent = Camera.main.transform;
-//	}
+	//parent to camera
+	if (transform.parent == null)
+	{
+		transform.parent = Camera.main.transform;
+	}
 //	
 //	//fade in
 //	if (!fadedIn && !dragControls.halt)
