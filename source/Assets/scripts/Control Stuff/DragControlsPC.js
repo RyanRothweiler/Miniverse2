@@ -422,8 +422,20 @@ function Update ()
 			{			
 				if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 				{
-					//if the planet is draggable
-					if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
+					//back arrow
+					if (objectInfo.collider.name == "BackArrow")
+					{
+//						halt = true;
+//						
+//						//wait a bit
+//						toLevelSelect = true;
+//						nextLevel = true;		
+						LevelLose(true);
+						LevelLost = true;
+//						isPlayOne = true;
+//						ZoomIn();
+					}
+					else if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
 					{
 						worldSelected = true;
 						selectedWorld = objectInfo;
@@ -479,7 +491,7 @@ function Update ()
 			{
 				if(!TouchAutoMove)
 				{
-					if (!isLevelSelect && selectedWorld.collider != null)
+					if (!isLevelSelect && selectedWorld.collider != null && selectedWorld.collider.name != "BackArrow")
 					{
 						selectedWorld.collider.GetComponent(PlanetSearcher).Selected = false;
 					}
@@ -943,7 +955,7 @@ function Update ()
 					//check if people on the planet to know if the level has been lost or not
 					if (worldObjects[i].transform.Find("HumanPerson") != null)
 					{
-						LevelLose();
+						LevelLose(false);
 					}
 					
 					//clean up scene and delete planet
@@ -981,10 +993,7 @@ function Update ()
 		SceneScaleController.transform.DetachChildren();
 		this.transform.DetachChildren();
 		
-//		if (!isLevelSelect) 
-//		{
-			halt = false;
-//		}
+		halt = false;
 		
 		//if start zoomed out and paused
 		if (StartZoomedOut)
@@ -1022,7 +1031,14 @@ function Update ()
 		if (transform.position.z >= WorldZDepth + 10)
 		{
 			StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
-			Application.LoadLevel(Application.loadedLevelName);
+			if (selectedWorld.collider.name == "BackArrow")
+			{
+				Application.LoadLevel("levelselect"); 
+			}
+			else
+			{
+				Application.LoadLevel(Application.loadedLevelName);
+			}
 		}
 	}
 //	if (FailType.text.Length > 0) //idk what the fuck this does
@@ -2156,11 +2172,15 @@ function CameraViewPlanetPushing()
 }
 
 //if the level was lost
-function LevelLose()
+function LevelLose(back : boolean)
 {
+	Debug.Log("losing");
 	halt = true;
 	yield WaitForSeconds(0.2);
-	FailType.GetComponent(TextTypeEffect).Type("LEVEL FAIL");
+	if (!back)
+	{
+//		FailType.GetComponent(TextTypeEffect).Type("LEVEL FAIL");
+	}
 	
 	yield WaitForSeconds(1.5);
 	
@@ -2191,7 +2211,7 @@ function LevelWon()
 		yield WaitForSeconds(1);
 		
 		//flicker out things
-		transform.Find("BackArrow").GetComponent(NeonFlicker).FlickerOut = true;
+		//transform.Find("BackArrow").GetComponent(NeonFlicker).FlickerOut = true;
 		
 		//start level winning type
 //		FailType.GetComponent(TextTypeEffect).ParentCheck = false;
@@ -2199,6 +2219,8 @@ function LevelWon()
 //		FailType.GetComponent(TextTypeEffect).Done = false;
 		FailType.GetComponent(NeonFlicker).Going = true;
 		FailType.transform.parent = null; //unparent
+		
+		Debug.Log("in here");
 		
 		//set level win level select variables
 		if (Application.loadedLevelName == "intro to moving people - The The Impotence")

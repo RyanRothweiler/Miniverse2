@@ -25,7 +25,7 @@ static var level20 = false;
 
 
 function Start () 
-{
+{	
 	if (level1)
 	{
 		GameObject.Find("intro to moving people - The The Impotence").transform.Find("CompletedPlane").gameObject.active = true;

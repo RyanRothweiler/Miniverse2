@@ -73,7 +73,7 @@ function Update ()
 			//if people on that planet then level is over
 			if (renderers.Length > 6)
 			{
-				DragControls.LevelLose();
+				DragControls.LevelLose(false);
 			}
 				
 			//is dead... pay for funeral later		

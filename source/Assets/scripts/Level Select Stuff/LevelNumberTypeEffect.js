@@ -67,7 +67,7 @@ function Start ()
 	    	times.Add(numbers[i].transform.parent.Find("Time").GetComponent(TextMesh).text);
 	    	//numbers[i].transform.parent.Find("Time").GetComponent(TextMesh).text = "";
 	    	
-	    	//numbers[i].transform.parent.transform.Find("CompletedPlane").GetComponent(TextMesh).text = "";
+	    	numbers[i].transform.parent.transform.Find("CompletedPlane").active = false;
 	    }
     }
     
@@ -136,10 +136,6 @@ function TypeStart (object : GameObject, num : int, name : String, time : String
 	yield StartCoroutine(Type(num.ToString(), object)); //type number
 	yield StartCoroutine(Type(name, object.transform.parent.transform.Find("Name").gameObject)); //type level name
 	yield StartCoroutine(Type(time, object.transform.parent.transform.Find("Time").gameObject)); //type the level time
-//	if (object.transform.parent.transform.Find("CompletedPlane").gameObject.active)
-//	{
-//		yield StartCoroutine(Type("COMPLETED", object.transform.parent.transform.Find("CompletedPlane").gameObject)); //type "completed"
-//	}
 	Running = false;
 } 
 
@@ -148,10 +144,6 @@ function TypeStartAway (object : GameObject, num : int, name : String, time : St
 	FadeOut(object);
 	yield StartCoroutine(UnType(name, object.transform.parent.transform.Find("Name").gameObject, name.Length)); //type level name
 	yield StartCoroutine(UnType(time, object.transform.parent.transform.Find("Time").gameObject, time.Length)); //type the level time
-//	if (object.transform.parent.transform.Find("CompletedPlane").gameObject.active)
-//	{
-//		yield StartCoroutine(UnType("COMPLETED", object.transform.parent.transform.Find("CompletedPlane").gameObject, "COMPLETED".Length)); //type "completed"
-//	}
 	Running = false;
 }
 
