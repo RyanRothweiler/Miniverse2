@@ -1,0 +1,52 @@
+html {
+	background-color:#000000;
+}
+
+img {
+	max-width:100%;
+	height:auto;
+}
+
+h1, h2, p {
+  color: #ed253c;
+  position: center;
+  left: 50%;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 40px;
+}
+
+h1 {
+  font-family: 'letter_gothic_stdbold', helvetica, arial;
+  font-size: 30px;
+  margin-top: 450px;
+}
+
+h2 {
+  font-family: 'letter_gothic_stdregular', helvetica, arial;
+  font-size: 20px;
+  margin-top: 100px;
+}
+
+#home {
+	background: url(images/starbkg.png)  50% 0 repeat fixed;
+	height: 2000px; 
+	margin: 0 auto; 
+	width: 100%; 
+	max-width: 1920px; 
+	position: relative; 
+}
+
+#home article { 
+  height: 458px; 
+  position: absolute; 
+  text-align: center; 
+  top: 200px; 
+  width: 100%; 
+}
+
+#arrow {
+	margin-top: 300px;
+	opacity: 0.4;
+}
+ 
