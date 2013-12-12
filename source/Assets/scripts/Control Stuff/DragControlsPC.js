@@ -421,20 +421,13 @@ function Update ()
 				{
 					//back arrow
 					if (objectInfo.collider.name == "BackArrow")
-					{
-//						halt = true;
-//						
-//						//wait a bit
-//						toLevelSelect = true;
-//						nextLevel = true;		
+					{	
 						LevelLose(true);
 						LevelLost = true;
-//						isPlayOne = true;
-//						ZoomIn();
 					}
 					else if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
 					{
-						worldSelected = true;
+						//worldSelected = true; // this line should be here if you want the mouse to drag the world.
 						selectedWorld = objectInfo;
 						selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
 						offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z));
