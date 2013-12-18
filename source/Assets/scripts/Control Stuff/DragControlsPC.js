@@ -50,6 +50,7 @@ public var StartZoomedOut = true; //if the level starts in the paused zoomed out
 public var levelWon = false;
 public var nextLevel = false;
 public var skipZoom = true;
+public var PlanetDragging = false; //if the player can drag planets around without moving the view. (this is the old way of doing things, after the PlanetJoystick stuff this should almost always be false
 
 public var Phase1 = false;
 public var Phase2 = false;
@@ -141,6 +142,7 @@ private var toContact = false; //moving to the contact scene
 private var toLevelSelect = false; //move to the level select scene
 private var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
+private var FirstClick = false; //used to detect double clicking
 
 //Strings
 static var Level : String;
@@ -402,16 +404,38 @@ function Update ()
 		{
 			//camera zooming
 			//zooming out
-			if(CanScrollZoom && !LevelPaused && Input.GetAxis("Mouse ScrollWheel") < 0)
+			if (Input.GetMouseButtonDown(0) && FirstClick)
 			{
-				StopAllCoroutines();
-				MoveToWorldView();
+				FirstClick = false;
+				switch (canMoveToPlay) 
+				{
+					case true:
+					{
+						Debug.Log("true");
+						break;
+					}
+					case false:
+					{
+						Debug.Log("false");
+						break;
+					}
+				}
+//				if(CanScrollZoom && !LevelPaused)
+//				{
+//					StopAllCoroutines();
+//					MoveToWorldView();
+//				}
+//				//zooming in
+//				if (CanScrollZoom && LevelPaused)
+//				{
+//					StopAllCoroutines();
+//					MoveToPlayView();
+//				}
 			}
-			//zooming in
-			if (CanScrollZoom && LevelPaused && Input.GetAxis("Mouse ScrollWheel") > 0)
+			if (Input.GetMouseButtonDown(0) && !FirstClick)
 			{
-				StopAllCoroutines();
-				MoveToPlayView();
+				FirstClick = true;
+				ResetFirstClick(); //start the click timer
 			}
 			
 			//world dragging shenanigans
@@ -427,7 +451,7 @@ function Update ()
 					}
 					else if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
 					{
-						//worldSelected = true; // this line should be here if you want the mouse to drag the world.
+						worldSelected = true; // this line should be here if you want the mouse to drag the world.
 						selectedWorld = objectInfo;
 						selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
 						offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z));
@@ -435,7 +459,7 @@ function Update ()
 				}
 			}
 			//if planet dragging
-			if (!LevelPaused && Input.GetMouseButton(0) && worldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")//&& !selectedWorld.collider.GetComponentInChildren(planetLifeIndicator).dead)
+			if (PlanetDragging && !LevelPaused && Input.GetMouseButton(0) && worldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")//&& !selectedWorld.collider.GetComponentInChildren(planetLifeIndicator).dead)
 			{
 				if (TouchAutoMove)
 				{
@@ -1113,7 +1137,14 @@ function Update ()
 		FailType.renderer.material.SetColor("_Color", Color(0,0,0,0));
 	}
 }
- 
+
+//resets the first click after some time
+function ResetFirstClick() 
+{
+	yield WaitForSeconds(0.2);
+	FirstClick = false;
+}
+
 //fade out the keys
 function FadeOutKeys()
 {

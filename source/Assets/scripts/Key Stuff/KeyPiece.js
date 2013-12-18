@@ -133,35 +133,35 @@ function Update ()
 	
 	
 	//key mating
-	if (Mate1 != null && !Mated1)//mate 1
+	if (Mate1 != null && !Mated1 && Mate1.active)//mate 1
 	{
 		if (Vector3.Distance(MatePoint1.transform.position, Mate1.GetComponent(KeyPiece).MatePoint1.transform.position) < SnapDistance)
 		{
 			Snap(1);
 		}
 	}
-	if (Mate2 != null && !Mated2)//mate 2
+	if (Mate2 != null && !Mated2 && Mate2.active)//mate 2
 	{
 		if (Vector3.Distance(MatePoint2.transform.position, Mate2.GetComponent(KeyPiece).MatePoint2.transform.position) < SnapDistance)
 		{
 			Snap(2);
 		}
 	}
-	if (Mate3 != null && !Mated3)//mate 3
+	if (Mate3 != null && !Mated3 && Mate3.active)//mate 3
 	{
 		if (Vector3.Distance(MatePoint3.transform.position, Mate3.GetComponent(KeyPiece).MatePoint3.transform.position) < SnapDistance)
 		{
 			Snap(3);
 		}
 	}
-	if (Mate4 != null && !Mated4)//mate 4
+	if (Mate4 != null && !Mated4 && Mate4.active)//mate 4
 	{
 		if (Vector3.Distance(MatePoint4.transform.position, Mate4.GetComponent(KeyPiece).MatePoint4.transform.position) < SnapDistance)
 		{
 			Snap(4);
 		}
 	}
-	if (Mate5 != null && !Mated5)//mate 4
+	if (Mate5 != null && !Mated5 && Mate5.active)//mate 4
 	{
 		if (Vector3.Distance(MatePoint5.transform.position, Mate5.GetComponent(KeyPiece).MatePoint5.transform.position) < SnapDistance)
 		{
