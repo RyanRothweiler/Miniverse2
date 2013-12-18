@@ -5,6 +5,7 @@ html {
 img {
 	max-width:100%;
 	height:auto;
+	border:0;
 }
 
 h1, h2, h3, h4, h5, h6 p {
@@ -50,7 +51,7 @@ a:hover
 #home {
 	margin: 0 auto; 
 	width: 100%; 
-	max-width: 800px; 
+	max-width: 700px; 
 	position: relative; 
 }
 
@@ -74,7 +75,7 @@ a:hover
 }
 
 .video-container {
-    position: relative;
+    position: relative;	
     padding-bottom: 56.25%;
     padding-top: 30px; height: 0; overflow: hidden;
 }
