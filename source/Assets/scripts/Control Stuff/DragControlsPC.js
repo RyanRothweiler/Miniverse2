@@ -406,40 +406,27 @@ function Update ()
 			//zooming out
 			if (Input.GetMouseButtonDown(0) && FirstClick)
 			{
-				FirstClick = false;
-				switch (canMoveToPlay) 
+				if(CanScrollZoom && !LevelPaused)
 				{
-					case true:
-					{
-						Debug.Log("true");
-						break;
-					}
-					case false:
-					{
-						Debug.Log("false");
-						break;
-					}
+					MoveToWorldView();
 				}
-//				if(CanScrollZoom && !LevelPaused)
-//				{
-//					StopAllCoroutines();
-//					MoveToWorldView();
-//				}
-//				//zooming in
-//				if (CanScrollZoom && LevelPaused)
-//				{
-//					StopAllCoroutines();
-//					MoveToPlayView();
-//				}
+				//zooming in
+				else if (CanScrollZoom && LevelPaused)
+				{
+					//set position to zoom into
+					cameraZoomInPos = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)); 
+					cameraZoomInPos.z = -11;
+					//zoom in
+					MoveToPlayView();
+				}
 			}
 			if (Input.GetMouseButtonDown(0) && !FirstClick)
 			{
 				FirstClick = true;
 				ResetFirstClick(); //start the click timer
 			}
-			
 			//world dragging shenanigans
-			if (!LevelPaused && Input.GetMouseButtonDown(0) && !AutoMoving && !isLevelSelect)
+			if (canMoveToWorld && !LevelPaused && Input.GetMouseButtonDown(0) && !AutoMoving && !isLevelSelect)
 			{			
 				if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 				{
@@ -996,7 +983,7 @@ function Update ()
 	else if(CanZoom && ZoomVirgin)
 	{
 		ZoomVirgin = false;
-		Timer.StartTimer(); //start the level timer
+		//Timer.StartTimer(); //start the level timer
 		
 		//unparent...ERVERRRTHNNGG
 		SceneScaleController.transform.localScale = Vector3(1,1,1);
@@ -1032,7 +1019,7 @@ function Update ()
 	{
 		LevelWon();
 		FlyAway = true;
-		Timer.LevelDone(previousLevel);
+		//Timer.LevelDone(previousLevel);
 	}
 	
 	//if player lost
@@ -2116,9 +2103,6 @@ function MoveToWorldView()
 		//zoom streaks
 		//ZoomStreaks.GetComponent(ZoomStarStreaks).MoveToPlanets();
 		
-		canMoveToWorld = false;
-		canMoveToPlay = true;
-		
 		cameraZoomInPos = transform.position;
 		cameraZoomInPos.z = CameraLocDepth;
 		
@@ -2129,6 +2113,9 @@ function MoveToWorldView()
 		
 		//move out camera
 		yield StartCoroutine(MoveTo(0.2,CameraZoomOutPos));
+
+		canMoveToWorld = false;
+		canMoveToPlay = true;
 		tapCount = 0;
 	}
 }
@@ -2144,15 +2131,15 @@ function MoveToPlayView()
 		//zoom streaks
 		//ZoomStreaks.GetComponent(ZoomStarStreaks).MoveAwayFromPlanets();
 		
-		canMoveToPlay = false;
-		canMoveToWorld = true;
-		
 		//type away pause text
 		PausePlane.GetComponent(TextTypeEffect).Done = false;
 		PausePlane.GetComponent(TextTypeEffect).TextToType = " ";
 		
 		//move in camera
 		yield StartCoroutine(MoveTo(0.2,cameraZoomInPos));
+		
+		canMoveToPlay = false;
+		canMoveToWorld = true;
 		tapCount = 0;
 	}
 }
@@ -2195,7 +2182,6 @@ function CameraViewPlanetPushing()
 //if the level was lost
 function LevelLose(back : boolean)
 {
-	Debug.Log("losing");
 	halt = true;
 	yield WaitForSeconds(0.2);
 	if (!back)
@@ -2240,8 +2226,6 @@ function LevelWon()
 //		FailType.GetComponent(TextTypeEffect).Done = false;
 		FailType.GetComponent(NeonFlicker).Going = true;
 		FailType.transform.parent = null; //unparent
-		
-		Debug.Log("in here");
 		
 		//set level win level select variables
 		if (Application.loadedLevelName == "intro to moving people - The The Impotence")
