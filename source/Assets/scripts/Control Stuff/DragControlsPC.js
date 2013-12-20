@@ -21,7 +21,7 @@ public static var previousLevel = 0; //the level num which the player was in las
 public var worldDist : float; //distance which the worlds must stay to the sun
 public var DragRate : float; //speed which player moves the world around
 public var CameraPositionSpeed : float; // the speed which the camera moves in during the level transitions
-public var CameraScaleSpeed : float; //the speed which the world scales up and down in the level transitions ƒ
+public var CameraScaleSpeed : float; //the speed which the world scales up and down in the level transitions 
 public var LevelSelectDragRate : float; //rate at which the level select tags are drug  
 public var TutorialTypeSpeed : float; //the speed at which the tutorials are typed
 
@@ -415,7 +415,7 @@ function Update ()
 				{
 					//set position to zoom into
 					cameraZoomInPos = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)); 
-					cameraZoomInPos.z = -11;
+					cameraZoomInPos.z = CameraLocDepth;
 					//zoom in
 					MoveToPlayView();
 				}

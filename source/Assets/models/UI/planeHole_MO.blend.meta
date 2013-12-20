@@ -3,6 +3,7 @@ guid: 4a15c4f1d1286cd41bf98b128f7e3448
 ModelImporter:
   fileIDToRecycleName:
     4300000: Plane_001
+    4300002: PlaneHole
     7400000: Default Take //// planeHole_MO
   serializedVersion: 10
   materials:
