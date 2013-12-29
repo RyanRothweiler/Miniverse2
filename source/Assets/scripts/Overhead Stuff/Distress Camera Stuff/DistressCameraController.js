@@ -40,7 +40,7 @@ function Update ()
 		if (dragControls.worldObjects[i].name != "humanShip")
 		{
 			//check planet life first
-			if (dragControls.worldObjects[i].transform.Find("planetShrinkingEffect").GetComponent(planetLifeIndicator).degradationSpeed > 0 && dragControls.worldObjects[i].transform.Find("planetShrinkingEffect").GetComponent(planetLifeIndicator).xPercentage > 80)
+			if (dragControls.worldObjects[i].transform.Find("planetShrinkingEffect").GetComponent(planetLifeIndicator).degradationSpeed > 0 && dragControls.worldObjects[i].transform.Find("planetShrinkingEffect").GetComponent(planetLifeIndicator).xPercentage > 60)
 			{
 				//make sure there is a person on that planet too
 				if (dragControls.worldObjects[i].transform.Find("HumanPerson"))

@@ -331,14 +331,14 @@ function Start ()
 	}
 	else
 	{
-//		print("IOS");
-//		DragRate = 0.02;
-//		PlatformIOS = true;
-//		PlatformPC = false;
-		print("PC");
-		PlatformPC = true;
-		PlatformIOS = false;
-		WorldDraggingInverted = true;
+		print("IOS");
+		DragRate = 0.02;
+		PlatformIOS = true;
+		PlatformPC = false;
+//		print("PC");
+//		PlatformPC = true;
+//		PlatformIOS = false;
+//		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -413,9 +413,35 @@ function Update ()
 				//zooming in
 				else if (CanScrollZoom && LevelPaused)
 				{
-					//set position to zoom into
-					cameraZoomInPos = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)); 
-					cameraZoomInPos.z = CameraLocDepth;
+					//detect the planet closest to the touch pos and zoom into that instead of where the player actually touched
+					var closestPla : GameObject; //holds the current closest planet
+					var smallDist = 1000; //holds the distance between the current closest planet and the touchTarget
+					var touchTarget : Vector3; //where the player actually touched
+					//now do the shit
+					touchTarget = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)); 
+					touchTarget.z = CameraLocDepth;   
+					
+					for (var i = 0; i < worldObjects.Length; i++)
+					{
+						if (Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
+						{
+							//set new smallest planet
+							smallDist = Vector3.Distance(worldObjects[i].transform.position, touchTarget);
+							closestPla = worldObjects[i];
+						}
+					}
+					 
+					//if the player tapped close to a planet then zoom into that, if not then zoom into the place they tapped
+					if (smallDist < 32)
+					{
+						cameraZoomInPos = closestPla.transform.position;
+						cameraZoomInPos.z = CameraLocDepth;
+					}
+					else
+					{
+						cameraZoomInPos = touchTarget;
+					}
+					
 					//zoom in
 					MoveToPlayView();
 				}
@@ -438,7 +464,7 @@ function Update ()
 					}
 					else if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
 					{
-						worldSelected = true; // this line should be here if you want the mouse to drag the world.
+						worldSelected = true;
 						selectedWorld = objectInfo;
 						selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
 						offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z));
@@ -454,8 +480,10 @@ function Update ()
 				}
 				
 				//if the planet is alive then move the planet
-				if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)		
+				if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
+				{
 					selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+				}
 			}
 			//if view dragging
 			if ( (Input.GetAxis("Horizontal") || Input.GetAxis("Vertical")) && !LevelPaused && CanViewDrag)
@@ -561,10 +589,36 @@ function Update ()
 							tapCount = 0;
 							if (LevelPaused) 
 							{
-								//set the position to zoom the camera in 
-								cameraZoomInPos = Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z));
-								cameraZoomInPos.z = CameraLocDepth;
+								//detect the planet closest to the touch pos and zoom into that instead of where the player actually touched
+								//closestPla : GameObject; //holds the current closest planet
+								smallDist = 1000; //holds the distance between the current closest planet and the touchTarget
+								//touchTarget : Vector3; //where the player actually touched
+								//now do the shit
+								touchTarget = Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z));
+								touchTarget.z = CameraLocDepth;   
 								
+								for (i = 0; i < worldObjects.Length; i++)
+								{
+									if (Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
+									{
+										//set new smallest planet
+										smallDist = Vector3.Distance(worldObjects[i].transform.position, touchTarget);
+										closestPla = worldObjects[i];
+									}
+								}
+								 
+								//if the player tapped close to a planet then zoom into that, if not then zoom into the place they tapped
+								if (smallDist < 32)
+								{
+									cameraZoomInPos = closestPla.transform.position;
+									cameraZoomInPos.z = CameraLocDepth;
+								}
+								else
+								{
+									cameraZoomInPos = touchTarget;
+								}
+								
+								//zoom in
 								MoveToPlayView();
 							}
 							else
@@ -577,7 +631,7 @@ function Update ()
 						Touch1StartPos = touch.position;
 						
 						//planet selection
-						if (!LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(touch.position.x,touch.position.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+						if (canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(touch.position.x,touch.position.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 						{
 							//if the planet is draggable
 							if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
@@ -642,7 +696,7 @@ function Update ()
 				}
 				
 				//if planet dragging
-				if (!LevelPaused && Touch1WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
+				if (canMoveToWorld && PlanetDragging && !LevelPaused && Touch1WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
 				{
 					Touch1WorldSelected = true;
 					if (TouchAutoMove)
@@ -695,7 +749,7 @@ function Update ()
 				}
 				
 				//if planet dragging
-				if (!LevelPaused && Touch2WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
+				if (canMoveToWorld && PlanetDragging && !LevelPaused && Touch2WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
 				{
 					if (TouchAutoMove)
 					{
@@ -946,7 +1000,9 @@ function Update ()
 					{
 						//if the object is a world then set close to true
 						if (worldObjects[i].transform.name == "HumanPlanet")
+						{
 							close = true;
+						}
 					}
 				}
 				
@@ -2182,6 +2238,7 @@ function CameraViewPlanetPushing()
 //if the level was lost
 function LevelLose(back : boolean)
 {
+	Debug.Log("losing");
 	halt = true;
 	yield WaitForSeconds(0.2);
 	if (!back)
@@ -2190,6 +2247,8 @@ function LevelLose(back : boolean)
 	}
 	
 	yield WaitForSeconds(1.5);
+	
+	LevelLost = true;
 	
 	//type fail text PUT LEVEL LOSE UI HERE
 //	LevelLost = true;
