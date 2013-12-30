@@ -233,11 +233,6 @@ function Start ()
 		shipLoc = GameObject.Find("humanShip").transform.position;
 	}
 	
-	if (StartZoomedOut)
-	{
-		LevelPaused = true;
-	}
-	
 	cameraZoomInPos = transform.Find("ZoomInInit").transform.position;
 	
 	//center scale controller
@@ -260,6 +255,17 @@ function Start ()
 //		//instant zoom
 //		transform.position.z = camZStopPos;
 //	}
+
+	//if starting zoomed out. make sure that the background is where it should be relative to the level not the camera.
+	if (StartZoomedOut)
+	{
+		//do this weird shit first
+		LevelPaused = false;
+		
+		//now do background stuff
+		NebulaBackground.transform.parent = null;
+		NebulaBackground.transform.position.z = 50;
+	}
 	
 	objects = GameObject.FindObjectsOfType(GameObject);
 	worldObjects = GameObject.FindGameObjectsWithTag("world");
@@ -331,14 +337,14 @@ function Start ()
 	}
 	else
 	{
-		print("IOS");
-		DragRate = 0.02;
-		PlatformIOS = true;
-		PlatformPC = false;
-//		print("PC");
-//		PlatformPC = true;
-//		PlatformIOS = false;
-//		WorldDraggingInverted = true;
+//		print("IOS");
+//		DragRate = 0.02;
+//		PlatformIOS = true;
+//		PlatformPC = false;
+		print("PC");
+		PlatformPC = true;
+		PlatformIOS = false;
+		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -353,8 +359,7 @@ function Start ()
 		CanScrollZoom = true;
 		CanViewDrag = true;
 		WorldDraggingInverted = true;
-	}
-	
+	}	
 }
 
 //main update function
