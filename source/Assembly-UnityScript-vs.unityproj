@@ -68,6 +68,7 @@
      <Compile Include="Assets\scripts\Key Stuff\KeyPiece.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyPositions.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyShowController.js" />
+     <Compile Include="Assets\scripts\Level Select Stuff\BackgroundDebrisParenting.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\KeyHolderController.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\LevelNumberTypeEffect.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\LevelProgress.js" />

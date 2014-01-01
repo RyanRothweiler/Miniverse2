@@ -108,25 +108,27 @@ function TypeControllerIn()
 
 function TypeControllerAway()
 {
-	Running = false;
-	do
-	{
-		if (!Running)
-		{
-			if (!(numNext+1 > numbers.Length))
-			{
-				TypeStartAway(numbers[numNext], numNext+1, names[numNext], times[numNext]);
-				Running = true;
-				numNext++;
-			}
-			else
-			{
-				NextLevelReady = true;
-				return;
-			}
-		}
-		yield;
-	}while(numNext <= awayStart + 6);
+//	Running = false;
+//	do
+//	{
+//		if (!Running)
+//		{
+//			if (!(numNext+1 > numbers.Length))
+//			{
+//				TypeStartAway(numbers[numNext], numNext+1, names[numNext], times[numNext]);
+//				Running = true;
+//				numNext++;
+//			}
+//			else
+//			{
+//				NextLevelReady = true;
+//				return;
+//			}
+//		}
+//		yield;
+//	}while(numNext <= awayStart + 6);
+
+	yield WaitForSeconds(0.7);
 	NextLevelReady = true;
 }
 

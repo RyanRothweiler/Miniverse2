@@ -16,6 +16,7 @@ private var speed = 0.02;
 private var target = 0.8;
 private var cont = true;
 private var virgin = true;
+private var virginOut = true;
 private var LightIntensity = 0.0;
 
 function Start () 
@@ -38,10 +39,17 @@ function Start ()
 function Update()
 {
 	//if the level is done introing (this if statement is the worst bit of code I've ever written)
-	if ((this.name == "Level fail") || (this.name == "BackArrow" && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0) || (this.name != "BackArrow" && (!transform.parent.parent || this.name == "Number" || this.name == "CompletedPlane") && virgin))
+	if ((this.name == "Level fail") || (this.name == "BackArrow" && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0) || (this.name != "BackArrow" && (!transform.parent.parent || this.name == "Number" || this.name == "CompletedPlane") && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0))
 	{
 		virgin = false;
 		WaitABit();
+	}
+	
+	//if on the level select and moving on to the next level then flicker out. 
+	if (Camera.main.GetComponent(DragControlsPC).nextLevel && Camera.main.GetComponent(DragControlsPC).toLevel && Camera.main.GetComponent(DragControlsPC).fromLSelect && virginOut)
+	{
+		virginOut = false;
+		FlickerOut = true;
 	}
 	
 	if (Going && Use)
@@ -178,7 +186,7 @@ function Update()
 		}
 			
 		//check if going to continue
-		if ((Random.Range(0,100) > 90))
+		if ((Random.Range(0,100) > 80))
 		{
 			//stop everything
 			Going = false;

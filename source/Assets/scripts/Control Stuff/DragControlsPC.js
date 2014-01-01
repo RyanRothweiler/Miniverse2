@@ -133,14 +133,14 @@ static var fromLSelect : boolean;
 private var buttonPushed = false;//if the back button was pushed
 private var CanZoom = true; //if the level can level transition zoom
 private var LevelFirst = true;
-private var ZoomVirgin = true;
+public var ZoomVirgin = true;
 private var tagPressed = false; //if a level tag has been pressed or not
 private var iosTagDepress = false;  //if a tag is depressed
 private var FadeKick = false; //if kick out of the level tag fading
 private var toSettings = false; //moving to the setting scene
 private var toContact = false; //moving to the contact scene
-private var toLevelSelect = false; //move to the level select scene
-private var toLevel = false; //moving to a level scene
+public var toLevelSelect = false; //move to the level select scene
+public var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
 private var FirstClick = false; //used to detect double clicking
 
@@ -242,19 +242,9 @@ function Start ()
 	if (isLevelSelect) 
 	{
 		//key fading
-		KeyMat.color.a = 0;
+		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r,KeyMat.GetColor("_TintColor").g,KeyMat.GetColor("_TintColor").b, 0));
 		FadeInKeys();
-		
-		//instant zoom
-//		transform.position.z = camZStopPos;
 	}
-	
-	//other menu inits
-//	if (isMainMenu || isSettingsMenu || isContactMenu)
-//	{
-//		//instant zoom
-//		transform.position.z = camZStopPos;
-//	}
 
 	//if starting zoomed out. make sure that the background is where it should be relative to the level not the camera.
 	if (StartZoomedOut)
@@ -324,7 +314,6 @@ function Start ()
 	if (!skipZoom) 
 	{
 		SceneScaleController.transform.localScale = Vector3(0,0,0);
-//		Camera.main.fieldOfView = 100; 
 	}
 	
 	//set platform and platform specific settings
@@ -369,7 +358,7 @@ function Update ()
 	Transitioning = false;
 	
 	//just menu stuff. this code is shit
-	if(isLevelSelect)
+	if(isLevelSelect && !ZoomVirgin)
 	{
 		LevelSelect();
 		LevelOffsetController.transform.position = PrevLevelLoc + LevelOffset;
@@ -703,6 +692,13 @@ function Update ()
 				//if planet dragging
 				if (canMoveToWorld && PlanetDragging && !LevelPaused && Touch1WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
 				{
+					//back arrow
+					if (objectInfo.collider.name == "BackArrow")
+					{	
+						LevelLose(true);
+						LevelLost = true;
+					}
+					
 					Touch1WorldSelected = true;
 					if (TouchAutoMove)
 					{
@@ -1129,7 +1125,7 @@ function Update ()
 			toLevelSelect = false;
 			isPlayOne = true;
 			ZoomIn();
-			if (transform.position.z >= WorldZDepth + 10)
+			if (transform.position.z >= WorldZDepth + 100)
 			{
 				Application.LoadLevel("Contact_SCE");
 			}
@@ -1153,10 +1149,16 @@ function Update ()
 			Camera.main.GetComponent(LevelNumberTypeEffect).SendMessage("TypeAway");
 			if (Camera.main.GetComponent(LevelNumberTypeEffect).NextLevelReady)
 			{
-				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
-				Application.LoadLevel(Level);
-				inGame = true;
-				fromLSelect = false;
+//				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
+				isPlayOne = true;
+				ZoomIn();
+				
+				if (transform.position.z >= WorldZDepth + 100)
+				{
+					Application.LoadLevel(Level);
+					inGame = true;
+					fromLSelect = false;
+				}
 			}
 		}
 		
@@ -1165,7 +1167,7 @@ function Update ()
 		{
 			isPlayOne = true;
 			ZoomIn();
-			if (transform.position.z >= WorldZDepth + 10)
+			if (transform.position.z >= WorldZDepth + 100)
 			{
 				Application.LoadLevel("MainMenu");
 			}
@@ -1198,19 +1200,26 @@ function FadeOutKeys()
 {
 	do
 	{
-		KeyMat.color.a -= Time.deltaTime * 2;
+		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r, KeyMat.GetColor("_TintColor").g, KeyMat.GetColor("_TintColor").b, KeyMat.GetColor("_TintColor").a - (Time.deltaTime * 2)));
 		yield WaitForSeconds(0.01);
-	} while (KeyMat.color.a > 0);
+	} while (KeyMat.GetColor("_TintColor").a > 0);
 }
  
 //fade in the keys
 function FadeInKeys()
 {
+	//wait until the level is done fading in 
+	do 
+	{
+		yield;
+	} while (Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount != 0);
+	
+	//now fade in
 	do
 	{
-		KeyMat.color.a += Time.deltaTime * 2;
+		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r, KeyMat.GetColor("_TintColor").g, KeyMat.GetColor("_TintColor").b, KeyMat.GetColor("_TintColor").a + (Time.deltaTime * 2)));
 		yield WaitForSeconds(0.01);
-	} while (KeyMat.color.a < 1);
+	} while (KeyMat.GetColor("_TintColor").a < 1);
 }
 
 //set the next level... hence the name.
@@ -1937,7 +1946,7 @@ function LevelSelect()
 					}
 					else
 					{
-						print("locked");
+						Debug.Log("locked");
 					}
 				}
 				else //if not boss level then load like a normal level
