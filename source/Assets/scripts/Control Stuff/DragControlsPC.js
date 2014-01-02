@@ -326,14 +326,14 @@ function Start ()
 	}
 	else
 	{
-//		print("IOS");
-//		DragRate = 0.02;
-//		PlatformIOS = true;
-//		PlatformPC = false;
-		print("PC");
-		PlatformPC = true;
-		PlatformIOS = false;
-		WorldDraggingInverted = true;
+		print("IOS");
+		DragRate = 0.02;
+		PlatformIOS = true;
+		PlatformPC = false;
+//		print("PC");
+//		PlatformPC = true;
+//		PlatformIOS = false;
+//		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -627,19 +627,19 @@ function Update ()
 						//planet selection
 						if (canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(touch.position.x,touch.position.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 						{
+							//back arrow
+							if (objectInfo.collider.name == "BackArrow")
+							{	
+								LevelLose(true);
+								LevelLost = true;
+							}
 							//if the planet is draggable
-							if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
+							else if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
 							{
 								Touch1WorldSelected = true;
 								selectedWorld = objectInfo;
 								selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
 								offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y,WorldZDepth - Camera.main.transform.position.z));
-							}
-							
-							//if tapped the reset button
-							if (objectInfo.collider.name == "BackArrow")
-							{
-								print("hit back");
 							}
 						}
 					}
@@ -691,14 +691,7 @@ function Update ()
 				
 				//if planet dragging
 				if (canMoveToWorld && PlanetDragging && !LevelPaused && Touch1WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
-				{
-					//back arrow
-					if (objectInfo.collider.name == "BackArrow")
-					{	
-						LevelLose(true);
-						LevelLost = true;
-					}
-					
+				{					
 					Touch1WorldSelected = true;
 					if (TouchAutoMove)
 					{
