@@ -14,7 +14,7 @@ function Start ()
 function Update () 
 {
 	//parent this to the level offset controller after the level is done zooming in
-	if (Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0 & parentVirgin)
+	if (Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0 && parentVirgin)
 	{
 		parentVirgin = false;
 		ParentWait();

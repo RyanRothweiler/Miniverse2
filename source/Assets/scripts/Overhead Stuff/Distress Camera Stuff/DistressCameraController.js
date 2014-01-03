@@ -104,7 +104,6 @@ function ShowMiniMap() //shows the mini map
 
 function HideMiniMap() //hides the mini map... duh.
 {
-	Debug.Log("hiding");
 	Distressed = false;
 	
 	//hide camera

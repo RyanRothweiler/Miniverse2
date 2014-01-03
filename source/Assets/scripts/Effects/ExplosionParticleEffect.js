@@ -14,32 +14,32 @@ function Start ()
 
 function Update () 
 {
-	if (!DragControls.LevelPaused)
-	{
-		//start all animations in children
-		if (!first)
-		{
-			first = true;
-			
-			objectList = GetComponentsInChildren(ParticleSystem); //get all particle effects
-			for (i = 0; i < objectList.length; i++)
-			{
-				objectList[i].particleSystem.Play();
-			}
-		}
-	}
-	else
-	{
-		//stop all animations and particle effects in children
-		if (first)
-		{
-			first = false;
-			
-			objectList = GetComponentsInChildren(ParticleSystem); //get all particle effects
-			for (i = 0; i < objectList.length; i++)
-			{
-				objectList[i].particleSystem.Pause();
-			}
-		}
-	}
+//	if (!DragControls.LevelPaused)
+//	{
+//		//start all animations in children
+//		if (!first)
+//		{
+//			first = true;
+//			
+//			objectList = GetComponentsInChildren(ParticleSystem); //get all particle effects
+//			for (i = 0; i < objectList.length; i++)
+//			{
+//				objectList[i].particleSystem.Play();
+//			}
+//		}
+//	}
+//	else
+//	{
+//		//stop all animations and particle effects in children
+//		if (first)
+//		{
+//			first = false;
+//			
+//			objectList = GetComponentsInChildren(ParticleSystem); //get all particle effects
+//			for (i = 0; i < objectList.length; i++)
+//			{
+//				objectList[i].particleSystem.Pause();
+//			}
+//		}
+//	}
 }

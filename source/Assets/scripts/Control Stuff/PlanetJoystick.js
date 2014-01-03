@@ -44,6 +44,7 @@ function Update ()
 				//move stuff
 				transform.position += direction;
 				dragControls.selectedWorld.collider.transform.position = Camera.main.ScreenToWorldPoint(Vector3(((Input.mousePosition.x - home.x) * PlanetDragRate) + home.x, ((Input.mousePosition.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
+				dragControls.FailType.transform.parent = Camera.main.transform;
 			}
 			else
 			{
@@ -71,6 +72,7 @@ function Update ()
 				//move stuff
 				transform.position += direction;
 				dragControls.selectedWorld.collider.transform.position = Camera.main.ScreenToWorldPoint(Vector3(((dragControls.Touch1EndPos.x - home.x) * PlanetDragRate) + home.x, ((dragControls.Touch1EndPos.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
+				dragControls.FailType.transform.parent = Camera.main.transform;
 			}
 			else
 			{

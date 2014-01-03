@@ -250,7 +250,7 @@ function Start ()
 	if (StartZoomedOut)
 	{
 		//do this weird shit first
-		LevelPaused = false;
+		LevelPaused = true;
 		
 		//now do background stuff
 		NebulaBackground.transform.parent = null;
@@ -326,14 +326,14 @@ function Start ()
 	}
 	else
 	{
-		print("IOS");
-		DragRate = 0.02;
-		PlatformIOS = true;
-		PlatformPC = false;
-//		print("PC");
-//		PlatformPC = true;
-//		PlatformIOS = false;
-//		WorldDraggingInverted = true;
+//		print("IOS");
+//		DragRate = 0.02;
+//		PlatformIOS = true;
+//		PlatformPC = false;
+		print("PC");
+		PlatformPC = true;
+		PlatformIOS = false;
+		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -2248,6 +2248,7 @@ function LevelLose(back : boolean)
 	Debug.Log("losing");
 	halt = true;
 	yield WaitForSeconds(0.2);
+	
 	if (!back)
 	{
 //		FailType.GetComponent(TextTypeEffect).Type("LEVEL FAIL");
@@ -2258,18 +2259,7 @@ function LevelLose(back : boolean)
 	LevelLost = true;
 	
 	//type fail text PUT LEVEL LOSE UI HERE
-//	LevelLost = true;
-//	str = FailType.text;
-//	j = str.Length;
-//	for (i = 0; i < j; i++)
-//	{
-//		if (str.Length > 0)
-//		{
-//			str = str.Substring(0, str.Length - 1);
-//			FailType.text = str;
-//			yield WaitForSeconds(0.05);
-//		}
-//	}
+
 }
 
 //if the level is won
@@ -2322,7 +2312,7 @@ function LevelWon()
 		{
 			transform.parent.GetComponent(LevelsCompleted).level7 = true;
 		}
-		if (Application.loadedLevelName == "intro to sun radii shrinking - (2PiR) - t")
+		if (Application.loadedLevelName == "into to planet life- Decay")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level8 = true;
 		}

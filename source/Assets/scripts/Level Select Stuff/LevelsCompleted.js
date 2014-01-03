@@ -56,7 +56,7 @@ function Start ()
 	}
 	if (level8)
 	{
-		GameObject.Find("intro to sun radii shrinking - (2PiR) - t").transform.Find("CompletedPlane").gameObject.active = true;
+		GameObject.Find("into to planet life- Decay").transform.Find("CompletedPlane").gameObject.active = true;
 	}
 	if (level9)
 	{

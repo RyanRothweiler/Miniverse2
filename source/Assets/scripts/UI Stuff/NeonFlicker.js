@@ -17,6 +17,7 @@ private var target = 0.8;
 private var cont = true;
 private var virgin = true;
 private var virginOut = true;
+private var flickerVirgin = true;
 private var LightIntensity = 0.0;
 
 function Start () 
@@ -211,4 +212,13 @@ function WaitABit()
 {
 	yield WaitForSeconds(Random.Range(0.2,0.75));
 	Going = true;
+}
+
+function FlickerOutControl()
+{
+	if (flickerVirgin)
+	{
+		flickerVirgin = false;
+		FlickerOut = true;
+	}
 }
