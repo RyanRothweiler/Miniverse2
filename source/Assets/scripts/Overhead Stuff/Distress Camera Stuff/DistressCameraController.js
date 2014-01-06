@@ -76,7 +76,6 @@ function Update ()
 
 function ShowMiniMap() //shows the mini map
 {
-	Debug.Log("showing");
 	
 	Distressed = true;
 
@@ -110,7 +109,6 @@ function HideMiniMap() //hides the mini map... duh.
 	this.camera.enabled = false;
 	
 	//hide map ui
-	Debug.Log("hiding");
 	DistressUI.transform.Find("DistressCircle").renderer.enabled = false;
 	DistressUI.transform.Find("DistressArrow/DistressArrow_model").renderer.enabled = false;
 }
