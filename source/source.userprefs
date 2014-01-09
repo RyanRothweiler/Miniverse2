@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Overhead Stuff\Distress Camera Stuff\DistressCameraController.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="329" Column="3" />
       <File FileName="Assets\scripts\Overhead Stuff\Distress Camera Stuff\DistressCameraController.js" Line="54" Column="8" />
       <File FileName="Assets\scripts\Tutorial Stuff\TouchTutorial.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\UI Stuff\NeonFlicker.js" Line="1" Column="1" />

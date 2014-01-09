@@ -2,7 +2,7 @@
 
 //public vars
 public var Distressed : boolean;
-public var zPos = 3;
+public var zPos : float;
 public var DistressUI : GameObject;
 
 //private vars
