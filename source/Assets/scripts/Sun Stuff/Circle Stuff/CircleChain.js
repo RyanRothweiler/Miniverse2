@@ -40,7 +40,7 @@ class CircleChain
 	}
 	
 	function SpliceTogether(chainNum : int, DeathSphere : GameObject)
-	{	
+	{
 		//init file counters
 		fileNum = 0; 
 		combinedNum = 0;
@@ -51,10 +51,10 @@ class CircleChain
 			var levelName = pathList[0].Split("/"[0]);
 			var name = levelName[3];
 			
-			//if the directory doesn't exist then create it (also creates a folder in the Resources folder
+			//if the directory doesn't exist then create it (also creates a folder in the Resources folder)
 			if (Application.isEditor && !(System.IO.Directory.Exists("Assets/models/Sun Radii Baking Stuff/"+name)))
 			{
-				Debug.Log("creating directory");
+				Debug.Log("creating saved mesh directory");
 				var GUID = AssetDatabase.CreateFolder("Assets/models/Sun Radii Baking Stuff", name); //create the folder
 				GUID = AssetDatabase.CreateFolder("Assets/Resources", name); //create the folder
 			}
@@ -211,7 +211,8 @@ class CircleChain
 				parentObj.GetComponent(MeshFilter).sharedMesh.Clear();
 				parentObj.GetComponent(MeshFilter).sharedMesh = AssetDatabase.LoadAssetAtPath(path, Mesh);
 				
-				//also save the custom lines list to a mesh. this code is shit
+				//also save the custom lines list to a mesh. this code is shit -----------
+				//first get the path information and create the asset data	
 				var cl : Mesh = new Mesh();
 				var dt = new Vector3[SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Count];
 				for (x = 0; x < SunRadiiHolder.GetComponent(WireframeRender).CustomLines.Count; x++)
@@ -220,6 +221,7 @@ class CircleChain
 				}
 				cl.vertices = dt;
 				path = "Assets/Resources/"+name+"/CustomListSave"+chainNum+".asset";
+				
 				AssetDatabase.CreateAsset(cl, path);
 			#endif
 		}

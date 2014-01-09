@@ -292,7 +292,7 @@ function Start ()
 		}
 		if (objects[i].name == "SunChainCircle")
 		{
-//			if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition)
+//			if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition) //I uncommented this for live sunradii addition. I remember I keep needing to comment it for some reason but I can never remember it.
 //			{
 				objects[i].transform.parent = SceneScaleController.transform;
 //			}
@@ -417,7 +417,7 @@ function Update ()
 					
 					for (var i = 0; i < worldObjects.Length; i++)
 					{
-						if (Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
+						if ((worldObjects[i].name != "humanShip") && Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
 						{
 							//set new smallest planet
 							smallDist = Vector3.Distance(worldObjects[i].transform.position, touchTarget);
@@ -593,7 +593,7 @@ function Update ()
 								
 								for (i = 0; i < worldObjects.Length; i++)
 								{
-									if (Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
+									if ((worldObjects[i].name != "humanShip") && (Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist))
 									{
 										//set new smallest planet
 										smallDist = Vector3.Distance(worldObjects[i].transform.position, touchTarget);

@@ -2,11 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="329" Column="3" />
-      <File FileName="Assets\scripts\Overhead Stuff\Distress Camera Stuff\DistressCameraController.js" Line="54" Column="8" />
-      <File FileName="Assets\scripts\Tutorial Stuff\TouchTutorial.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\UI Stuff\NeonFlicker.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Control Stuff\PlanetJoystick.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="292" Column="4" />
+      <File FileName="Assets\scripts\Sun Stuff\SunRadiiCombine.js" Line="136" Column="2" />
+      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\CircleChain.js" Line="46" Column="19" />
+      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\MeshCircle.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Effects\WireframeRender.js" Line="166" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

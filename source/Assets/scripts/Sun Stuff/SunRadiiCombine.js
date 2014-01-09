@@ -1,6 +1,6 @@
 #pragma strict
 
-//note, the camera must be at (0,0,0) for this to work. Why? idk.
+//note, the camera must be at (0,0,anything) for this to work. Why? idk.
 
 
 //public vars
@@ -114,7 +114,6 @@ function Start ()
 			//if the sun is not using live radii addition then initialize its wireframe renderer
 			if (!obj.transform.parent.GetComponent(SunController).LiveRadiiAddition)
 			{
-//				Debug.Log("initializing");
 				obj.GetComponent(WireframeRender).Initialize();
 			}
 		}
@@ -129,7 +128,7 @@ function Start ()
 				newCirc.transform.parent = this.transform;
 				
 				//create mesh circle data
-				circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);				
+				circles[count] = new MeshCircle(newCirc.GetComponent(MeshFilter).sharedMesh.vertices[0].y * newCirc.transform.localScale.x, transform.TransformPoint(newCirc.transform.position), newCirc.GetComponent(MeshFilter), circle);
 				count++;
 			}
 		}
@@ -160,7 +159,7 @@ function MeshAdd ()
 		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 		for (var circle : GameObject in objects)
 		{
-			if (circle.name == "SunChainCircle" && circle.transform.parent.GetComponent(SunController).LiveRadiiAddition)
+			if ((circle.name == "SunChainCircle") && (circle.transform.parent.GetComponent(SunController).LiveRadiiAddition))
 			{
 				//set mesh data first
 				circles[count].mesh.mesh = circle.GetComponent(MeshFilter).mesh;
@@ -173,7 +172,7 @@ function MeshAdd ()
 				circles[count].reset();
 				circles[count].circle.center = circle.transform.parent.position;
 				circles[count].circle.radius = circles[count].mesh.mesh.vertices[0].y * circles[count].mesh.gameObject.transform.localScale.x;
-
+				
 				count++;
 			}
 		}
@@ -209,7 +208,7 @@ function MeshAdd ()
 			count++;
 		}
 	}
-
+	
 	//mark the end circles
 	for (var circle1 : MeshCircle in circles)
 	{
@@ -285,9 +284,9 @@ function MeshAdd ()
 	}
 	
 	//splice together all chains
-	if (LiveSunRadiiHolder.GetComponent(MeshFilter).sharedMesh)
+	if (LiveSunRadiiHolder.GetComponent(MeshFilter).sharedMesh) //reset the mesh
 	{
-		LiveSunRadiiHolder.GetComponent(MeshFilter).sharedMesh.Clear(); //reset the mesh
+		LiveSunRadiiHolder.GetComponent(MeshFilter).sharedMesh.Clear();
 	}
 	for (i = 0; i < chains.Count; i++)
 	{
