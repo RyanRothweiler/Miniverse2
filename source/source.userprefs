@@ -1,12 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Audio Stuff\MusicAudioController.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="292" Column="4" />
-      <File FileName="Assets\scripts\Sun Stuff\SunRadiiCombine.js" Line="136" Column="2" />
-      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\CircleChain.js" Line="46" Column="19" />
-      <File FileName="Assets\scripts\Sun Stuff\Circle Stuff\MeshCircle.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Effects\WireframeRender.js" Line="166" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1742" Column="14" />
+      <File FileName="Assets\scripts\Audio Stuff\MainMenuAudioController.js" Line="15" Column="17" />
+      <File FileName="Assets\scripts\Audio Stuff\BackgroundAudioController.js" Line="5" Column="14" />
+      <File FileName="Assets\scripts\Audio Stuff\MusicAudioController.js" Line="28" Column="22" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -1084,10 +1084,12 @@ function Update ()
 			StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
 			if (selectedWorld.collider.name == "BackArrow")
 			{
+				transform.DetachChildren();
 				Application.LoadLevel("levelselect"); 
 			}
 			else
 			{
+				transform.DetachChildren();
 				Application.LoadLevel(Application.loadedLevelName);
 			}
 		}
@@ -1108,6 +1110,7 @@ function Update ()
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 10)
 			{
+				transform.DetachChildren();
 				Application.LoadLevel("Settings_SCE");
 			}
 		}
@@ -1120,6 +1123,7 @@ function Update ()
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 100)
 			{
+				transform.DetachChildren();
 				Application.LoadLevel("Contact_SCE");
 			}
 		}
@@ -1131,6 +1135,7 @@ function Update ()
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 100)
 			{
+				transform.DetachChildren();
 				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
 				Application.LoadLevel("levelselect"); 
 			}
@@ -1148,6 +1153,7 @@ function Update ()
 				
 				if (transform.position.z >= WorldZDepth + 100)
 				{
+					transform.DetachChildren();
 					Application.LoadLevel(Level);
 					inGame = true;
 					fromLSelect = false;
@@ -1162,6 +1168,7 @@ function Update ()
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 100)
 			{
+				transform.DetachChildren();
 				Application.LoadLevel("MainMenu");
 			}
 		}
@@ -1422,6 +1429,7 @@ function AutoMovingStartPhases()
 function Reset ()
 {
 	yield WaitForSeconds(1.5);
+	transform.DetachChildren();
 	Application.LoadLevel(Application.loadedLevel);
 }
 
@@ -2134,6 +2142,7 @@ function LevelSelect()
 						//Goes back to main menu	
 						if(objectInfo.collider.name == "mainmenu")
 						{
+							transform.DetachChildren();
 							Application.LoadLevel("mainmenu");
 							isLevelSelect = false;
 							//isMenu = true;
