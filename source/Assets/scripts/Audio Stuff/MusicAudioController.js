@@ -22,8 +22,8 @@ function Update ()
 		audioSource.Play();
 	}
 	
-	if (Application.loadedLevelName != "intro to moving people - The The Impotence")
-	{
-		audioSource.Stop();
-	}
+//	if (Application.loadedLevelName != "intro to moving people - The The Impotence")
+//	{
+//		audioSource.Stop();
+//	}
 }

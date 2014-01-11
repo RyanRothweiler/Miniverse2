@@ -49,7 +49,7 @@ function StartLights()
 		yield WaitForSeconds(0.1);
 		FadeArrow(arrow1, light1); //middle arrow
 		
-		yield WaitForSeconds(1); //set things reset
+		yield WaitForSeconds(1); //let things reset
 	} while (true);
 }
 
