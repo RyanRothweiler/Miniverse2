@@ -81,6 +81,7 @@ public var FailType : GameObject; //the type which shows on level fail
 public var StarStreakMat : Material;
 public var KeyMat : Material; //the material used for the keys
 public var LevelOffsetController : GameObject; //the level select object to move when scrolling level select stuff
+public var FailTexture : Texture2D; //the texture which sail fail on it. lolz
 
 
 
@@ -143,6 +144,7 @@ public var toLevelSelect = false; //move to the level select scene
 public var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
 private var FirstClick = false; //used to detect double clicking
+private var stopHidingFileType = false; //used to stop hiding the fail type! what did you think it did?
 
 //Strings
 static var Level : String;
@@ -1052,9 +1054,7 @@ function Update ()
 			canMoveToWorld = false;
 			canMoveToPlay = true;
 			
-			PausePlane.GetComponent(TextTypeEffect).ParentCheck = false;
-			PausePlane.GetComponent(TextTypeEffect).Done = false; 
-			PausePlane.GetComponent(TextTypeEffect).TextToType = "PAUSED";
+			FadeInPausePlane();
 			
 			//set z for zoom in pos
 			cameraZoomInPos.z = CameraLocDepth;
@@ -1075,7 +1075,8 @@ function Update ()
 	//if player lost
 	if (LevelLost)
 	{
-		FailType.transform.parent = Camera.main.transform;
+//		FailType.transform.parent = Camera.main.transform;
+
 		isPlayOne = true;
 		ZoomIn();
 		
@@ -1181,7 +1182,7 @@ function Update ()
 	}
 	
 	//make sure the levelfail plane doesn't show until the level has actually been completed
-	if (!levelWon)
+	if (!stopHidingFileType && !levelWon)
 	{
 		FailType.GetComponent(NeonFlicker).Going = false;
 		FailType.renderer.material.SetColor("_Color", Color(0,0,0,0));
@@ -2178,10 +2179,7 @@ function MoveToWorldView()
 		cameraZoomInPos = transform.position;
 		cameraZoomInPos.z = CameraLocDepth;
 		
-		//type in pause text
-		PausePlane.GetComponent(TextTypeEffect).ParentCheck = false;
-		PausePlane.GetComponent(TextTypeEffect).Done = false;
-		PausePlane.GetComponent(TextTypeEffect).TextToType = "PAUSED";
+		FadeInPausePlane();
 		
 		//move out camera
 		yield StartCoroutine(MoveTo(0.2,CameraZoomOutPos));
@@ -2203,9 +2201,7 @@ function MoveToPlayView()
 		//zoom streaks
 		//ZoomStreaks.GetComponent(ZoomStarStreaks).MoveAwayFromPlanets();
 		
-		//type away pause text
-		PausePlane.GetComponent(TextTypeEffect).Done = false;
-		PausePlane.GetComponent(TextTypeEffect).TextToType = " ";
+		FadeOutPausePlane();
 		
 		//move in camera
 		yield StartCoroutine(MoveTo(0.2,cameraZoomInPos));
@@ -2214,6 +2210,26 @@ function MoveToPlayView()
 		canMoveToWorld = true;
 		tapCount = 0;
 	}
+}
+
+function FadeInPausePlane()
+{
+	Debug.Log("fading in");
+	do
+	{
+		PausePlane.renderer.material.SetColor("_Color", Color(PausePlane.renderer.material.GetColor("_Color").a + 0.05, PausePlane.renderer.material.GetColor("_Color").a + 0.05, PausePlane.renderer.material.GetColor("_Color").a + 0.05, PausePlane.renderer.material.GetColor("_Color").a + 0.05));
+		yield WaitForSeconds(0.001);
+	}while (PausePlane.renderer.material.GetColor("_Color").a < 0.99);
+}
+
+function FadeOutPausePlane()
+{
+	Debug.Log("faind out");
+	do
+	{
+		PausePlane.renderer.material.SetColor("_Color", Color(PausePlane.renderer.material.GetColor("_Color").a - 0.05, PausePlane.renderer.material.GetColor("_Color").a - 0.05, PausePlane.renderer.material.GetColor("_Color").a - 0.05, PausePlane.renderer.material.GetColor("_Color").a - 0.05));
+		yield WaitForSeconds(0.001);
+	}while (PausePlane.renderer.material.GetColor("_Color").a > 0.01);
 }
 
 //push the camera around when dragging planets
@@ -2253,17 +2269,20 @@ function CameraViewPlanetPushing()
 
 //if the level was lost
 function LevelLose(back : boolean)
-{
-	Debug.Log("losing");
+{	
+	stopHidingFileType = true; //stop hiding that type! dog!
+	FailType.renderer.material.mainTexture = FailTexture;
 	halt = true;
+	
 	yield WaitForSeconds(0.2);
 	
 	if (!back)
 	{
-//		FailType.GetComponent(TextTypeEffect).Type("LEVEL FAIL");
+		FailType.transform.parent = null; //unparent
+		FailType.GetComponent(NeonFlicker).Going = true;
 	}
 	
-	yield WaitForSeconds(1.5);
+	yield WaitForSeconds(2);
 	
 	LevelLost = true;
 	

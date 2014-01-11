@@ -18,7 +18,6 @@ function Update ()
 {	
 	if (!audioSource.isPlaying && Application.loadedLevelName == "intro to moving people - The The Impotence")
 	{
-		Debug.Log("playing");
 		audioSource.clip = Level1Audio;
 		audioSource.Play();
 	}
