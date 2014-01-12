@@ -138,7 +138,7 @@ function Start ()
 function Update () 
 {
 	//combine the meshes in game time
-	if (LiveCombine)
+	if (LiveCombine && !Camera.main.GetComponent(DragControlsPC).halt && !Camera.main.GetComponent(DragControlsPC).LevelPaused)
 	{
 		MeshAdd();
 	}
@@ -146,7 +146,7 @@ function Update ()
 
 //splice the chains together
 function MeshAdd ()
-{
+{	
 	//reset
 	count = 0;
 	var size = 0;
@@ -154,7 +154,7 @@ function MeshAdd ()
 	
 	//only for live combining, reset the circles but don't delete them, because that takes a lot of resources.
 	if (LiveCombine)
-	{
+	{		
 		//get all the clone objects
 		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
 		for (var circle : GameObject in objects)

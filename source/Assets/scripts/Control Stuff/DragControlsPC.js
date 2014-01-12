@@ -225,10 +225,40 @@ function Start ()
 	halt = true;
 	cont = false;
 	f = 0;
-//	LevelOffset = Vector3.zero;
 	Timer = GetComponent(LevelTimer); //get the level timer 
 	TutorialTypeSpeed = 0.03;
 	levelFinishCamZoomMultiplier = 0;
+	
+	//if this level has live sun radii addition then do special things. (add the radii first then go about regular level loading)
+	if (!isLevelSelect && transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
+	{
+		transform.position = Vector3(0, 0, -15); //move the camera in before adding
+		transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).MeshAdd(); //add the live suns once before scaling everything down
+		transform.position = CameraZoomOutPos; //move the camera back out
+		
+		//turn off the things that should not show like the sun rings used in the addition process
+		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
+		for (i = 0; i < objects.length; i++)
+		{
+			//if the object is not the live sun radii holder then turn of its wireframe renderer
+			if (objects[i].name != "LiveSunRadiiHolder")
+			{
+				objects[i].GetComponent(WireframeRender).use = false;
+			}
+		}
+		
+		//move the live sun radii holder to zero
+		objects = GameObject.FindGameObjectsWithTag("Debris");
+		for (i = 0; i < objects.length; i++)
+		{ 
+			if (objects[i].name == "LiveSunRadiiHolder")
+			{
+				Debug.Log("setting");
+				objects[i].transform.position = Vector3.zero;
+				break;
+			}
+		}
+	}
 	
 	if (!LevelSelect)
 	{
@@ -257,6 +287,10 @@ function Start ()
 		//now do background stuff
 		NebulaBackground.transform.parent = null;
 		NebulaBackground.transform.position.z = 50;
+	}
+	else //else move the camer to the correct z position based on the variable
+	{
+		transform.position.z = CameraLocDepth;
 	}
 	
 	objects = GameObject.FindObjectsOfType(GameObject);
@@ -292,12 +326,22 @@ function Start ()
 		{
 			objects[i].transform.parent = SceneScaleController.transform;
 		}
-		if (objects[i].name == "SunChainCircle")
+		if (!isLevelSelect && transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
 		{
-//			if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition) //I uncommented this for live sunradii addition. I remember I keep needing to comment it for some reason but I can never remember it.
-//			{
+			if (objects[i].name == "SunChainCircle")
+			{
+				if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition)
+				{
+					objects[i].transform.parent = SceneScaleController.transform;
+				}
+			}
+		}
+		else
+		{
+			if (objects[i].name == "SunChainCircle")
+			{
 				objects[i].transform.parent = SceneScaleController.transform;
-//			}
+			}
 		}
 		//debris
 		if (objects[i].tag == "Debris")
@@ -2213,7 +2257,6 @@ function MoveToPlayView()
 
 function FadeInPausePlane()
 {
-	Debug.Log("fading in");
 	do
 	{
 		PausePlane.renderer.material.SetColor("_Color", Color(PausePlane.renderer.material.GetColor("_Color").a + 0.05, PausePlane.renderer.material.GetColor("_Color").a + 0.05, PausePlane.renderer.material.GetColor("_Color").a + 0.05, PausePlane.renderer.material.GetColor("_Color").a + 0.05));
@@ -2223,7 +2266,6 @@ function FadeInPausePlane()
 
 function FadeOutPausePlane()
 {
-	Debug.Log("faind out");
 	do
 	{
 		PausePlane.renderer.material.SetColor("_Color", Color(PausePlane.renderer.material.GetColor("_Color").a - 0.05, PausePlane.renderer.material.GetColor("_Color").a - 0.05, PausePlane.renderer.material.GetColor("_Color").a - 0.05, PausePlane.renderer.material.GetColor("_Color").a - 0.05));

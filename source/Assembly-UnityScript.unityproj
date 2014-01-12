@@ -96,6 +96,7 @@
      <Compile Include="Assets\scripts\Planet Stuff\planetLifeIndicator.js" />
      <Compile Include="Assets\scripts\Sun Stuff\Circle Stuff\Circ.js" />
      <Compile Include="Assets\scripts\Sun Stuff\Circle Stuff\CircleChain.js" />
+     <Compile Include="Assets\scripts\Sun Stuff\Circle Stuff\LiveSunRadiiController.js" />
      <Compile Include="Assets\scripts\Sun Stuff\Circle Stuff\MeshCircle.js" />
      <Compile Include="Assets\scripts\Sun Stuff\Circle Stuff\SunChainCircleController.js" />
      <Compile Include="Assets\scripts\Sun Stuff\ShrinkCode.js" />
