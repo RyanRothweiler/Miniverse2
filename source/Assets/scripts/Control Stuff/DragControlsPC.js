@@ -229,36 +229,36 @@ function Start ()
 	TutorialTypeSpeed = 0.03;
 	levelFinishCamZoomMultiplier = 0;
 	
-	//if this level has live sun radii addition then do special things. (add the radii first then go about regular level loading)
-	if (!isLevelSelect && transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
-	{
-		transform.position = Vector3(0, 0, -15); //move the camera in before adding
-		transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).MeshAdd(); //add the live suns once before scaling everything down
-		transform.position = CameraZoomOutPos; //move the camera back out
-		
-		//turn off the things that should not show like the sun rings used in the addition process
-		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
-		for (i = 0; i < objects.length; i++)
-		{
-			//if the object is not the live sun radii holder then turn of its wireframe renderer
-			if (objects[i].name != "LiveSunRadiiHolder")
-			{
-				objects[i].GetComponent(WireframeRender).use = false;
-			}
-		}
-		
-		//move the live sun radii holder to zero
-		objects = GameObject.FindGameObjectsWithTag("Debris");
-		for (i = 0; i < objects.length; i++)
-		{ 
-			if (objects[i].name == "LiveSunRadiiHolder")
-			{
-				Debug.Log("setting");
-				objects[i].transform.position = Vector3.zero;
-				break;
-			}
-		}
-	}
+//	//if this level has live sun radii addition then do special things. (add the radii first then go about regular level loading)
+//	if (!isLevelSelect && transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
+//	{
+//		transform.position = Vector3(0, 0, -15); //move the camera in before adding
+//		transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).MeshAdd(); //add the live suns once before scaling everything down
+//		transform.position = CameraZoomOutPos; //move the camera back out
+//		
+//		//turn off the things that should not show like the sun rings used in the addition process
+//		objects = GameObject.FindGameObjectsWithTag("SunChainCircle");
+//		for (i = 0; i < objects.length; i++)
+//		{
+//			//if the object is not the live sun radii holder then turn of its wireframe renderer
+//			if (objects[i].name != "LiveSunRadiiHolder")
+//			{
+//				objects[i].GetComponent(WireframeRender).use = false;
+//			}
+//		}
+//		
+//		//move the live sun radii holder to zero
+//		objects = GameObject.FindGameObjectsWithTag("Debris");
+//		for (i = 0; i < objects.length; i++)
+//		{ 
+//			if (objects[i].name == "LiveSunRadiiHolder")
+//			{
+//				Debug.Log("setting");
+//				objects[i].transform.position = Vector3.zero;
+//				break;
+//			}
+//		}
+//	}
 	
 	if (!LevelSelect)
 	{
@@ -326,23 +326,25 @@ function Start ()
 		{
 			objects[i].transform.parent = SceneScaleController.transform;
 		}
-		if (!isLevelSelect && transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
-		{
-			if (objects[i].name == "SunChainCircle")
-			{
-				if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition)
-				{
-					objects[i].transform.parent = SceneScaleController.transform;
-				}
-			}
-		}
-		else
-		{
-			if (objects[i].name == "SunChainCircle")
-			{
-				objects[i].transform.parent = SceneScaleController.transform;
-			}
-		}
+		
+//		if (!isLevelSelect && transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
+//		{
+//			if (objects[i].name == "SunChainCircle")
+//			{
+//				if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition)
+//				{
+//					objects[i].transform.parent = SceneScaleController.transform;
+//				}
+//			}
+//		}
+//		else
+//		{
+//			if (objects[i].name == "SunChainCircle")
+//			{
+//				objects[i].transform.parent = SceneScaleController.transform;
+//			}
+//		}
+		
 		//debris
 		if (objects[i].tag == "Debris")
 		{

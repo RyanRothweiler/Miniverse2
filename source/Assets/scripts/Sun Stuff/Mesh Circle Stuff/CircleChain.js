@@ -233,6 +233,7 @@ class CircleChain
 			parentObj.GetComponent(MeshFilter).mesh.uv = uvs;
 			parentObj.GetComponent(MeshFilter).mesh.triangles = triangles;
 		}
+		
 		//when everything is done disable the members
 		for (i = 0; i < members.Count; i++)
 		{
@@ -382,5 +383,10 @@ class CircleChain
 		{
 			Debug.Log("-----WARNING: Not all the end points have been found. Try wiggling things around a bit. (twss)");
 		}
+	}
+	
+	function SpliceMathMethod()
+	{
+		
 	}
 }
