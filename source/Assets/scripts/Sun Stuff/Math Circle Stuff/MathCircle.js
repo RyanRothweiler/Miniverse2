@@ -22,7 +22,7 @@ class MathCircle
 	//check if this circle contains the given point. aka the given point is inside the radius of this circle
 	function Contains(point : Vector3) : boolean
 	{
-		if (Vector3.Distance(point, center) > radius)
+		if (Vector3.Distance(point, center) > (radius + 0.1))
 		{
 			return false;
 		}
@@ -33,7 +33,7 @@ class MathCircle
 	}
 	
 	//return the intersection points of this circle and the given circle
-	function FindIntersectPoints(circle1 : Circ) : Vector3[]
+	function FindIntersectPoints(circle1 : MathCircle) : Vector3[]
 	{
 		var d = Vector3.Distance(circle1.center, center);
 		var a = ((radius*radius) - (circle1.radius*circle1.radius) + (d*d))/(2*d); // h is a common leg for two right triangles.  
@@ -48,7 +48,7 @@ class MathCircle
 	    var P2x = P0x - h*(circle1.center.y - center.y)/d;       // extend to intersection 2 from midpoint
 	    var P2y = P0y + h*(circle1.center.x - center.x)/d;
 	    
-		return [Vector3(P1x, P1y, 0), Vector3(P2x, P2y, 0)];
+		return [Vector3(P1x, P1y, circle1.center.z), Vector3(P2x, P2y, circle1.center.z)];
 	}
 	
 	//creates objects to visualize this circle

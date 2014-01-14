@@ -8,6 +8,7 @@ public var MathSuns : GameObject[]; //holds all the mathsun game objects in the 
 public var LiveSunRadiiHolder : GameObject; //this object holds the live addition suns. baked radii holders are instantiated
 public var combine : boolean;
 public var circles : MathCircle[]; //holds all sun radii circles. these circle objects should not be deleted, they are instantiated at the start of the level and only their mesh data is changed after that.
+public var CircleResolution : float; //the smoothness of the circle aka the number of lines to make
 
 var chains = new Array(); //holds all the chains in the level
 
@@ -17,7 +18,6 @@ public var DeathSphere : GameObject;
 private var circleRadii : float; //radius of the circle. retreived before combining the meshes
 private var count : int; //generic count
 private var d : float; //generic d variable (the distance) used for calculating intersecting points
-private var x : float; //generic x variable (the x location) used for calculating intersecting points
 private var a : float; //generic a variable (the distance between the two points) used for calculating intersecting points
 private var i : int;
 
@@ -28,6 +28,9 @@ private var cont : boolean; //general continue variable
 
 function Start () 
 {
+	//waken the live sun radii controller
+	LiveSunRadiiHolder.active = true;
+	
 	//make all the circles
 	MathSuns = GameObject.FindGameObjectsWithTag("MathSun");
 	if (combine)
@@ -59,12 +62,23 @@ function Update ()
 //splice the chains together
 function MeshAdd ()
 {
-	//reset
+	//reset variables
 	count = 0;
 	var size = 0;
 	chains.Clear();
+	circles = new MathCircle[MathSuns.length]; //reset circle
 	
-	//reset the circle data
+	//create circle data every loop
+	count = 0;
+	for (var sun : GameObject in MathSuns)
+	{			
+		//create mesh circle data
+		tempCircle = new MathCircle(sun.transform.position, Vector3.Distance(sun.transform.position, sun.transform.TransformPoint(sun.GetComponent(MeshFilter).mesh.vertices[10])));
+		circles[count] = tempCircle;
+		count++;
+	}
+	
+	
 	
 	//mark the end circles
 	for (var circle1 : MathCircle in circles)
@@ -122,62 +136,80 @@ function MeshAdd ()
 		}
 	}
 	
-	Debug.Log(chains.length);
+	//set end circles... again
+	for (var circle : MathCircle in circles)
+	{
+		if (circle.hitOnce && !circle.hitTwice)
+		{
+			circle.endCircle = true;
+		}
+	}
 	
-//	//set end circles... again as well as set colliding status
-//	for (var circle : MeshCircle in circles)
-//	{
-//		if (circle.hitOnce && !circle.hitTwice)
-//		{
-//			circle.endCircle = true;
-//		}
-//	}
-//	
-//	//splice together all chains
-//	if (LiveSunRadiiHolder.GetComponent(MeshFilter).sharedMesh) //reset the mesh
-//	{
-//		LiveSunRadiiHolder.GetComponent(MeshFilter).sharedMesh.Clear();
-//	}
-//	for (i = 0; i < chains.Count; i++)
-//	{
-//		tempChain = chains[i];
-//		tempChain.SpliceTogether(i, DeathSphere);
-//	}
-//	
-//	//the rest of this stuff is for cleaning up the scene after the circles have been chained
-//	
-//	//unparent circles
-//	if (!LiveCombine)
-//	{
-//		for (var circle : MeshCircle in circles)
-//		{
-//			if (circle.mesh.transform.parent.name != "Sun") //make sure the circle isn't parent to a sun
-//			{
-//				circle.mesh.gameObject.transform.parent = null;
-//			}
-//		}
-//	}
-//	
-//	//show circles that have been marked for live radii addition but aren't colliding with anything atm
-//	if (LiveCombine)
-//	{
-//		for (var circle : MeshCircle in circles)
-//		{
-//			circle.CheckCollidesForPastLife();
-//		}
-//	}
-//	
-//	//if there are no colliding circles then remove all custom lines in the sunradiiholder
-//	if (chains.length == 0)
-//	{
-//		LiveSunRadiiHolder.GetComponent(WireframeRender).SpliceOveride = true;
-//	}
-//	else
-//	{
-//		LiveSunRadiiHolder.GetComponent(WireframeRender).SpliceOveride = false;
-//	}
-//	
-//	
+	
+	//create lines from the circles in chains
+	for (var chain : MathCircleChain in chains) //go through chains
+	{
+		//get the LiveSunRadiiHolder renderer for this chain
+		var wireframer = LiveSunRadiiHolder.GetComponent(MathWireframeRender);
+		
+		var memberCount = 0;
+		for (var circle : MathCircle in chain.members) //go through the circles in the chain
+		{
+			//go through the points on the circle
+			for (var a = 0.0; a < 6.5; a += CircleResolution)
+			{
+				//get the x,y position
+				var x = circle.center.x + (circle.radius * Mathf.Cos(a));
+				var y = circle.center.y + (circle.radius * Mathf.Sin(a));
+				var pnt = Vector3(x, y, circle.center.z);
+				
+				var newCirc = new MathCircle(pnt, 0);
+				
+				//this is for the internal circles
+				if (!circle.endCircle)
+				{
+					if (!(circle.Contains(pnt) && chain.members[memberCount - 1].Contains(pnt)) && !(circle.Contains(pnt) && chain.members[memberCount + 1].Contains(pnt)))
+					{
+						//set internal points
+						wireframer.CustomLines.Add(pnt);
+//						newCirc.Visualize(DeathSphere);
+						
+						//set intersect points
+//						newCirc.center = circle.FindIntersectPoints(chain.members[memberCount + 1])[0];
+//						newCirc.Visualize(DeathSphere);
+//						newCirc.center = circle.FindIntersectPoints(chain.members[memberCount + 1])[1];
+//						newCirc.Visualize(DeathSphere);
+					}
+				}
+				else //do things a bit differently for the very last circle and the first circle
+				{
+					//if the first circle
+					if (memberCount == 0)
+					{
+						if (!(circle.Contains(pnt) && chain.members[memberCount + 1].Contains(pnt)))
+						{
+							//set the internal points
+//							newCirc.Visualize(DeathSphere);
+							
+							//set intersect points
+//							newCirc.center = circle.FindIntersectPoints(chain.members[memberCount + 1])[0];
+//							newCirc.Visualize(DeathSphere);
+//							newCirc.center = circle.FindIntersectPoints(chain.members[memberCount + 1])[1];
+//							newCirc.Visualize(DeathSphere);
+						}
+					}
+					else //else the last circle
+					{
+						if (!(circle.Contains(pnt) && chain.members[memberCount - 1].Contains(pnt)))
+						{
+//							newCirc.Visualize(DeathSphere);
+						}
+					}
+				}
+			}
+			memberCount++;
+		}
+	}
 }
 
 //assigns the next member in the chain
@@ -205,43 +237,4 @@ function SetNextMember(chain : MathCircleChain, currentCircle : MathCircle) : bo
 	}
 	currentCircle.endCircle = false;
 	return true;
-}
-
-function Revert()
-{
-//	//enable LiveSunRadiiHolder
-//	LiveSunRadiiHolder.active = true;
-//	
-//	//ddestroy sundradiiholders
-//	do
-//	{
-//		GameObject.DestroyImmediate(GameObject.Find("BakedSunRadiiHolder(Clone)"));
-//	} while(GameObject.Find("BakedSunRadiiHolder(Clone)"));
-//	
-//	//destroy sunchaincricles
-//	var sirs = GameObject.FindObjectsOfType(SunChainCircleController);
-//	for (var i = 0; i < sirs.Length; i++)
-//	{
-//		if (sirs[i].transform.parent == null)
-//		{		
-//			GameObject.DestroyImmediate(sirs[i].gameObject);
-//		}
-//	}
-//	
-//	//destroy old suns
-//	objects = GameObject.FindGameObjectsWithTag("sun");
-//	for (var sun : GameObject in objects) 
-//	{
-//		if (!sun.GetComponent(SunController).LiveRadiiAddition)
-//		{
-//			GameObject.DestroyImmediate(sun);
-//		}
-//	}
-//	
-//	//instantiate sun archive
-//	do
-//	{
-//		Camera.main.transform.Find("Sun").gameObject.SetActiveRecursively(true); //activate sun
-//		Camera.main.transform.Find("Sun").parent = null; //unparent it
-//	} while(Camera.main.transform.Find("Sun"));
 }

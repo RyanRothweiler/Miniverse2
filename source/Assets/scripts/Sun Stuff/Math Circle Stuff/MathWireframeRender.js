@@ -3,7 +3,7 @@
 
 //public vars
 public var use : boolean;
-public var CustomLines = new List.<Vector3>(); //the lines which to render. Must be added in groups of 2.
+public var CustomLines = new List.<Vector3>();
 public var initialized = false;
 public var SpliceOveride = false;
 
@@ -47,9 +47,10 @@ function OnRenderObject()
 	    GL.Begin(GL.LINES);
 	    
 		//create lines from CustomLines
-		for (var i = 0; i < CustomLines.Count; i++)
+		for (var i = 0; i < CustomLines.Count-1; i++)
 		{
 			GL.Vertex(CustomLines[i]);
+			GL.Vertex(CustomLines[i+1]);
 		}
 	  
 	    GL.End(); 
