@@ -6,7 +6,7 @@
 //public vars
 public var MathSuns : GameObject[]; //holds all the mathsun game objects in the scene
 public var LiveSunRadiiHolder : GameObject; //this object holds the live addition suns. baked radii holders are instantiated
-public var combine : boolean;
+public var LiveCombine : boolean;
 public var circles : MathCircle[]; //holds all sun radii circles. these circle objects should not be deleted, they are instantiated at the start of the level and only their mesh data is changed after that.
 public var CircleResolution : float; //the smoothness of the circle aka the number of lines to make
 
@@ -33,7 +33,7 @@ function Start ()
 	
 	//make all the circles
 	MathSuns = GameObject.FindGameObjectsWithTag("MathSun");
-	if (combine)
+	if (LiveCombine)
 	{		
 		//intialize circle array size using the circles that are not live adding
 		circles = new MathCircle[MathSuns.length];
@@ -53,7 +53,7 @@ function Start ()
 function Update () 
 {
 	//combine the meshes in game time
-	if (combine && !Camera.main.GetComponent(DragControlsPC).halt && !Camera.main.GetComponent(DragControlsPC).LevelPaused)
+	if (LiveCombine && !Camera.main.GetComponent(DragControlsPC).halt && !Camera.main.GetComponent(DragControlsPC).LevelPaused)
 	{
 		MeshAdd();
 	}
