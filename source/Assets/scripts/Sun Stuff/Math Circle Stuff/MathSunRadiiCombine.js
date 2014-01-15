@@ -154,31 +154,73 @@ function MeshAdd ()
 		
 		var memberCount = 0;
 		for (var circle : MathCircle in chain.members) //go through the circles in the chain
-		{
+		{	
+			var endCount = 0; //holds the number of times moving around the circle has found an end point
 			//go through the points on the circle
 			for (var a = 0.0; a < 6.5; a += CircleResolution)
 			{
-				//get the x,y position
+				//get the current point
 				var x = circle.center.x + (circle.radius * Mathf.Cos(a));
 				var y = circle.center.y + (circle.radius * Mathf.Sin(a));
-				var pnt = Vector3(x, y, circle.center.z);
+				var currPoint = Vector3(x, y, circle.center.z);
 				
-				var newCirc = new MathCircle(pnt, 0);
+				x = circle.center.x + (circle.radius * Mathf.Cos(a + CircleResolution));
+				y = circle.center.y + (circle.radius * Mathf.Sin(a + CircleResolution));
+				var nxtPoint = Vector3(x, y, circle.center.z);
 				
+												
 				//this is for the internal circles
 				if (!circle.endCircle)
 				{
-					if (!(circle.Contains(pnt) && chain.members[memberCount - 1].Contains(pnt)) && !(circle.Contains(pnt) && chain.members[memberCount + 1].Contains(pnt)))
+					//if the first point is not an internal point
+					if (!(circle.Contains(currPoint) && chain.members[memberCount - 1].Contains(currPoint)) && !(circle.Contains(currPoint) && chain.members[memberCount + 1].Contains(currPoint)))
 					{
-						//set internal points
-						wireframer.CustomLines.Add(pnt);
-//						newCirc.Visualize(DeathSphere);
-						
-						//set intersect points
-//						newCirc.center = circle.FindIntersectPoints(chain.members[memberCount + 1])[0];
-//						newCirc.Visualize(DeathSphere);
-//						newCirc.center = circle.FindIntersectPoints(chain.members[memberCount + 1])[1];
-//						newCirc.Visualize(DeathSphere);
+						//if the second point is not an internal point
+						if (!(circle.Contains(nxtPoint) && chain.members[memberCount - 1].Contains(nxtPoint)) && !(circle.Contains(nxtPoint) && chain.members[memberCount + 1].Contains(nxtPoint)))
+						{
+							wireframer.CustomLines.Add(currPoint); //add the current point
+							wireframer.CustomLines.Add(nxtPoint); //and the next point
+						}
+						else //if the second point actaully is an internal point then the next custom line should be connecting to the closest intersect point
+						{
+							if ((endCount == 0) || (endCount == 2))
+							{
+								endCount++;
+								wireframer.CustomLines.Add(currPoint); //add the current point
+								
+								//find which circle is closer
+								if (Vector3.Distance(currPoint, chain.members[memberCount - 1].center) < Vector3.Distance(currPoint, chain.members[memberCount + 1].center))
+								{
+									wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount - 1])[0]); //add intersect point
+								}
+								else
+								{
+									wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount + 1])[0]); //add intersect point
+								}
+							}
+						}
+					}
+					else //else the first point is an internal point
+					{
+						//if the second point is not an internal point
+						if (!(circle.Contains(nxtPoint) && chain.members[memberCount - 1].Contains(nxtPoint)) && !(circle.Contains(nxtPoint) && chain.members[memberCount + 1].Contains(nxtPoint)))
+						{
+							if ((endCount == 1) || (endCount == 3))
+							{
+								endCount++;
+								wireframer.CustomLines.Add(nxtPoint); //add the current point
+								
+								//find which circle is closer
+								if (Vector3.Distance(nxtPoint, chain.members[memberCount - 1].center) < Vector3.Distance(currPoint, chain.members[memberCount + 1].center))
+								{
+									wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount - 1])[1]); //add intersect point
+								}
+								else
+								{
+									wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount + 1])[1]); //add intersect point
+								}
+							}
+						}
 					}
 				}
 				else //do things a bit differently for the very last circle and the first circle
@@ -186,23 +228,56 @@ function MeshAdd ()
 					//if the first circle
 					if (memberCount == 0)
 					{
-						if (!(circle.Contains(pnt) && chain.members[memberCount + 1].Contains(pnt)))
+						//if the first point is not an internal point
+						if (!(circle.Contains(currPoint) && chain.members[memberCount + 1].Contains(currPoint)))
 						{
-							//set the internal points
-//							newCirc.Visualize(DeathSphere);
-							
-							//set intersect points
-//							newCirc.center = circle.FindIntersectPoints(chain.members[memberCount + 1])[0];
-//							newCirc.Visualize(DeathSphere);
-//							newCirc.center = circle.FindIntersectPoints(chain.members[memberCount + 1])[1];
-//							newCirc.Visualize(DeathSphere);
+							//and the second point is not an internal point
+							if (!(circle.Contains(nxtPoint) && chain.members[memberCount + 1].Contains(nxtPoint)))
+							{
+								wireframer.CustomLines.Add(currPoint); //add the current point
+								wireframer.CustomLines.Add(nxtPoint); //and the next point	
+							}
+							else //else the second point is an internal
+							{
+								wireframer.CustomLines.Add(currPoint); //add the current point
+								wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount + 1])[0]); //add intersect point
+							}
+						}
+						else //else the first point is an internal point
+						{
+							//and the second point is not
+							if (!(circle.Contains(nxtPoint) && chain.members[memberCount + 1].Contains(nxtPoint)))
+							{
+								wireframer.CustomLines.Add(nxtPoint); //add the current point
+								wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount + 1])[1]); //add intersect point
+							}
 						}
 					}
 					else //else the last circle
 					{
-						if (!(circle.Contains(pnt) && chain.members[memberCount - 1].Contains(pnt)))
+						//if the first point is not an internal point
+						if (!(circle.Contains(currPoint) && chain.members[memberCount - 1].Contains(currPoint)))
 						{
-//							newCirc.Visualize(DeathSphere);
+							//and the second point is not an internal point
+							if (!(circle.Contains(nxtPoint) && chain.members[memberCount - 1].Contains(nxtPoint)))
+							{
+								wireframer.CustomLines.Add(currPoint); //add the current point
+								wireframer.CustomLines.Add(nxtPoint); //and the next point	
+							}
+							else
+							{
+								wireframer.CustomLines.Add(currPoint); //add the current point
+								wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount - 1])[0]); //add intersect point
+							}
+						}
+						else //else the first point is an internal point
+						{
+							//and the second point is not
+							if (!(circle.Contains(nxtPoint) && chain.members[memberCount - 1].Contains(nxtPoint)))
+							{
+								wireframer.CustomLines.Add(nxtPoint); //add the current point
+								wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount - 1])[1]); //add intersect point
+							}
 						}
 					}
 				}
