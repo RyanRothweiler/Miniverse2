@@ -29,9 +29,6 @@ function OnRenderObject()
 		{
 			GL.Vertex(CustomLines[i]);
 		}
-		
-		//clear custom lines
-		CustomLines.Clear();
 	  
 	    GL.End(); 
 	    GL.PopMatrix();

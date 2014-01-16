@@ -8,8 +8,10 @@ class MathCircle
 	var hitTwice : boolean; //if the circle touches two other circles
 	var endCircle : boolean; //if the circle is on the end of a chain of circles
 	
+	var object : GameObject; //the game object this was created from
+	
 	//default constructor
-	function MathCircle(center : Vector3, radius : float)
+	function MathCircle(center : Vector3, radius : float, object : GameObject)
 	{
 		this.center = center;
 		this.radius = Mathf.Abs(radius);
@@ -17,6 +19,8 @@ class MathCircle
 		this.hitOnce = false;
 		this.hitTwice = false;
 		this.endCircle = false;
+		
+		this.object = object;
 	}
 	
 	//check if this circle contains the given point. aka the given point is inside the radius of this circle

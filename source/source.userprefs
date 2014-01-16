@@ -1,16 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Sun Stuff\Mesh Circle Stuff\LiveSunRadiiController.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Sun Stuff\Math Circle Stuff\MathSunRadiiCombine.js">
     <Files>
-      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathSunRadiiCombine.js" Line="17" Column="15" />
-      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathCircleChain.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathWireframeRender.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathCircle.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\Mesh Circle Stuff\SunRadiiCombine.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\Mesh Circle Stuff\CircleChain.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\Mesh Circle Stuff\WireframeRender.js" Line="166" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\Mesh Circle Stuff\LiveSunRadiiController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathSunRadiiCombine.js" Line="305" Column="4" />
+      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathCircleChain.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathCircle.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathWireframeRender.js" Line="31" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
