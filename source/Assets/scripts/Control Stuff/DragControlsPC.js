@@ -362,7 +362,7 @@ function Start ()
 	//ios initializations
 	if (PlatformIOS)
 	{
-		LevelOffset = Vector3(leveloffsetX, leveloffsetY, leveloffsetZ);
+//		LevelOffset = Vector3(leveloffsetX, leveloffsetY, leveloffsetZ);
 	}
 	
 	//pc initializations

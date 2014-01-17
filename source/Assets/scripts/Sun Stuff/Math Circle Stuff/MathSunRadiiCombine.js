@@ -8,7 +8,8 @@ public var MathSuns : GameObject[]; //holds all the mathsun game objects in the 
 public var HolderPrefab : GameObject; //the prefab which is used to hold the final sun shapes. each chain gets its own holder
 public var LiveCombine : boolean;
 public var circles : MathCircle[]; //holds all sun radii circles. these circle objects should not be deleted, they are instantiated at the start of the level and only their mesh data is changed after that.
-public var Holders : GameObject[]; //holds all prefab holders that are instantiated
+//public var Holders : GameObject[]; //holds all prefab holders that are instantiated
+public var Holders = new List.<GameObject>();
 public var CircleResolution : float; //the smoothness of the circle aka the number of lines to make
 
 var chains = new Array(); //holds all the chains in the level
@@ -73,6 +74,7 @@ function MeshAdd ()
 		//create mesh circle data
 		tempCircle = new MathCircle(sun.transform.position, Vector3.Distance(sun.transform.position, sun.transform.TransformPoint(sun.GetComponent(MeshFilter).mesh.vertices[10])), sun);
 		circles[count] = tempCircle;
+		circles[count].object.GetComponent(MathWireframeRender).CustomLines.Clear();
 		count++;
 	}
 	
@@ -141,22 +143,35 @@ function MeshAdd ()
 		}
 	}
 	
-	//create the holders if they haven't already been created
-	if (!holdersInstantiated)
+//	//create the holders if they haven't already been created
+//	if (!holdersInstantiated)
+//	{
+//		Holders = new GameObject[chains.Count];
+//		holdersInstantiated = true;
+//		for (i = 0; i < chains.Count; i++)
+//		{
+//			var obj = GameObject.Instantiate(HolderPrefab, HolderPrefab.transform.position, Quaternion.identity);
+//			Holders[i] = obj;
+//		}
+//	}
+	
+	//clear all the holders
+	for (var holder : GameObject in Holders)
 	{
-		Holders = new GameObject[chains.Count];
-		holdersInstantiated = true;
-		for (i = 0; i < chains.Count; i++)
-		{
-			var obj = GameObject.Instantiate(HolderPrefab, HolderPrefab.transform.position, Quaternion.identity);
-			Holders[i] = obj;
-		}
-	}	
+		holder.GetComponent(MathWireframeRender).CustomLines.Clear();
+	}
 	
 	//create lines from the circles in chains
 	var holderCount = 0; 
 	for (var chain : MathCircleChain in chains) //go through chains
-	{		
+	{
+		//make sure I don't need to make more holders
+		if(holderCount == Holders.Count)
+		{
+			var obj = GameObject.Instantiate(HolderPrefab, HolderPrefab.transform.position, Quaternion.identity);
+			Holders.Add(obj);
+		}
+		
 		//set the holder for this chain
 		chain.SunRadiiHolder = Holders[holderCount]; //this might do nothing
 		var wireframer = Holders[holderCount].GetComponent(MathWireframeRender); //get the LiveSunRadiiHolder renderer for this chain
@@ -297,24 +312,29 @@ function MeshAdd ()
 		}
 	}
 	
-	//find the circles that don't intersect with anything, and render them straight up! dog don't even trip.
+	//find the circles that don't intersect with anything, and render them straight up! dog, don't even trip.
 	for (var circle : MathCircle in circles)
 	{
 		//not colliding with anything
 		if (!circle.hitOnce && !circle.hitTwice && !circle.endCircle)
 		{
 			circle.object.GetComponent(MathWireframeRender).CustomLines.Clear();
+			
+			//adjust the circle into to work here
+			circle.center = circle.object.transform.localPosition;
+			circle.radius = Vector3.Distance(circle.center, (circle.object.GetComponent(MeshFilter).mesh.vertices[10]));
+			
 			//go through the points on the circle
 			for (a = 0.0; a < 6.5; a += CircleResolution)
 			{
 				//get the current point
-				x = circle.object.transform.TransformPoint(circle.center).x + (circle.radius * Mathf.Cos(a));
-				y = circle.object.transform.TransformPoint(circle.center).y + (circle.radius * Mathf.Sin(a));
-				currPoint = Vector3(x, y, circle.object.transform.TransformPoint(circle.center).z);
+				x = circle.center.x + ((circle.radius) * Mathf.Cos(a));
+				y = circle.center.y + ((circle.radius) * Mathf.Sin(a));
+				currPoint = Vector3(x, y, 0);
 				
-				x = circle.object.transform.TransformPoint(circle.center).x + (circle.radius * Mathf.Cos(a + CircleResolution));
-				y = circle.object.transform.TransformPoint(circle.center).y + (circle.radius * Mathf.Sin(a + CircleResolution));
-				nxtPoint = Vector3(x, y, circle.object.transform.TransformPoint(circle.center).z);
+				x = circle.center.x + ((circle.radius) * Mathf.Cos(a + CircleResolution));
+				y = circle.center.y + ((circle.radius) * Mathf.Sin(a + CircleResolution));
+				nxtPoint = Vector3(x, y, 0);
 				
 				circle.object.GetComponent(MathWireframeRender).CustomLines.Add(currPoint); //add the current point
 				circle.object.GetComponent(MathWireframeRender).CustomLines.Add(nxtPoint); //and the next point
