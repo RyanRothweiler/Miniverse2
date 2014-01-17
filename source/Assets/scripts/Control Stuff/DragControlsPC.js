@@ -25,7 +25,7 @@ public var CameraScaleSpeed : float; //the speed which the world scales up and d
 public var LevelSelectDragRate : float; //rate at which the level select tags are drug  
 public var TutorialTypeSpeed : float; //the speed at which the tutorials are typed
 
-static var leveloffsetX : float;//save level offest x position
+static var leveloffsetX = -2;//save level offest x position
 static var leveloffsetY : float;
 static var leveloffsetZ : float;
 
@@ -300,26 +300,7 @@ function Start ()
 		if (objects[i].name == "SunRadiiHolder(Clone)")
 		{
 			objects[i].transform.parent = SceneScaleController.transform;
-		}
-		
-//		if (!isLevelSelect && transform.Find("SunRadiiController").GetComponent(SunRadiiCombine).LiveCombine)
-//		{
-//			if (objects[i].name == "SunChainCircle")
-//			{
-//				if (!objects[i].transform.parent.GetComponent(SunController).LiveRadiiAddition)
-//				{
-//					objects[i].transform.parent = SceneScaleController.transform;
-//				}
-//			}
-//		}
-//		else
-//		{
-//			if (objects[i].name == "SunChainCircle")
-//			{
-//				objects[i].transform.parent = SceneScaleController.transform;
-//			}
-//		}
-		
+		}		
 		//debris
 		if (objects[i].tag == "Debris")
 		{
@@ -362,7 +343,7 @@ function Start ()
 	//ios initializations
 	if (PlatformIOS)
 	{
-//		LevelOffset = Vector3(leveloffsetX, leveloffsetY, leveloffsetZ);
+		LevelOffset = Vector3(leveloffsetX, leveloffsetY, leveloffsetZ);
 	}
 	
 	//pc initializations

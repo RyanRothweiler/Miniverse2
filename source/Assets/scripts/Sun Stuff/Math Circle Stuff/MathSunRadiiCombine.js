@@ -44,6 +44,13 @@ function Start ()
 			//create mesh circle data
 			tempCircle = new MathCircle(sun.transform.position, Vector3.Distance(sun.transform.position, sun.transform.TransformPoint(sun.GetComponent(MeshFilter).mesh.vertices[10])), sun);
 			circles[count] = tempCircle;
+			
+			//make holder for this circle
+			var obj = GameObject.Instantiate(HolderPrefab, HolderPrefab.transform.position, Quaternion.identity);
+			obj.renderer.material.SetColor("_EmisColor", circles[count].object.renderer.material.GetColor("_EmisColor"));
+			Holders.Add(obj);
+			circles[count].Holder = Holders[Holders.Count-1];
+			
 			count++;
 		}
 	}
@@ -65,16 +72,19 @@ function MeshAdd ()
 	count = 0;
 	var size = 0;
 	chains.Clear();
-	circles = new MathCircle[MathSuns.length]; //reset circle
+//	circles = new MathCircle[MathSuns.length]; //reset circle
 	
 	//create circle data every loop
 	count = 0;
 	for (var sun : GameObject in MathSuns)
-	{			
+	{
 		//create mesh circle data
-		tempCircle = new MathCircle(sun.transform.position, Vector3.Distance(sun.transform.position, sun.transform.TransformPoint(sun.GetComponent(MeshFilter).mesh.vertices[10])), sun);
-		circles[count] = tempCircle;
+		circles[count].center = sun.transform.position;
+		circles[count].radius = Vector3.Distance(sun.transform.position, sun.transform.TransformPoint(sun.GetComponent(MeshFilter).mesh.vertices[10]));
 		circles[count].object.GetComponent(MathWireframeRender).CustomLines.Clear();
+		circles[count].hitOnce = false;
+		circles[count].hitTwice = false;
+		circles[count].endCircle = false;
 		count++;
 	}
 	
@@ -143,18 +153,6 @@ function MeshAdd ()
 		}
 	}
 	
-//	//create the holders if they haven't already been created
-//	if (!holdersInstantiated)
-//	{
-//		Holders = new GameObject[chains.Count];
-//		holdersInstantiated = true;
-//		for (i = 0; i < chains.Count; i++)
-//		{
-//			var obj = GameObject.Instantiate(HolderPrefab, HolderPrefab.transform.position, Quaternion.identity);
-//			Holders[i] = obj;
-//		}
-//	}
-	
 	//clear all the holders
 	for (var holder : GameObject in Holders)
 	{
@@ -162,30 +160,21 @@ function MeshAdd ()
 	}
 	
 	//create lines from the circles in chains
-	var holderCount = 0; 
 	for (var chain : MathCircleChain in chains) //go through chains
-	{
-		//make sure I don't need to make more holders
-		if(holderCount == Holders.Count)
-		{
-			var obj = GameObject.Instantiate(HolderPrefab, HolderPrefab.transform.position, Quaternion.identity);
-			Holders.Add(obj);
-		}
-		
-		//set the holder for this chain
-		chain.SunRadiiHolder = Holders[holderCount]; //this might do nothing
-		var wireframer = Holders[holderCount].GetComponent(MathWireframeRender); //get the LiveSunRadiiHolder renderer for this chain
-		wireframer.CustomLines.Clear();
-		holderCount++;
-		
+	{		
 		var memberCount = 0;
 		for (var circle : MathCircle in chain.members) //go through the circles in the chain
-		{	
+		{			
+			//set the holder for this circle
+			var wireframer = circle.Holder.GetComponent(MathWireframeRender); //get the LiveSunRadiiHolder renderer for this chain
+			wireframer.CustomLines.Clear();
+		
 			var endCount = 0; //holds the number of times moving around the circle has found an end point
+			
 			//go through the points on the circle
 			for (var a = 0.0; a < 6.5; a += CircleResolution)
-			{
-				//get the current point
+			{				
+				//get the points
 				var x = circle.center.x + (circle.radius * Mathf.Cos(a));
 				var y = circle.center.y + (circle.radius * Mathf.Sin(a));
 				var currPoint = Vector3(x, y, circle.center.z);
@@ -193,8 +182,7 @@ function MeshAdd ()
 				x = circle.center.x + (circle.radius * Mathf.Cos(a + CircleResolution));
 				y = circle.center.y + (circle.radius * Mathf.Sin(a + CircleResolution));
 				var nxtPoint = Vector3(x, y, circle.center.z);
-				
-												
+											
 				//this is for the internal circles
 				if (!circle.endCircle)
 				{
@@ -301,7 +289,7 @@ function MeshAdd ()
 							//and the second point is not
 							if (!(circle.Contains(nxtPoint) && chain.members[memberCount - 1].Contains(nxtPoint)))
 							{
-								wireframer.CustomLines.Add(nxtPoint); //add the current point
+								wireframer.CustomLines.Add(currPoint); //add the current point
 								wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount - 1])[1]); //add intersect point
 							}
 						}

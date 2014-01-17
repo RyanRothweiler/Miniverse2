@@ -9,6 +9,7 @@ class MathCircle
 	var endCircle : boolean; //if the circle is on the end of a chain of circles
 	
 	var object : GameObject; //the game object this was created from
+	var Holder : GameObject; //the object that is used to render this
 	
 	//default constructor
 	function MathCircle(center : Vector3, radius : float, object : GameObject)
