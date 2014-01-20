@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Asteroid Stuff\AsteroidController.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="546" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="524" Column="7" />
       <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathSunRadiiCombine.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathCircleChain.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathCircle.js" Line="1" Column="1" />
@@ -11,7 +11,8 @@
       <File FileName="Assets\scripts\Tutorial Stuff\TouchTutorial.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Planet Stuff\planetLifeIndicator.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\UI Stuff\PeopleCounter.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Sun Stuff\ShrinkCode.js" Line="17" Column="8" />
+      <File FileName="Assets\scripts\Sun Stuff\ShrinkCode.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Asteroid Stuff\AsteroidController.js" Line="229" Column="29" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

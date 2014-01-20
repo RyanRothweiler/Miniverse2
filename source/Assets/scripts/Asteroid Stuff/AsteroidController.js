@@ -226,5 +226,5 @@ function FadeInMat(mat : Material)
 	{
 		mat.color.a += Time.deltaTime * 10;
 		yield WaitForSeconds(0.01);
-	} while (mat.color.a < 0.3);
+	} while (mat.color.a < 0.75);
 }
