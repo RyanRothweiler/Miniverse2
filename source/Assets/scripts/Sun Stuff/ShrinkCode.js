@@ -4,7 +4,7 @@
 public var RadiiMatObj : GameObject; //the game object which holds the radii ring material
 public var PlanetExplosion : GameObject; //the planet explosion particle effect
 public var radiiSize : float;
-public var check : boolean;
+private var check : boolean;
 public var shrinkSpeed : float;
 public var dead = false; //if the sun is alive or not
 
@@ -16,6 +16,11 @@ function Start ()
 {
 	//init
 	RealShrinkSpeed = shrinkSpeed; 
+	
+	if (shrinkSpeed > 0)
+	{
+		check = true;
+	}
 	
 	//get drag controls
 	dragControls = Camera.main.GetComponent(DragControlsPC);
@@ -31,7 +36,7 @@ function Start ()
 		{
 			RadiiMatObj.renderer.material.SetColor("_EmisColor", Color(255,255,0,0.2));
 		}
-		if (shrinkSpeed >= 1 && shrinkSpeed < 2) //green
+		if (shrinkSpeed >= 0.1 && shrinkSpeed < 2) //green
 		{
 			RadiiMatObj.renderer.material.SetColor("_EmisColor", Color(0,255,0,0.2));
 		}

@@ -53,6 +53,7 @@
      <Compile Include="Assets\scripts\Background Stuff\NebulaBackground.js" />
      <Compile Include="Assets\scripts\Background Stuff\NebulaParentController.js" />
      <Compile Include="Assets\scripts\Background Stuff\StarBackground.js" />
+     <Compile Include="Assets\scripts\Control Stuff\AsteroidDrag.js" />
      <Compile Include="Assets\scripts\Control Stuff\DragControlsPC.js" />
      <Compile Include="Assets\scripts\Control Stuff\Joystick.js" />
      <Compile Include="Assets\scripts\Control Stuff\PlanetJoystick.js" />

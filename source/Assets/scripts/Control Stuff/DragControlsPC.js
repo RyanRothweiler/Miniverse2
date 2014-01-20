@@ -421,7 +421,13 @@ function Update ()
 					
 					for (var i = 0; i < worldObjects.Length; i++)
 					{
-						if ((worldObjects[i].name != "humanShip") && Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
+						if (worldObjects[i].name == "Asteroid" && Vector3.Distance(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.TransformPoint(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.position), touchTarget) < smallDist)
+						{
+							//set new smallest planet
+							smallDist = Vector3.Distance(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.TransformPoint(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.position), touchTarget);
+							closestPla = worldObjects[i].GetComponent(AsteroidController).AsteroidCenter;
+						}
+						if (worldObjects[i].name == "HumanPlanet" && Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
 						{
 							//set new smallest planet
 							smallDist = Vector3.Distance(worldObjects[i].transform.position, touchTarget);
@@ -546,7 +552,7 @@ function Update ()
 					if (objectInfo.collider.name == "AsteroidCenter" && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != selectedWorld.collider.gameObject) //if selected an asteroid and the asteroids nearest planet is not itself
 					{	
 						//if mouse didn't move
-						if (mousePos == Input.mousePosition && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != selectedWorld.collider.gameObject)
+						if (mousePos == Input.mousePosition && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != null && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != selectedWorld.collider.gameObject)
 						{
 							MovePeople(true);
 						}
