@@ -249,7 +249,7 @@ function Start ()
 	if (isLevelSelect) 
 	{
 		//key fading
-		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r,KeyMat.GetColor("_TintColor").g,KeyMat.GetColor("_TintColor").b, 0));
+//		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r,KeyMat.GetColor("_TintColor").g,KeyMat.GetColor("_TintColor").b, 0));
 		FadeInKeys();
 	}
 
@@ -1207,11 +1207,11 @@ function ResetFirstClick()
 //fade out the keys
 function FadeOutKeys()
 {
-	do
-	{
-		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r, KeyMat.GetColor("_TintColor").g, KeyMat.GetColor("_TintColor").b, KeyMat.GetColor("_TintColor").a - (Time.deltaTime * 2)));
-		yield WaitForSeconds(0.01);
-	} while (KeyMat.GetColor("_TintColor").a > 0);
+//	do
+//	{
+//		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r, KeyMat.GetColor("_TintColor").g, KeyMat.GetColor("_TintColor").b, KeyMat.GetColor("_TintColor").a - (Time.deltaTime * 2)));
+//		yield WaitForSeconds(0.01);
+//	} while (KeyMat.GetColor("_TintColor").a > 0);
 }
  
 //fade in the keys
@@ -1224,11 +1224,11 @@ function FadeInKeys()
 	} while (Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount != 0);
 	
 	//now fade in
-	do
-	{
-		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r, KeyMat.GetColor("_TintColor").g, KeyMat.GetColor("_TintColor").b, KeyMat.GetColor("_TintColor").a + (Time.deltaTime * 2)));
-		yield WaitForSeconds(0.01);
-	} while (KeyMat.GetColor("_TintColor").a < 1);
+//	do
+//	{
+//		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r, KeyMat.GetColor("_TintColor").g, KeyMat.GetColor("_TintColor").b, KeyMat.GetColor("_TintColor").a + (Time.deltaTime * 2)));
+//		yield WaitForSeconds(0.01);
+//	} while (KeyMat.GetColor("_TintColor").a < 1);
 }
 
 //set the next level... hence the name.

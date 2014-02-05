@@ -1,29 +1,28 @@
 fileFormatVersion: 2
-guid: e2f4c41257b897145af07da1f2be6064
+guid: 4ac06f6538e64e946bb149a8138b37c6
 ModelImporter:
   fileIDToRecycleName:
-    4300000: 20
-    4300002: 7
-    4300004: 12
-    4300006: 18
-    4300008: 17
-    4300010: 16
-    4300012: 15
-    4300014: 14
-    4300016: 13
-    4300018: 11
-    4300020: 10
-    4300022: 9
-    4300024: 8
-    4300026: 6
-    4300028: 5
-    4300030: 4
-    4300032: 3
+    4300000: 15
+    4300002: 14
+    4300004: 13
+    4300006: 12
+    4300008: 11
+    4300010: 10
+    4300012: 9
+    4300014: 8
+    4300016: 16
+    4300018: 7
+    4300020: 17
+    4300022: 18
+    4300024: 6
+    4300026: 5
+    4300028: 19
+    4300030: 3
+    4300032: 4
     4300034: 2
-    4300036: 1
-    4300038: 19
-    4300040: All
-    7400000: Default Take //// humankey_2_pieces
+    4300036: 20
+    4300038: 1
+    7400000: Default Take //// humankey_2_pieces_BACKUP
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -61,66 +60,27 @@ ModelImporter:
     //RootNode:
       data:
         first: 1
-        second: a0860100
+        second: c6860100
       data:
         first: 4
-        second: 801a0600
+        second: a61a0600
       data:
         first: 111
         second: 605fa900
     1:
       data:
         first: 1
-        second: a4860100
+        second: a0860100
       data:
         first: 4
-        second: 841a0600
+        second: 801a0600
       data:
         first: 23
-        second: 62182300
+        second: 60182300
       data:
         first: 33
-        second: a25a3200
+        second: a05a3200
     10:
-      data:
-        first: 1
-        second: b4860100
-      data:
-        first: 4
-        second: 941a0600
-      data:
-        first: 23
-        second: 72182300
-      data:
-        first: 33
-        second: b25a3200
-    11:
-      data:
-        first: 1
-        second: b6860100
-      data:
-        first: 4
-        second: 961a0600
-      data:
-        first: 23
-        second: 74182300
-      data:
-        first: 33
-        second: b45a3200
-    12:
-      data:
-        first: 1
-        second: c4860100
-      data:
-        first: 4
-        second: a41a0600
-      data:
-        first: 23
-        second: 82182300
-      data:
-        first: 33
-        second: c25a3200
-    13:
       data:
         first: 1
         second: b8860100
@@ -129,36 +89,75 @@ ModelImporter:
         second: 981a0600
       data:
         first: 23
-        second: 76182300
-      data:
-        first: 33
-        second: b65a3200
-    14:
-      data:
-        first: 1
-        second: ba860100
-      data:
-        first: 4
-        second: 9a1a0600
-      data:
-        first: 23
         second: 78182300
       data:
         first: 33
         second: b85a3200
+    11:
+      data:
+        first: 1
+        second: c4860100
+      data:
+        first: 4
+        second: a41a0600
+      data:
+        first: 23
+        second: 84182300
+      data:
+        first: 33
+        second: c45a3200
+    12:
+      data:
+        first: 1
+        second: a8860100
+      data:
+        first: 4
+        second: 881a0600
+      data:
+        first: 23
+        second: 68182300
+      data:
+        first: 33
+        second: a85a3200
+    13:
+      data:
+        first: 1
+        second: b2860100
+      data:
+        first: 4
+        second: 921a0600
+      data:
+        first: 23
+        second: 72182300
+      data:
+        first: 33
+        second: b25a3200
+    14:
+      data:
+        first: 1
+        second: b0860100
+      data:
+        first: 4
+        second: 901a0600
+      data:
+        first: 23
+        second: 70182300
+      data:
+        first: 33
+        second: b05a3200
     15:
       data:
         first: 1
-        second: bc860100
+        second: b4860100
       data:
         first: 4
-        second: 9c1a0600
+        second: 941a0600
       data:
         first: 23
-        second: 7a182300
+        second: 74182300
       data:
         first: 33
-        second: ba5a3200
+        second: b45a3200
     16:
       data:
         first: 1
@@ -168,63 +167,11 @@ ModelImporter:
         second: 9e1a0600
       data:
         first: 23
-        second: 7c182300
-      data:
-        first: 33
-        second: bc5a3200
-    17:
-      data:
-        first: 1
-        second: c0860100
-      data:
-        first: 4
-        second: a01a0600
-      data:
-        first: 23
         second: 7e182300
       data:
         first: 33
         second: be5a3200
-    18:
-      data:
-        first: 1
-        second: c2860100
-      data:
-        first: 4
-        second: a21a0600
-      data:
-        first: 23
-        second: 80182300
-      data:
-        first: 33
-        second: c05a3200
-    19:
-      data:
-        first: 1
-        second: a2860100
-      data:
-        first: 4
-        second: 821a0600
-      data:
-        first: 23
-        second: 60182300
-      data:
-        first: 33
-        second: a05a3200
-    2:
-      data:
-        first: 1
-        second: a6860100
-      data:
-        first: 4
-        second: 861a0600
-      data:
-        first: 23
-        second: 64182300
-      data:
-        first: 33
-        second: a45a3200
-    20:
+    17:
       data:
         first: 1
         second: c8860100
@@ -237,52 +184,104 @@ ModelImporter:
       data:
         first: 33
         second: c65a3200
-    3:
-      data:
-        first: 1
-        second: a8860100
-      data:
-        first: 4
-        second: 881a0600
-      data:
-        first: 23
-        second: 66182300
-      data:
-        first: 33
-        second: a65a3200
-    4:
-      data:
-        first: 1
-        second: aa860100
-      data:
-        first: 4
-        second: 8a1a0600
-      data:
-        first: 23
-        second: 68182300
-      data:
-        first: 33
-        second: a85a3200
-    5:
-      data:
-        first: 1
-        second: ac860100
-      data:
-        first: 4
-        second: 8c1a0600
-      data:
-        first: 23
-        second: 6a182300
-      data:
-        first: 33
-        second: aa5a3200
-    6:
+    18:
       data:
         first: 1
         second: ae860100
       data:
         first: 4
         second: 8e1a0600
+      data:
+        first: 23
+        second: 6e182300
+      data:
+        first: 33
+        second: ae5a3200
+    19:
+      data:
+        first: 1
+        second: ba860100
+      data:
+        first: 4
+        second: 9a1a0600
+      data:
+        first: 23
+        second: 7a182300
+      data:
+        first: 33
+        second: ba5a3200
+    2:
+      data:
+        first: 1
+        second: a2860100
+      data:
+        first: 4
+        second: 821a0600
+      data:
+        first: 23
+        second: 62182300
+      data:
+        first: 33
+        second: a25a3200
+    20:
+      data:
+        first: 1
+        second: a6860100
+      data:
+        first: 4
+        second: 861a0600
+      data:
+        first: 23
+        second: 66182300
+      data:
+        first: 33
+        second: a65a3200
+    3:
+      data:
+        first: 1
+        second: c0860100
+      data:
+        first: 4
+        second: a01a0600
+      data:
+        first: 23
+        second: 80182300
+      data:
+        first: 33
+        second: c05a3200
+    4:
+      data:
+        first: 1
+        second: c2860100
+      data:
+        first: 4
+        second: a21a0600
+      data:
+        first: 23
+        second: 82182300
+      data:
+        first: 33
+        second: c25a3200
+    5:
+      data:
+        first: 1
+        second: b6860100
+      data:
+        first: 4
+        second: 961a0600
+      data:
+        first: 23
+        second: 76182300
+      data:
+        first: 33
+        second: b65a3200
+    6:
+      data:
+        first: 1
+        second: ac860100
+      data:
+        first: 4
+        second: 8c1a0600
       data:
         first: 23
         second: 6c182300
@@ -292,52 +291,39 @@ ModelImporter:
     7:
       data:
         first: 1
-        second: c6860100
+        second: bc860100
       data:
         first: 4
-        second: a61a0600
+        second: 9c1a0600
       data:
         first: 23
-        second: 84182300
+        second: 7c182300
       data:
         first: 33
-        second: c45a3200
+        second: bc5a3200
     8:
       data:
         first: 1
-        second: b0860100
+        second: a4860100
       data:
         first: 4
-        second: 901a0600
+        second: 841a0600
       data:
         first: 23
-        second: 6e182300
+        second: 64182300
       data:
         first: 33
-        second: ae5a3200
+        second: a45a3200
     9:
       data:
         first: 1
-        second: b2860100
+        second: aa860100
       data:
         first: 4
-        second: 921a0600
+        second: 8a1a0600
       data:
         first: 23
-        second: 70182300
+        second: 6a182300
       data:
         first: 33
-        second: b05a3200
-    All:
-      data:
-        first: 1
-        second: ca860100
-      data:
-        first: 4
-        second: aa1a0600
-      data:
-        first: 23
-        second: 88182300
-      data:
-        first: 33
-        second: c85a3200
+        second: aa5a3200

@@ -342,48 +342,48 @@ function Snap(numFrom : int)
 //checks any vertices that overlap with the mated key and remove this objects vertices
 function CheckOverlappingVerts(mate : GameObject, mateS : GameObject, mateSB : GameObject, DeathSphere : GameObject)
 {
-	if (this.gameObject.active)
-	{
-		vertsChecked = true;
-		dumTris.Clear();
-		
-		var intersectCirc = new Circ(mateS.transform.TransformPoint(mateS.GetComponent(SphereCollider).center), mateS.GetComponent(SphereCollider).radius);
-		if (mateSB)
-		{
-			var intersectCircB = new Circ(mateSB.transform.TransformPoint(mateSB.GetComponent(SphereCollider).center), mateSB.GetComponent(SphereCollider).radius);
-		}
-		var keyMesh = this.GetComponentsInChildren(MeshRenderer, false)[0].gameObject;		
-		
-		for (var i = 0; i < keyMesh.GetComponent(MeshFilter).mesh.triangles.length; i += 3)
-		{
-			//if all three of the triangle's vertices are not inside the intersection circle then add them to the new tris list (dumTris)
-			if (!(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i]]))) && !(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]]))) && !(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]]))) )
-			{
-				if (mateSB)
-				{
-					//check the second circle if there is one
-					if (!(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i]]))) && !(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]]))) && !(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]]))) )
-					{
-						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i]);
-						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]);
-						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]);
-					}
-				}
-				else
-				{
-					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i]);
-					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]);
-					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]);
-				}
-			}
-		}
-		
-		//update mesh
-		var dummyTriangles = new int[dumTris.Count];
-		for (i = 0; i < dumTris.Count; i++)
-		{
-			dummyTriangles[i] = dumTris[i];
-		}
-		keyMesh.GetComponent(MeshFilter).mesh.triangles = dummyTriangles;
-	}
+//	if (this.gameObject.active)
+//	{
+//		vertsChecked = true;
+//		dumTris.Clear();
+//		
+//		var intersectCirc = new Circ(mateS.transform.TransformPoint(mateS.GetComponent(SphereCollider).center), mateS.GetComponent(SphereCollider).radius);
+//		if (mateSB)
+//		{
+//			var intersectCircB = new Circ(mateSB.transform.TransformPoint(mateSB.GetComponent(SphereCollider).center), mateSB.GetComponent(SphereCollider).radius);
+//		}
+//		var keyMesh = this.GetComponentsInChildren(MeshRenderer, false)[0].gameObject;		
+//		
+//		for (var i = 0; i < keyMesh.GetComponent(MeshFilter).mesh.triangles.length; i += 3)
+//		{
+//			//if all three of the triangle's vertices are not inside the intersection circle then add them to the new tris list (dumTris)
+//			if (!(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i]]))) && !(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]]))) && !(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]]))) )
+//			{
+//				if (mateSB)
+//				{
+//					//check the second circle if there is one
+//					if (!(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i]]))) && !(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]]))) && !(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]]))) )
+//					{
+//						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i]);
+//						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]);
+//						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]);
+//					}
+//				}
+//				else
+//				{
+//					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i]);
+//					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]);
+//					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]);
+//				}
+//			}
+//		}
+//		
+//		//update mesh
+//		var dummyTriangles = new int[dumTris.Count];
+//		for (i = 0; i < dumTris.Count; i++)
+//		{
+//			dummyTriangles[i] = dumTris[i];
+//		}
+//		keyMesh.GetComponent(MeshFilter).mesh.triangles = dummyTriangles;
+//	}
 }
