@@ -80,6 +80,7 @@ public var DeathSphere : GameObject; //a sphere that dies after a time. used for
 public var FailType : GameObject; //the type which shows on level fail
 public var StarStreakMat : Material;
 public var KeyMat : Material; //the material used for the keys
+public var GlowMat : Material; //the material used for the glow behind the keys
 public var LevelOffsetController : GameObject; //the level select object to move when scrolling level select stuff
 public var FailTexture : Texture2D; //the texture which sail fail on it. lolz
 
@@ -169,6 +170,7 @@ private var LevelOffset = Vector3(-2,0,0);
 private var shipLoc : Vector3; //the location of the ship
 private var Timer : LevelTimer; //the script which controls the level times
 private var dummyObj : GameObject; //a dummy game object
+private var SFXCont : SFXController; //sfx controller
 
 //touch control variables
 public var Touch1StartPos = Vector2(0,0); //the start position of a touch
@@ -216,10 +218,22 @@ function OnLevelWasLoaded()
 
 function Start () 
 {
+	//setup analytics
+	var Metrics = GoogleAnalyticsHelper();
+	if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+	{
+	    Metrics.Settings("UA-46456696-2", "http://www.miniversegame.com/");
+	    Metrics.LogEvent("game", "start", 0);
+	}
+
 	//set fps
 	Application.targetFrameRate = 40; //set to 60 fps?
 	
 	//initialize things
+	if (GameObject.Find("PersistentSFXController"))
+	{
+		SFXCont = GameObject.Find("PersistentSFXController").GetComponent(SFXController);
+	}
 	peopleDragging = false;
 	nextLevel = false;
 	halt = true;
@@ -249,7 +263,8 @@ function Start ()
 	if (isLevelSelect) 
 	{
 		//key fading
-//		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r,KeyMat.GetColor("_TintColor").g,KeyMat.GetColor("_TintColor").b, 0));
+		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r,KeyMat.GetColor("_Color").g,KeyMat.GetColor("_Color").b, 0));
+		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r,GlowMat.GetColor("_Color").g,GlowMat.GetColor("_Color").b, 0));
 		FadeInKeys();
 	}
 
@@ -1153,6 +1168,11 @@ function Update ()
 		//moving to a level
 		if (toLevel)
 		{
+			//play rocket in sound
+			if (SFXCont)
+			{
+				SFXCont.ToLevel();
+			}
 			Camera.main.GetComponent(LevelNumberTypeEffect).SendMessage("TypeAway");
 			if (Camera.main.GetComponent(LevelNumberTypeEffect).NextLevelReady)
 			{
@@ -1207,11 +1227,12 @@ function ResetFirstClick()
 //fade out the keys
 function FadeOutKeys()
 {
-//	do
-//	{
-//		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r, KeyMat.GetColor("_TintColor").g, KeyMat.GetColor("_TintColor").b, KeyMat.GetColor("_TintColor").a - (Time.deltaTime * 2)));
-//		yield WaitForSeconds(0.01);
-//	} while (KeyMat.GetColor("_TintColor").a > 0);
+	do
+	{
+		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a - (Time.deltaTime * 2)));
+		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a - (Time.deltaTime * 2)));
+		yield WaitForSeconds(0.01);
+	} while (KeyMat.GetColor("_Color").a > 0);
 }
  
 //fade in the keys
@@ -1224,11 +1245,12 @@ function FadeInKeys()
 	} while (Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount != 0);
 	
 	//now fade in
-//	do
-//	{
-//		KeyMat.SetColor("_TintColor", Color(KeyMat.GetColor("_TintColor").r, KeyMat.GetColor("_TintColor").g, KeyMat.GetColor("_TintColor").b, KeyMat.GetColor("_TintColor").a + (Time.deltaTime * 2)));
-//		yield WaitForSeconds(0.01);
-//	} while (KeyMat.GetColor("_TintColor").a < 1);
+	do
+	{
+		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime * 2)));
+		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a + (Time.deltaTime * 2)));
+		yield WaitForSeconds(0.01);
+	} while (KeyMat.GetColor("_Color").a < 1);
 }
 
 //set the next level... hence the name.

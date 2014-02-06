@@ -50,6 +50,7 @@
      <Compile Include="Assets\scripts\Audio Stuff\BackgroundAudioController.js" />
      <Compile Include="Assets\scripts\Audio Stuff\MainMenuAudioController.js" />
      <Compile Include="Assets\scripts\Audio Stuff\MusicAudioController.js" />
+     <Compile Include="Assets\scripts\Audio Stuff\SFXController.js" />
      <Compile Include="Assets\scripts\Background Stuff\NebulaBackground.js" />
      <Compile Include="Assets\scripts\Background Stuff\NebulaParentController.js" />
      <Compile Include="Assets\scripts\Background Stuff\StarBackground.js" />
@@ -84,6 +85,7 @@
      <Compile Include="Assets\scripts\Overhead Stuff\Distress Camera Stuff\DistressCameraController.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\Distress Camera Stuff\DistressUI.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\FPSDraw.js" />
+     <Compile Include="Assets\scripts\Overhead Stuff\GoogleAnalyticsHelper.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\LevelTimer.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\PausePlane.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\Platform_type.js" />
