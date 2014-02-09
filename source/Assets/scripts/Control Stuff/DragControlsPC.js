@@ -219,12 +219,12 @@ function OnLevelWasLoaded()
 function Start () 
 {
 	//setup analytics
-	var Metrics = GoogleAnalyticsHelper();
-	if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-	{
-	    Metrics.Settings("UA-46456696-2", "http://www.miniversegame.com/");
-	    //Metrics.LogEvent("Ryt", "MiniverseBeta1.0", "CATAGORY" (level), "ACTION" (win or not), "VALUE" (time it took to complete the action));
-	}
+//	var Metrics = GoogleAnalyticsHelper();
+//	if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+//	{
+//	    Metrics.Settings("UA-46456696-2", "http://www.miniversegame.com/");
+//	    //Metrics.LogEvent("Ryt", "MiniverseBeta1.0", "CATAGORY" (level), "ACTION" (win or not), "VALUE" (time it took to complete the action));
+//	}
 
 	//set fps
 	Application.targetFrameRate = 40; //set to 60 fps?
@@ -1093,8 +1093,8 @@ function Update ()
 		//log metrics if on ios
 		if (PlatformIOS)
 		{
-			Debug.Log("logging event");
-			Metrics.LogEvent("Ryt", "MiniverseBetaRyan", Application.loadedLevel, "win", Time.timeSinceLevelLoad);
+//			Debug.Log("logging event");
+//			Metrics.LogEvent("Ryt", "MiniverseBetaRyan", Application.loadedLevel, "win", Time.timeSinceLevelLoad);
 		}
 		
 		LevelWon();
