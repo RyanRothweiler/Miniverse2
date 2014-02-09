@@ -223,7 +223,7 @@ function Start ()
 	if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
 	{
 	    Metrics.Settings("UA-46456696-2", "http://www.miniversegame.com/");
-	    Metrics.LogEvent("game", "start", 0);
+	    //Metrics.LogEvent("Ryt", "MiniverseBeta1.0", "CATAGORY" (level), "ACTION" (win or not), "VALUE" (time it took to complete the action));
 	}
 
 	//set fps
@@ -1090,6 +1090,13 @@ function Update ()
 	//if player hit the people goal. win condition
 	if (peopleSaved >= peopleGoal)
 	{
+		//log metrics if on ios
+		if (PlatformIOS)
+		{
+			Debug.Log("logging event");
+			Metrics.LogEvent("Ryt", "MiniverseBetaRyan", Application.loadedLevel, "win", Time.timeSinceLevelLoad);
+		}
+		
 		LevelWon();
 		FlyAway = true;
 		//Timer.LevelDone(previousLevel);
