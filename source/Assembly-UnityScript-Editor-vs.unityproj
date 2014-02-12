@@ -64,11 +64,11 @@
  <Reference Include="Assembly-UnityScript">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>
  </Reference>
- <Reference Include="P31RestKit">
- <HintPath>Assets\Plugins\P31RestKit.dll</HintPath>
- </Reference>
  <Reference Include="Prime31MenuItem">
  <HintPath>Assets\editor\Prime31\Prime31MenuItem.dll</HintPath>
+ </Reference>
+ <Reference Include="P31RestKit">
+ <HintPath>Assets\Plugins\P31RestKit.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
