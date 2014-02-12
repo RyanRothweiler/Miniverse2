@@ -18,12 +18,13 @@ public class FlurryGUIManager : MonoBehaviourGUI
 			FlurryBinding.setGender( "M" );
 			
 			// replace with your Flurry Key!!!
-			FlurryBinding.startSession( "XJHB5EGMQ9NCC6XWH43W" );
+			FlurryBinding.startSession( "BBGNNPQWKBYN7WXGTWWZ" );
 		}
 
 
 		if( GUILayout.Button( "Log Event" ) )
 		{
+			Debug.Log("loggin event");
 			FlurryBinding.logEvent( "Stuff Happened", false );
 		}
 

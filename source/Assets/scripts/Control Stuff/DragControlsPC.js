@@ -1,5 +1,7 @@
 #pragma strict
 
+import Prime31; //get flurry plugin
+
 //just some notes
 //
 //
@@ -146,6 +148,7 @@ public var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
 private var FirstClick = false; //used to detect double clicking
 private var stopHidingFileType = false; //used to stop hiding the fail type! what did you think it did?
+private var LevelTimerEnded = false; 
 
 //Strings
 static var Level : String;
@@ -219,13 +222,13 @@ function OnLevelWasLoaded()
 function Start () 
 {
 	//setup analytics
-//	var Metrics = GoogleAnalyticsHelper();
-//	if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-//	{
-//	    Metrics.Settings("UA-46456696-2", "http://www.miniversegame.com/");
-//	    //Metrics.LogEvent("Ryt", "MiniverseBeta1.0", "CATAGORY" (level), "ACTION" (win or not), "VALUE" (time it took to complete the action));
-//	}
-
+	if (Application.loadedLevel == 0)
+	{
+		Debug.Log("metrics init");
+		
+		FlurryBinding.startSession( "BBGNNPQWKBYN7WXGTWWZ" );
+	}
+	
 	//set fps
 	Application.targetFrameRate = 40; //set to 60 fps?
 	
@@ -367,7 +370,14 @@ function Start ()
 		CanScrollZoom = true;
 		CanViewDrag = true;
 		WorldDraggingInverted = true;
-	}	
+	}
+	
+	//start metrics level timer
+	if ((Application.loadedLevel > 0) && (Application.loadedLevel < 21))
+	{
+		Debug.Log("level starting event");
+		FlurryBinding.logEvent(" "+Application.loadedLevel + " - Level Time", true );
+	}
 }
 
 //main update function
@@ -1091,10 +1101,11 @@ function Update ()
 	if (peopleSaved >= peopleGoal)
 	{
 		//log metrics if on ios
-		if (PlatformIOS)
+		if (!LevelTimerEnded)
 		{
-//			Debug.Log("logging event");
-//			Metrics.LogEvent("Ryt", "MiniverseBetaRyan", Application.loadedLevel, "win", Time.timeSinceLevelLoad);
+			Debug.Log("level ending event");
+			LevelTimerEnded = true;
+			FlurryBinding.endTimedEvent(" "+Application.loadedLevel + " - Level Time"); //end level timer
 		}
 		
 		LevelWon();
@@ -1120,6 +1131,13 @@ function Update ()
 			}
 			else
 			{
+				if (!LevelTimerEnded)
+				{
+					Debug.Log("logging fail");
+					LevelTimerEnded = true;
+					FlurryBinding.endTimedEvent(" "+Application.loadedLevel + " - Level Time"); //end level timer
+					FlurryBinding.logEvent(" "+Application.loadedLevel + " - Level Fail", false); //log level fail 
+				}
 				transform.DetachChildren();
 				Application.LoadLevel(Application.loadedLevelName);
 			}
@@ -1188,7 +1206,7 @@ function Update ()
 				ZoomIn();
 				
 				if (transform.position.z >= WorldZDepth + 100)
-				{
+				{					
 					transform.DetachChildren();
 					Application.LoadLevel(Level);
 					inGame = true;
