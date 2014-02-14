@@ -1330,18 +1330,29 @@ function MovePeople(Asteroid : boolean)
 		//get human children and move them
 		for(MoveI = 0; MoveI < dummyChildList.Length; MoveI++)
 		{
-			if (!Asteroid)
+			if (!Asteroid) //not an asteroid, just a regular planet
 			{
-				yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum)));
 				//if moving to the human ship then turn hide the person
 				if (tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.gameObject.name == "humanShip")
 				{
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true));
 					dummyChildList[MoveI].gameObject.SetActiveRecursively(false);
 				}
+				else
+				{
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false));
+				}
 			}
-			else
+			else //else an asteroid
 			{
-				yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum)));
+				if (tempSelectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.name == "humanShip")
+				{
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true));
+				}
+				else
+				{
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false));
+				}
 			}
 			MoveN++;
 		}
@@ -1366,10 +1377,16 @@ function MovePeople(Asteroid : boolean)
 	}
 }
 
-function ReparentChild(fromChild : GameObject, rotOffset : int) //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
+function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean) //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
 {
 	//teleport out 'from' child
 	fromChild.GetComponent(HumanPerson).TeleportOut();
+	
+	//if moving the people to the ship
+	if (toShip)
+	{
+		GameObject.Find("humanShip").transform.Find("humanship_3_MO").GetComponent(HumanShip).Teleport(); //human ship teleport effect
+	}
 	
 	//if the selected world is a planet
 	if (selectedWorld.collider.name == "HumanPlanet")

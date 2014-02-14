@@ -3,6 +3,7 @@
 //public vars
 public var FlameEffect : GameObject;
 public var FlameSmokeEffect : GameObject;
+public var TeleportPS : GameObject; 
 static var Gone = false; //if the ship has gone or not. to start the ship has not
 
 //private var
@@ -170,4 +171,10 @@ function ShowShip()
 	this.renderer.enabled = true;
 	FlameEffect.renderer.enabled = true;
 	FlameSmokeEffect.renderer.enabled = true;
+}
+
+function Teleport() //instantiate and play the teleport animation
+{
+	GameObject.Instantiate(TeleportPS, Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); //instantiate the effect
+	//and do nothing else I guess, I thought I'd need more here.
 }
