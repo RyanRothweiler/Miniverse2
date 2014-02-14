@@ -1,12 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Plugins/Flurry/demo/FlurryGUIManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
     <Files>
-      <File FileName="Assets/Plugins/Flurry/FlurryManager.cs" Line="16" Column="43" />
-      <File FileName="Assets/Plugins/Flurry/demo/FlurryEventListener.cs" Line="1" Column="1" />
-      <File FileName="Assets/Plugins/Flurry/demo/FlurryGUIManager.cs" Line="27" Column="30" />
-      <File FileName="Assets/scripts/Control Stuff/DragControlsPC.js" Line="1" Column="1" />
-      <File FileName="Assets/Plugins/Flurry/FlurryBinding.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1867" Column="5" />
+      <File FileName="Assets\Plugins\Flurry\FlurryManager.cs" Line="16" Column="43" />
+      <File FileName="Assets\Plugins\Flurry\demo\FlurryEventListener.cs" Line="1" Column="1" />
+      <File FileName="Assets\Plugins\Flurry\demo\FlurryGUIManager.cs" Line="8" Column="1" />
+      <File FileName="Assets\Plugins\Flurry\FlurryBinding.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -221,13 +221,15 @@ function OnLevelWasLoaded()
 
 function Start () 
 {
-	//setup analytics
-	if (Application.loadedLevel == 0)
-	{
-		Debug.Log("metrics init");
-		
-		FlurryBinding.startSession( "BBGNNPQWKBYN7WXGTWWZ" );
-	}
+	#if UNITY_IPHONE
+		//setup analytics
+		if (Application.loadedLevel == 0)
+		{
+			Debug.Log("metrics init");
+			
+			FlurryBinding.startSession( "BBGNNPQWKBYN7WXGTWWZ" );
+		}
+	#endif
 	
 	//set fps
 	Application.targetFrameRate = 40; //set to 60 fps?
@@ -372,12 +374,14 @@ function Start ()
 		WorldDraggingInverted = true;
 	}
 	
-	//start metrics level timer
-	if ((Application.loadedLevel > 0) && (Application.loadedLevel < 21))
-	{
-		Debug.Log("level starting event");
-		FlurryBinding.logEvent(" "+Application.loadedLevel + " - Level Time", true );
-	}
+	#if UNITY_IPHONE
+		//start metrics level timer
+		if ((Application.loadedLevel > 0) && (Application.loadedLevel < 21))
+		{
+			Debug.Log("level starting event");
+			FlurryBinding.logEvent(" "+Application.loadedLevel + " - Level Time", true );
+		}
+	#endif
 }
 
 //main update function
@@ -1100,13 +1104,15 @@ function Update ()
 	//if player hit the people goal. win condition
 	if (peopleSaved >= peopleGoal)
 	{
-		//log metrics if on ios
-		if (!LevelTimerEnded)
-		{
-			Debug.Log("level ending event");
-			LevelTimerEnded = true;
-			FlurryBinding.endTimedEvent(" "+Application.loadedLevel + " - Level Time"); //end level timer
-		}
+		#if UNITY_IPHONE
+			//log metrics if on ios
+			if (!LevelTimerEnded)
+			{
+				Debug.Log("level ending event");
+				LevelTimerEnded = true;
+				FlurryBinding.endTimedEvent(" "+Application.loadedLevel + " - Level Time"); //end level timer
+			}
+		#endif
 		
 		LevelWon();
 		FlyAway = true;
@@ -1131,13 +1137,16 @@ function Update ()
 			}
 			else
 			{
-				if (!LevelTimerEnded)
-				{
-					Debug.Log("logging fail");
-					LevelTimerEnded = true;
-					FlurryBinding.endTimedEvent(" "+Application.loadedLevel + " - Level Time"); //end level timer
-					FlurryBinding.logEvent(" "+Application.loadedLevel + " - Level Fail", false); //log level fail 
-				}
+				#if UNITY_IPHONEa
+					if (!LevelTimerEnded)
+					{
+						Debug.Log("logging fail");
+						LevelTimerEnded = true;
+						FlurryBinding.endTimedEvent(" "+Application.loadedLevel + " - Level Time"); //end level timer
+						FlurryBinding.logEvent(" "+Application.loadedLevel + " - Level Fail", false); //log level fail 
+					}
+				#endif
+				
 				transform.DetachChildren();
 				Application.LoadLevel(Application.loadedLevelName);
 			}
@@ -2482,8 +2491,8 @@ function DepressLevelTag(info : RaycastHit, isLevelTag : boolean)
 	//back arrow
 	if (info.collider.name == "BackArrow")
 	{
-		FadeLevelTagSize(info.collider.transform.localScale.x); //fade tag size
-		//info.collider.renderer.material.color.a = 0.4; //fade opacity
+		//FadeLevelTagSize(info.collider.transform.localScale.x); //fade tag size
+		info.collider.renderer.material.color.a = 0.4; //fade opacity
 	}
 }
 
@@ -2512,7 +2521,7 @@ function UnpressLevelTag(info : RaycastHit, isLevelTag : boolean)
 	//back arrow
 	if (info.collider.name == "BackArrow")
 	{
-		info.collider.transform.localScale = Vector3(0.4, 0.4, 0.4); //tag scale
+		//info.collider.transform.localScale = Vector3(0.4, 0.4, 0.4); //tag scale
 	}
 }
 
