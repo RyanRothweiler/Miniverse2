@@ -1576,7 +1576,7 @@ function SettingsMenu()
 			worldSelected = false;
 		}
 		
-		//if object selected
+		//moving volume slider
 		if (worldSelected && selectedWorld.collider.name == "volume marker")	
 		{
 			var target = (Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet).x;
@@ -1614,12 +1614,32 @@ function SettingsMenu()
 					//check for tag depression
 					if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 					{
-						DepressLevelTag(objectInfo, false);
-						depressedTag = objectInfo;
-						iosTagDepress = true;
+						//volume slider
+						if (objectInfo.collider.name == "volume marker")
+						{
+							worldSelected = true;
+							selectedWorld = objectInfo;
+							offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z));
+						}
+						
+						if (objectInfo.collider.name == "BackArrow")
+						{
+							DepressLevelTag(objectInfo, false);
+							depressedTag = objectInfo;
+							iosTagDepress = true;
+						}
+					}					
+				}
+				
+				//moving volume slider
+				if (worldSelected && selectedWorld.collider.name == "volume marker")	
+				{
+					target = (Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet).x;
+					if ((target > -0.55) && (target < 3.06))
+					{
+						selectedWorld.collider.transform.position.x = target;
 					}
-					
-				}		
+				}	
 			}
 		}
 		
@@ -1628,6 +1648,7 @@ function SettingsMenu()
 		{
 			//reset
 			Touch1Start = true;
+			worldSelected = false;
 			
 			//unpress level tag
 			if (iosTagDepress)
@@ -1735,36 +1756,39 @@ function ContactMenu()
 		
 		//if not touching
 		if (!Touching1)
-		{
-			//reset
-			Touch1Start = true;
-			
+		{		
 			//unpress level tag
 			if (iosTagDepress)
 			{
 				iosTagDepress = false;
 				UnpressLevelTag(depressedTag, false);
 			}
-			
-			//back arrow
-			if (objectInfo.collider.name == "BackArrow")
+			if (objectInfo.collider != null && !Touch1Start)
 			{
-				//move back to main menu
-				nextLevel = true;
-				toMainMenu = true;
+				Debug.Log("not touching");
+				//back arrow
+				if (objectInfo.collider.name == "BackArrow")
+				{
+					//move back to main menu
+					nextLevel = true;
+					toMainMenu = true;
+				}
+				
+				//twitter button
+				if (objectInfo.collider.name == "twitter")
+				{
+					Application.OpenURL("https://twitter.com/RytGames");
+				}
+				
+				//facebook button
+				if (objectInfo.collider.name == "facebook")
+				{
+					Application.OpenURL("fb://profile/432451866787009");
+				}
 			}
 			
-			//twitter button
-			if (objectInfo.collider.name == "twitter")
-			{
-				Application.OpenURL("https://twitter.com/RytGames");
-			}
-			
-			//twitter button
-			if (objectInfo.collider.name == "facebook")
-			{
-				Application.OpenURL("https://www.facebook.com/Miniverse");
-			}
+			//reset
+			Touch1Start = true;
 		}
 	}
 }
@@ -1822,7 +1846,6 @@ function MainMenu()
 			//if clicked the Contact button
 			if (objectInfo.collider.name == "Contact")
 			{				
-				print("contact");
 				nextLevel = true;
 				toContact = true;
 				isLevelSelect = false;
@@ -1873,15 +1896,7 @@ function MainMenu()
 			//reset
 			Touch1Start = true;
 			
-			//unpress level tag
-			if (iosTagDepress)
-			{
-				iosTagDepress = false;
-				UnpressLevelTag(depressedTag, false);
-			}
-			
-			//check a tap			
-			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+			if (iosTagDepress && objectInfo.collider.tag == "ui")
 			{
 				//if clicked the start button
 				if (objectInfo.collider.name == "Start")
@@ -1914,11 +1929,19 @@ function MainMenu()
 				Touch1StartPos = Vector2(0,0);
 				Touch1EndPos = Vector2(1000,1000);
 			}
-			else
+//			else
+//			{
+//				Touch1StartPos = Vector2(0,0);
+//				Touch1EndPos = Vector2(1000,1000);
+//				Touch1Tap = false;
+//			}
+			
+			//unpress level tag
+			if (iosTagDepress)
 			{
-				Touch1StartPos = Vector2(0,0);
-				Touch1EndPos = Vector2(1000,1000);
-				Touch1Tap = false;
+				Debug.Log("unpressing");
+				iosTagDepress = false;
+				UnpressLevelTag(depressedTag, false);
 			}
 		}
 	}
