@@ -3,7 +3,7 @@
 //public vars
 public var Use : boolean;
 public var speed : float;
-public var PlanetDragRate = 0.3; //the rate which the planet lags behind the finger. This should always be between 0 and 1 
+public var PlanetDragRate = 0.2; //the rate which the planet lags behind the finger. This should always be between 0 and 1 
 
 //private vars
 private var dragControls : DragControlsPC;

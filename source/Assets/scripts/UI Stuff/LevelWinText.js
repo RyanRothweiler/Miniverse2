@@ -14,14 +14,14 @@ function Start ()
 function Update () 
 {
 	//stay parented
-	if (transform.parent == null && !dragControls.levelWon)
+	if (transform.parent == null && !dragControls.levelWon && !dragControls.LevelLost)
 	{
 		transform.parent = Camera.main.transform;
 		GetComponent(NeonFlicker).Going = false;
 	}
 	
 	//unparenting on level win
-	if (dragControls.levelWon)
+	if (dragControls.levelWon || dragControls.LevelLost)
 	{
 		transform.parent == null;
 		GetComponent(NeonFlicker).Going = true;

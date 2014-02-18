@@ -23,7 +23,7 @@ function Start ()
 	
 	//get anim and set speed
 	anim = transform.GetChild(0).GetComponent(Animation);
-	anim["Default Take"].speed = 60;
+	anim["Default Take"].speed = 40;
 }
 
 function Update () 
