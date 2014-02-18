@@ -70,25 +70,36 @@ function Update ()
 			{
 				rendar.enabled = false;
 			}
-			//if people on that planet then level is over
-			if (renderers.Length > 6)
-			{
-				DragControls.LevelLose(false);
-			}
-				
+			
+			CheckLoss(); //see if the death of this planet causes a level loss
+						
 			//is dead... pay for funeral later		
 			dead = true;
 			
 			//disable thie collider
 			transform.parent.collider.enabled = false;
-			
-			//disable select line
-			//ransform.parent.GetComponent(PlanetSearcher).selectLine.transform.parent = null;
-			//transform.parent.GetComponent(PlanetSearcher).selectLine.GetComponentInChildren(MeshRenderer).enabled = false;  
 		}
 	}
 	else //else pause the animations
 	{
 		animation["ArmatureAction"].speed = 0;
+	}
+}
+
+function CheckLoss()
+{
+	//wait until not moving people to check
+	do
+	{
+		yield;
+	}while (DragControls.MovingPeople);
+	
+	yield WaitForSeconds(0.4);
+	
+	//if people on that planet then level is over
+	var renderers = transform.parent.GetComponentsInChildren(Renderer);
+	if (renderers.Length > 6)
+	{
+		DragControls.LevelLose(false);
 	}
 }

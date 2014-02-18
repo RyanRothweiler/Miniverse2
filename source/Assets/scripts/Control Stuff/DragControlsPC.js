@@ -53,6 +53,7 @@ public var levelWon = false;
 public var nextLevel = false;
 public var skipZoom = true;
 public var PlanetDragging = false; //if the player can drag planets around without moving the view. (this is the old way of doing things, after the PlanetJoystick stuff this should almost always be false
+public var MovingPeople = false; //if people are being moved or not
 
 public var Phase1 = false;
 public var Phase2 = false;
@@ -187,16 +188,16 @@ public var Touching1 = false;
 public var Touch1WorldSelected = false;
 public var Touch1CameraDragging = false;
 
-//public var Touch2StartPos = Vector2(0,0); //the start position of a touch
-//public var Touch2EndPos = Vector2(100,100); //the end position of a touch
-//private var Touch2Delta : Vector2; //delta of the second touch
-//private var Touch2Tap = false; //if the touch is a tap
-//private var Touch2Move = false; //if the touch is a moving one
-//private var Movement2Delta : Vector2; //used for flicking
-//private var Touch2Start = true;
-//public var Touching2 = false;
-//public var Touch2WorldSelected = false;
-//public var Touch2CameraDragging = false;
+public var Touch2StartPos = Vector2(0,0); //the start position of a touch
+public var Touch2EndPos = Vector2(100,100); //the end position of a touch
+private var Touch2Delta : Vector2; //delta of the second touch
+private var Touch2Tap = false; //if the touch is a tap
+private var Touch2Move = false; //if the touch is a moving one
+private var Movement2Delta : Vector2; //used for flicking
+private var Touch2Start = true;
+public var Touching2 = false;
+public var Touch2WorldSelected = false;
+public var Touch2CameraDragging = false;
 
 private var TouchTapBounds = Vector2(10,10); //the amount of movement to allow which stil constitutes a tap.
 private var dummyVect : Vector3; //a dummy vector 2
@@ -686,6 +687,33 @@ function Update ()
 					Touch1EndPos = touch.position;
 					Touch1Delta = touch.deltaPosition;
 				}
+				
+				if (touch.fingerId == 1)
+				{
+					//first touch
+					if (Touch2Start)
+					{
+							Touch2Start = false;
+							Touch2StartPos = touch.position;
+							
+							//planet selection
+							if (!LevelPaused && !Touch2WorldSelected && Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(touch.position.x,touch.position.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+							{
+								//if the planet is draggable
+								if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
+								{
+									Touch2WorldSelected = true;
+									selectedWorld = objectInfo;
+									selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
+									offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y,WorldZDepth - Camera.main.transform.position.z));
+								}
+							}
+					}
+					
+					Touching2 = true;
+					Touch2EndPos = touch.position;
+					Touch2Delta = touch.deltaPosition;
+				}
 			}
 			
 			//check gestures
@@ -741,6 +769,66 @@ function Update ()
 					}
 				}
 			}
+			
+				if (Touching2) //touch 2
+{	
+//check tap
+if ((Touch2StartPos.x + TouchTapBounds.x > Touch2EndPos.x) && (Touch2StartPos.x - TouchTapBounds.x < Touch2EndPos.x) && (Touch2StartPos.y + TouchTapBounds.y > Touch2EndPos.y) && (Touch2StartPos.y - TouchTapBounds.y < Touch2EndPos.y))
+Touch2Tap = true;
+else
+{
+Touch2Tap = false;
+Touch2Move = true;
+}
+
+//if planet dragging
+if (canMoveToWorld && PlanetDragging && !LevelPaused && Touch2WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
+{
+if (TouchAutoMove)
+{
+AutoMoveCheckPhases();
+}
+
+//if the planet is alive then move the planet
+if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
+{
+selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Touch2EndPos.x,Touch2EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+}
+}
+
+//camera dragging
+if (!LevelPaused && !Touch2WorldSelected && Touch2Move && CanViewDrag)
+{
+Touch2CameraDragging = true;
+if ( !(Touching1 && Touching2 && !Touch1WorldSelected && !Touch2WorldSelected))
+{
+if (CanMoveCameraHorizontal)
+{
+if (WorldDraggingInverted)
+{
+this.transform.Translate(Vector3(Touch2Delta.x * DragRate, Touch2Delta.y * DragRate, 0));
+}
+else
+{
+this.transform.Translate(Vector3(Touch2Delta.x * DragRate * -1, Touch2Delta.y * DragRate * -1, 0));
+}
+}
+else
+{
+if (WorldDraggingInverted)
+{
+this.transform.Translate(0, Touch2Delta.y * DragRate, 0);
+}
+else
+{
+this.transform.Translate(0, Touch2Delta.y * DragRate * -1, 0);
+}
+}
+}
+}
+}
+			
+			
 			
 			//if not touching first touch
 			if (!Touching1)
@@ -820,7 +908,6 @@ function Update ()
 			}
 		}
 	}
-	
 	
 	
 	
@@ -1061,12 +1148,31 @@ function SetNextLevel()
 //move people between objects
 function MovePeople(Asteroid : boolean)
 {
+	MovingPeople = true;
 	if (canMoveToWorld)
 	{
 		//Get the childCount and store it in num
 		tempSelectedWorld = selectedWorld;
 		MoveNum = tempSelectedWorld.transform.childCount;
 		MoveN = 0;
+		
+		//if the people are moving to the spaceship then add their count to the saved people. Need to know if moving people from an asteroid.
+		if (!Asteroid)
+		{
+			if (tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.gameObject.name == "humanShip")
+			{
+				peopleSaved += MoveN;
+				Camera.main.transform.Find("PeopleCounter").GetComponent(PeopleCounter).Increment(MoveN);
+			}
+		}
+		else
+		{
+			if (tempSelectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.name == "humanShip")
+			{
+				peopleSaved += MoveN;
+				Camera.main.transform.Find("PeopleCounter").GetComponent(PeopleCounter).Increment(MoveN); 
+			}
+		}
 		
 		//find how many children are already on the planet being moved to
 		MoveDummyNum = 0;
@@ -1119,25 +1225,8 @@ function MovePeople(Asteroid : boolean)
 			}
 			MoveN++;
 		}
-							
-		//if the people are moving to the spaceship then add their count to the saved people. Need to know if moving people from an asteroid.
-		if (!Asteroid)
-		{
-			if (tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.gameObject.name == "humanShip")
-			{
-				peopleSaved += MoveN;
-				Camera.main.transform.Find("PeopleCounter").GetComponent(PeopleCounter).Increment(MoveN);
-			}
-		}
-		else
-		{
-			if (tempSelectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.name == "humanShip")
-			{
-				peopleSaved += MoveN;
-				Camera.main.transform.Find("PeopleCounter").GetComponent(PeopleCounter).Increment(MoveN); 
-			}
-		}
 	}
+	MovingPeople = false;
 }
 
 function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean) //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
@@ -2149,9 +2238,6 @@ function LevelLose(back : boolean)
 	yield WaitForSeconds(2);
 	
 	LevelLost = true;
-	
-	//type fail text PUT LEVEL LOSE UI HERE
-
 }
 
 //if the level is won
