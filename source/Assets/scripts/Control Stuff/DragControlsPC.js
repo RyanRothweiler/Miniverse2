@@ -436,7 +436,11 @@ function Update ()
 			{
 				if(CanScrollZoom && !LevelPaused)
 				{
-					MoveToWorldView();
+					//make sure not double clicking on a planet
+					if (!Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+					{
+						MoveToWorldView();
+					}
 				}
 				//zooming in
 				else if (CanScrollZoom && LevelPaused)
@@ -656,7 +660,10 @@ function Update ()
 							}
 							else
 							{
-								MoveToWorldView();
+								if (!Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+								{
+									MoveToWorldView();
+								}
 							}
 						}
 
@@ -972,8 +979,6 @@ this.transform.Translate(0, Touch2Delta.y * DragRate * -1, 0);
 	//if player lost
 	if (LevelLost)
 	{
-//		FailType.transform.parent = Camera.main.transform;
-
 		isPlayOne = true;
 		ZoomIn();
 		
@@ -1155,25 +1160,7 @@ function MovePeople(Asteroid : boolean)
 		tempSelectedWorld = selectedWorld;
 		MoveNum = tempSelectedWorld.transform.childCount;
 		MoveN = 0;
-		
-		//if the people are moving to the spaceship then add their count to the saved people. Need to know if moving people from an asteroid.
-		if (!Asteroid)
-		{
-			if (tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.gameObject.name == "humanShip")
-			{
-				peopleSaved += MoveN;
-				Camera.main.transform.Find("PeopleCounter").GetComponent(PeopleCounter).Increment(MoveN);
-			}
-		}
-		else
-		{
-			if (tempSelectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.name == "humanShip")
-			{
-				peopleSaved += MoveN;
-				Camera.main.transform.Find("PeopleCounter").GetComponent(PeopleCounter).Increment(MoveN); 
-			}
-		}
-		
+			
 		//find how many children are already on the planet being moved to
 		MoveDummyNum = 0;
 		if (!Asteroid)
@@ -1224,6 +1211,24 @@ function MovePeople(Asteroid : boolean)
 				}
 			}
 			MoveN++;
+		}
+		
+		//if the people are moving to the spaceship then add their count to the saved people. Need to know if moving people from an asteroid.
+		if (!Asteroid)
+		{
+			if (tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.gameObject.name == "humanShip")
+			{
+				peopleSaved += MoveN;
+				Camera.main.transform.Find("PeopleCounter").GetComponent(PeopleCounter).Increment(MoveN);
+			}
+		}
+		else
+		{
+			if (tempSelectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.name == "humanShip")
+			{
+				peopleSaved += MoveN;
+				Camera.main.transform.Find("PeopleCounter").GetComponent(PeopleCounter).Increment(MoveN); 
+			}
 		}
 	}
 	MovingPeople = false;
