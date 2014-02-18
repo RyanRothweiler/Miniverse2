@@ -187,16 +187,16 @@ public var Touching1 = false;
 public var Touch1WorldSelected = false;
 public var Touch1CameraDragging = false;
 
-public var Touch2StartPos = Vector2(0,0); //the start position of a touch
-public var Touch2EndPos = Vector2(100,100); //the end position of a touch
-private var Touch2Delta : Vector2; //delta of the second touch
-private var Touch2Tap = false; //if the touch is a tap
-private var Touch2Move = false; //if the touch is a moving one
-private var Movement2Delta : Vector2; //used for flicking
-private var Touch2Start = true;
-public var Touching2 = false;
-public var Touch2WorldSelected = false;
-public var Touch2CameraDragging = false;
+//public var Touch2StartPos = Vector2(0,0); //the start position of a touch
+//public var Touch2EndPos = Vector2(100,100); //the end position of a touch
+//private var Touch2Delta : Vector2; //delta of the second touch
+//private var Touch2Tap = false; //if the touch is a tap
+//private var Touch2Move = false; //if the touch is a moving one
+//private var Movement2Delta : Vector2; //used for flicking
+//private var Touch2Start = true;
+//public var Touching2 = false;
+//public var Touch2WorldSelected = false;
+//public var Touch2CameraDragging = false;
 
 private var TouchTapBounds = Vector2(10,10); //the amount of movement to allow which stil constitutes a tap.
 private var dummyVect : Vector3; //a dummy vector 2
@@ -603,7 +603,6 @@ function Update ()
 		{
 			//reset
 			Touching1 = false;
-			Touching2 = false;
 			
 			//first check all touches
 			for (var touch : Touch in Input.touches)
@@ -687,33 +686,6 @@ function Update ()
 					Touch1EndPos = touch.position;
 					Touch1Delta = touch.deltaPosition;
 				}
-				//check second touch
-				if (touch.fingerId == 1)
-				{
-					//first touch
-					if (Touch2Start)
-					{
-						Touch2Start = false;
-						Touch2StartPos = touch.position;
-						
-						//planet selection
-						if (!LevelPaused && !Touch2WorldSelected && Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(touch.position.x,touch.position.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
-						{
-							//if the planet is draggable
-							if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
-							{
-								Touch2WorldSelected = true;
-								selectedWorld = objectInfo;
-								selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
-								offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y,WorldZDepth - Camera.main.transform.position.z));
-							}
-						}
-					}
-					
-					Touching2 = true;
-					Touch2EndPos = touch.position;
-					Touch2Delta = touch.deltaPosition;
-				}
 			}
 			
 			//check gestures
@@ -746,7 +718,7 @@ function Update ()
 				if (!LevelPaused && !Touch1WorldSelected && Touch1Move && CanViewDrag)
 				{
 					Touch1CameraDragging = true;
-					if ( !(Touching1 && Touching2 && !Touch1WorldSelected && !Touch2WorldSelected))
+					if ( !(Touching1 && !Touch1WorldSelected))
 					{
 						if (CanMoveCameraHorizontal)
 						{
@@ -767,176 +739,6 @@ function Update ()
 							}
 						}
 					}
-				}
-			}
-			
-			if (Touching2) //touch 2
-			{				
-				//check tap 
-				if ((Touch2StartPos.x + TouchTapBounds.x > Touch2EndPos.x) && (Touch2StartPos.x - TouchTapBounds.x < Touch2EndPos.x) && (Touch2StartPos.y + TouchTapBounds.y > Touch2EndPos.y) && (Touch2StartPos.y - TouchTapBounds.y < Touch2EndPos.y))
-					Touch2Tap = true;
-				else
-				{
-					Touch2Tap = false;
-					Touch2Move = true;
-				}
-				
-				//if planet dragging
-				if (canMoveToWorld && PlanetDragging && !LevelPaused && Touch2WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
-				{
-					if (TouchAutoMove)
-					{
-						AutoMoveCheckPhases();
-					}
-				
-					//if the planet is alive then move the planet
-					if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
-					{
-						selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Touch2EndPos.x,Touch2EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
-					}
-				}
-				
-				//camera dragging
-				if (!LevelPaused && !Touch2WorldSelected && Touch2Move && CanViewDrag)
-				{
-					Touch2CameraDragging = true;
-					if ( !(Touching1 && Touching2 && !Touch1WorldSelected && !Touch2WorldSelected))
-					{
-						if (CanMoveCameraHorizontal)
-						{
-							if (WorldDraggingInverted)
-							{
-								this.transform.Translate(Vector3(Touch2Delta.x * DragRate, Touch2Delta.y * DragRate, 0));
-							}
-							else
-							{
-								this.transform.Translate(Vector3(Touch2Delta.x * DragRate * -1, Touch2Delta.y * DragRate * -1, 0));
-							}
-						}
-						else
-						{
-							if (WorldDraggingInverted)
-							{
-								this.transform.Translate(0, Touch2Delta.y * DragRate, 0);
-							}
-							else
-							{
-								this.transform.Translate(0, Touch2Delta.y * DragRate * -1, 0);
-							}
-						}
-					}
-				}
-			}
-			
-			//pinch in gesture
-			if (CanScrollZoom && Touching1 && Touching2 && Touch1Move && Touch2Move && Touch1WorldSelected == false && Touch2WorldSelected == false)
-			{ 
-				//pinching in
-				
-				//check the x values first if no pinch then check the y
-				if ((Touch1StartPos.x > Touch2StartPos.x))
-				{
-					if ((Touch1StartPos.x > Touch1EndPos.x) && (Touch2StartPos.x < Touch2EndPos.x))
-					{
-						PinchIn = true; 
-						if (!LevelPaused) 
-						{
-							//StopAllCoroutines();
-							MoveToWorldView(); 
-						}
-					}
-				}
-				else
-				{
-					if ((Touch1StartPos.x < Touch1EndPos.x) && (Touch2StartPos.x > Touch2EndPos.x))
-					{
-						PinchIn = true; 
-						if (!LevelPaused) 
-						{
-							//StopAllCoroutines();
-							MoveToWorldView(); 
-						}
-					}
-				} 
-				
-				if (!PinchIn && (Touch1StartPos.y > Touch2StartPos.y)) //if no pinch then check the y values 
-				{
-					if ((Touch1StartPos.y > Touch1EndPos.y) && (Touch2StartPos.y < Touch2EndPos.y))
-					{
-						PinchIn = true; 
-						if (!LevelPaused) 
-						{
-							//StopAllCoroutines();
-							MoveToWorldView(); 
-						}
-					}
-				}
-				else
-				{
-					if ((Touch1StartPos.y < Touch1EndPos.y) && (Touch2StartPos.y > Touch2EndPos.y))
-					{
-						PinchIn = true; 
-						if (!LevelPaused) 
-						{
-							//StopAllCoroutines();
-							MoveToWorldView(); 
-						}
-					}
-				}  
-				
-				//pinching out
-				//check the x values first if no pinch then check the y 
-				if (!PinchIn)
-				{
-					if ((Touch1StartPos.x > Touch2StartPos.x))
-					{
-						if ((Touch1StartPos.x < Touch1EndPos.x) && (Touch2StartPos.x > Touch2EndPos.x))
-						{
-							PinchOut = true; 
-							if (LevelPaused) 
-							{
-								//StopAllCoroutines();
-								MoveToPlayView(); 
-							}
-						}
-					}
-					else
-					{
-						if ((Touch1StartPos.x > Touch1EndPos.x) && (Touch2StartPos.x < Touch2EndPos.x))
-						{
-							PinchOut = true; 
-							if (LevelPaused) 
-							{
-								//StopAllCoroutines();
-								MoveToPlayView(); 
-							}
-						}
-					} 
-					
-					if (!PinchIn && (Touch1StartPos.y > Touch2StartPos.y)) //if no pinch then check the y values 
-					{
-						if ((Touch1StartPos.y < Touch1EndPos.y) && (Touch2StartPos.y > Touch2EndPos.y))
-						{
-							PinchOut = true;
-							if (LevelPaused) 
-							{
-								//StopAllCoroutines();
-								MoveToPlayView(); 
-							}
-						}
-					}
-					else
-					{
-						if ((Touch1StartPos.y > Touch1EndPos.y) && (Touch2StartPos.y < Touch2EndPos.y))
-						{
-							PinchOut = true; 
-							if (LevelPaused) 
-							{
-								//StopAllCoroutines();
-								MoveToPlayView(); 
-							}
-						}
-					}  
 				}
 			}
 			
@@ -975,45 +777,6 @@ function Update ()
 					}
 					if (selectedWorld.collider.name == "HumanPlanet" && selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet != selectedWorld.collider.gameObject) //if selected a human planet
 					{					
-						MovePeople(false);
-					}
-				}			
-			}
-			
-			//if not touching second touch
-			if (!Touching2)
-			{
-				Touch2Start = true;	
-				Touch2CameraDragging = false;
-				Touch2Move = false; 
-				PinchIn = false;
-				PinchOut = false;
-				
-				if (Touch2WorldSelected)
-				{
-					if (!isLevelSelect && selectedWorld != null)
-					{
-						selectedWorld.collider.GetComponent(PlanetSearcher).Selected = false;
-					}
-					Touch2WorldSelected = false;
-				}
-				
-				//check touch location again this time for tap purposes
-				if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
-				{
-					selectedWorld = objectInfo;
-				}
-				
-				//tap moving people
-				if (Touch2Tap && objectInfo.collider != null)
-				{
-					Touch2Tap = false;
-					if (selectedWorld.collider.name == "AsteroidCenter") //if selected an asteroid
-					{
-						MovePeople(true);
-					}
-					if (selectedWorld.collider.name == "HumanPlanet") //if selected a human planet
-					{	
 						MovePeople(false);
 					}
 				}			
