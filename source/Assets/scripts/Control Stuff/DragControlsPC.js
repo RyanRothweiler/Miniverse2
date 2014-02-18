@@ -437,7 +437,7 @@ function Update ()
 				if(CanScrollZoom && !LevelPaused)
 				{
 					//make sure not double clicking on a planet
-					if (!Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+					if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 					{
 						MoveToWorldView();
 					}
@@ -491,12 +491,13 @@ function Update ()
 			}
 			//world dragging shenanigans
 			if (canMoveToWorld && !LevelPaused && Input.GetMouseButtonDown(0) && !AutoMoving && !isLevelSelect)
-			{			
-				if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+			{
+				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
 					//back arrow
 					if (objectInfo.collider.name == "BackArrow")
-					{	
+					{
+						Debug.Log(objectInfo.collider.transform.parent.name);
 						LevelLose(true);
 						LevelLost = true;
 					}
@@ -570,7 +571,7 @@ function Update ()
 			if (Input.GetMouseButtonDown(0) && !LevelPaused)
 			{
 				mousePos = Input.mousePosition;
-				if (Physics.Raycast(Camera.main.ScreenPointToRay(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)).origin, Camera.main.ScreenPointToRay(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)).direction, objectInfo))
+				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
 					selectedWorld = objectInfo;
 					peopleDragging = true;
@@ -581,7 +582,7 @@ function Update ()
 			if(Input.GetMouseButtonUp(0) && peopleDragging == true && !LevelPaused)
 			{
 				//make sure the player clicked on a planet
-				if (Physics.Raycast(Camera.main.ScreenPointToRay(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)).origin, Camera.main.ScreenPointToRay(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)).direction, objectInfo))
+				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
 					if (objectInfo.collider.name == "AsteroidCenter" && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != selectedWorld.collider.gameObject) //if selected an asteroid and the asteroids nearest planet is not itself
 					{	
@@ -660,7 +661,7 @@ function Update ()
 							}
 							else
 							{
-								if (!Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+								if (!Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 								{
 									MoveToWorldView();
 								}
@@ -671,7 +672,7 @@ function Update ()
 						Touch1StartPos = touch.position;
 						
 						//planet selection
-						if (canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(touch.position.x,touch.position.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+						if (canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 						{
 							//back arrow
 							if (objectInfo.collider.name == "BackArrow")
@@ -704,7 +705,7 @@ function Update ()
 							Touch2StartPos = touch.position;
 							
 							//planet selection
-							if (!LevelPaused && !Touch2WorldSelected && Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(touch.position.x,touch.position.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+							if (!LevelPaused && !Touch2WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 							{
 								//if the planet is draggable
 								if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
@@ -775,66 +776,7 @@ function Update ()
 						}
 					}
 				}
-			}
-			
-				if (Touching2) //touch 2
-{	
-//check tap
-if ((Touch2StartPos.x + TouchTapBounds.x > Touch2EndPos.x) && (Touch2StartPos.x - TouchTapBounds.x < Touch2EndPos.x) && (Touch2StartPos.y + TouchTapBounds.y > Touch2EndPos.y) && (Touch2StartPos.y - TouchTapBounds.y < Touch2EndPos.y))
-Touch2Tap = true;
-else
-{
-Touch2Tap = false;
-Touch2Move = true;
-}
-
-//if planet dragging
-if (canMoveToWorld && PlanetDragging && !LevelPaused && Touch2WorldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")
-{
-if (TouchAutoMove)
-{
-AutoMoveCheckPhases();
-}
-
-//if the planet is alive then move the planet
-if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
-{
-selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Touch2EndPos.x,Touch2EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
-}
-}
-
-//camera dragging
-if (!LevelPaused && !Touch2WorldSelected && Touch2Move && CanViewDrag)
-{
-Touch2CameraDragging = true;
-if ( !(Touching1 && Touching2 && !Touch1WorldSelected && !Touch2WorldSelected))
-{
-if (CanMoveCameraHorizontal)
-{
-if (WorldDraggingInverted)
-{
-this.transform.Translate(Vector3(Touch2Delta.x * DragRate, Touch2Delta.y * DragRate, 0));
-}
-else
-{
-this.transform.Translate(Vector3(Touch2Delta.x * DragRate * -1, Touch2Delta.y * DragRate * -1, 0));
-}
-}
-else
-{
-if (WorldDraggingInverted)
-{
-this.transform.Translate(0, Touch2Delta.y * DragRate, 0);
-}
-else
-{
-this.transform.Translate(0, Touch2Delta.y * DragRate * -1, 0);
-}
-}
-}
-}
-}
-			
+			}			
 			
 			
 			//if not touching first touch
@@ -856,7 +798,7 @@ this.transform.Translate(0, Touch2Delta.y * DragRate * -1, 0);
 				}
 				
 				//check touch location again this time for tap purposes
-				if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+				if (Physics.Raycast(Camera.main.ScreenPointToRay(Touch1EndPos), objectInfo))
 				{
 					selectedWorld = objectInfo;
 				}
@@ -1409,7 +1351,7 @@ function SettingsMenu()
 		//selecting level select objects
 		if(Input.GetMouseButtonDown(0))
 		{
-			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 			{
 				//back arrow
 				if (objectInfo.collider.name == "BackArrow")
@@ -1486,7 +1428,7 @@ function SettingsMenu()
 					Touch1Move = false;
 					
 					//check for tag depression
-					if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+					if (Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 					{
 						//volume slider
 						if (objectInfo.collider.name == "volume marker")
@@ -1548,7 +1490,7 @@ function ContactMenu()
 		//selecting level select objects
 		if(Input.GetMouseButtonDown(0))
 		{
-			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 			{
 				//back arrow
 				if (objectInfo.collider.name == "BackArrow" || objectInfo.collider.name == "twitter" || objectInfo.collider.name == "facebook")
@@ -1617,7 +1559,7 @@ function ContactMenu()
 					Touch1Move = false;
 					
 					//check for tag depression
-					if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+					if(Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 					{
 						DepressLevelTag(objectInfo, false);
 						depressedTag = objectInfo;
@@ -1678,7 +1620,7 @@ function MainMenu()
 		//selecting level select objects
 		if(Input.GetMouseButtonDown(0))
 		{
-			if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, (WorldZDepth+10) - Camera.main.transform.position.z)), objectInfo))
+			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 			{
 				if (objectInfo.collider.tag == "ui")
 				{
@@ -1753,7 +1695,7 @@ function MainMenu()
 					Touch1Move = false;
 					
 					//check for tag depression
-					if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+					if (Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 					{
 						DepressLevelTag(objectInfo, false);
 						depressedTag = objectInfo;
@@ -1955,7 +1897,7 @@ function LevelSelect()
 					Touch1Move = false;
 					
 					//check for tag depression
-					if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+					if(Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 					{
 						FadeKick = false;
 						DepressLevelTag(objectInfo, true);
@@ -2227,7 +2169,7 @@ function CameraViewPlanetPushing()
 
 //if the level was lost
 function LevelLose(back : boolean)
-{	
+{
 	stopHidingFileType = true; //stop hiding that type! dog!
 	FailType.renderer.material.mainTexture = FailTexture;
 	halt = true;
