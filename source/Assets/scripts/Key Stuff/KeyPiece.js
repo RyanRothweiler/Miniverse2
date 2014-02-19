@@ -2,6 +2,10 @@
 
 //public vars
 public var DeathSphere : GameObject;
+public var KeyHolder : GameObject;
+
+static public var Orientation = 1; //1 - N, 2 - E, 3 - S, 4 - W. 1 is always the correction orientation, meaning the key won't snap unless in the 1 orientation
+public var Rotating = false; //if the key is in the process of rotating or not
 
 //holds the object being mated to
 public var Mate1 : GameObject;
@@ -49,13 +53,16 @@ public var Mate5SB : GameObject;
 private var DragControls : DragControlsPC;
 private var objectInfo : RaycastHit;
 private var FirstGrab = true;
-private var Selected = false;
+public var Selected = false;
 private var offSet : Vector3;
 private var oldPos : Vector3;
 private var SnapDistance = 0.1; //the range for which to snap
-private var done : boolean;
+private var done = false;
+private var done2 = false;
 private var vertsChecked = false;
 private var dumTris = new List.<int>(); //list of vertices to remove from the circle
+private var parentSwapped = false;
+private var canCheckMouse = true;
 
 function Start () 
 {
@@ -88,46 +95,88 @@ function Start ()
 function Update () 
 {
 	done = false;
-	//key dragging
-	if (Input.GetMouseButtonDown(0))//selecting
-	{			
-		if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, DragControls.WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+	done2 = false;
+	
+	if (DragControls.PlatformPC)
+	{
+		//key dragging
+		if (canCheckMouse && Input.GetMouseButtonDown(0) && !Rotating && !DragControls.KeyRotating)//selecting
 		{
-			if (objectInfo.collider.name == this.name)
+			canCheckMouse = false;
+			if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, DragControls.WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 			{
-				offSet = transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z));
-				Selected = true;
+				if (objectInfo.collider.name == this.name)
+				{
+					offSet = transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z));
+					Selected = true;
+				}
+			}
+		}
+		
+		if (Input.GetMouseButtonUp(0) || DragControls.KeySelectOff) //unselecting
+		{
+			canCheckMouse = true;
+			Selected = false;
+			parentSwapped = false;
+		}
+		
+		if (Input.GetMouseButtonUp(0))
+		{
+			DragControls.KeySelectOff = false;
+		}
+		
+		if (Selected && !Rotating && !DragControls.KeyRotating)//moving
+		{
+			transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z)) + offSet;
+			
+			//reparent all the mates
+			if (!parentSwapped)
+			{
+				parentSwapped = true;
+				transform.parent = KeyHolder.transform;
+				Parent(this.gameObject, 10);
 			}
 		}
 	}
-	
-	if (Input.GetMouseButtonUp(0)) //unselecting
+	if (DragControls.PlatformIOS)
 	{
-		Selected = false;
-	}
-	
-	if (Selected)//moving
-	{
-		transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z)) + offSet;	
-		if (Mate1 != null && Mated1)
+		//key dragging
+		if (canCheckMouse && DragControls.Touching1 && !Rotating && !DragControls.KeyRotating)//selecting
 		{
-			Mate1.GetComponent(KeyPiece).Move(transform.position - Mate1Offset, 1);
+			canCheckMouse = false;
+			if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(DragControls.Touch1EndPos.x,DragControls.Touch1EndPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+			{
+				if (objectInfo.collider.name == this.name)
+				{
+					offSet = transform.position - Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z));
+					Selected = true;
+				}
+			}
 		}
-		if (Mate2 != null && Mated2)
+		
+		if (!DragControls.Touching1 || DragControls.KeySelectOff) //unselecting
 		{
-			Mate2.GetComponent(KeyPiece).Move(transform.position - Mate2Offset, 2);
+			canCheckMouse = true;
+			Selected = false;
+			parentSwapped = false;
 		}
-		if (Mate3 != null && Mated3)
+		
+		if (!DragControls.Touching1)
 		{
-			Mate3.GetComponent(KeyPiece).Move(transform.position - Mate3Offset, 3);
+			DragControls.KeySelectOff = false;
 		}
-		if (Mate4 != null && Mated4)
+		
+		if (Selected && !Rotating && !DragControls.KeyRotating)//moving
 		{
-			Mate4.GetComponent(KeyPiece).Move(transform.position - Mate4Offset, 4);
-		}
-		if (Mate5 != null && Mated5)
-		{
-			Mate5.GetComponent(KeyPiece).Move(transform.position - Mate5Offset, 5);
+			transform.position = Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z)) + offSet;
+			
+			//reparent all the mates
+			if (!parentSwapped)
+			{
+				parentSwapped = true;
+				transform.parent = KeyHolder.transform;
+				Parent(this.gameObject, 10);
+			}
 		}
 	}
 	
@@ -135,82 +184,115 @@ function Update ()
 	//key mating
 	if (Mate1 != null && !Mated1 && Mate1.active)//mate 1
 	{
+		//check distance
 		if (Vector3.Distance(MatePoint1.transform.position, Mate1.GetComponent(KeyPiece).MatePoint1.transform.position) < SnapDistance)
 		{
-			Snap(1);
+			//check orientation
+			if (Orientation == MatePoint1.GetComponent(KeyPiece).Orientation)
+			{
+				Selected = false;
+				Snap(1);
+			}
 		}
 	}
 	if (Mate2 != null && !Mated2 && Mate2.active)//mate 2
 	{
 		if (Vector3.Distance(MatePoint2.transform.position, Mate2.GetComponent(KeyPiece).MatePoint2.transform.position) < SnapDistance)
 		{
-			Snap(2);
+			//check orientation
+			if (Orientation == MatePoint2.GetComponent(KeyPiece).Orientation)
+			{
+				Selected = false;
+				Snap(2);
+			}
 		}
 	}
 	if (Mate3 != null && !Mated3 && Mate3.active)//mate 3
 	{
 		if (Vector3.Distance(MatePoint3.transform.position, Mate3.GetComponent(KeyPiece).MatePoint3.transform.position) < SnapDistance)
 		{
-			Snap(3);
+			//check orientation
+			if (Orientation == MatePoint3.GetComponent(KeyPiece).Orientation)
+			{
+				Selected = false;
+				Snap(3);
+			}
 		}
 	}
 	if (Mate4 != null && !Mated4 && Mate4.active)//mate 4
 	{
 		if (Vector3.Distance(MatePoint4.transform.position, Mate4.GetComponent(KeyPiece).MatePoint4.transform.position) < SnapDistance)
 		{
-			Snap(4);
+			//check orientation
+			if (Orientation == MatePoint4.GetComponent(KeyPiece).Orientation)
+			{
+				Selected = false;
+				Snap(4);
+			}
 		}
 	}
 	if (Mate5 != null && !Mated5 && Mate5.active)//mate 4
 	{
 		if (Vector3.Distance(MatePoint5.transform.position, Mate5.GetComponent(KeyPiece).MatePoint5.transform.position) < SnapDistance)
 		{
-			Snap(5);
+			//check orientation
+			if (Orientation == MatePoint5.GetComponent(KeyPiece).Orientation)
+			{
+				Selected = false;
+				Snap(5);
+			}
 		}
 	}
 }
 
-function Move(pos : Vector3, numFrom : int)
+//goes through all mates and parents them to parent
+function Parent(newParent : GameObject, numFrom : int) : IEnumerator
 {
 	if (!done)
 	{
 		done = true;
-		transform.position = pos; //move self
-		if (Mate1 != null && Mated1 && numFrom != 1) //move mate 1 if the Move did not come from that mate
+		
+		if (numFrom != 1 && Mate1 != null && Mated1)
 		{
-			Mate1.GetComponent(KeyPiece).Move(transform.position - Mate1Offset, 1);
+			Mate1.transform.parent = newParent.transform;
+			Mate1.GetComponent(KeyPiece).Parent(newParent, 1);
 		}
-		if (Mate2 != null && Mated2 && numFrom != 2)
+		if (numFrom != 2 && Mate2 != null && Mated2)
 		{
-			Mate2.GetComponent(KeyPiece).Move(transform.position - Mate2Offset, 2);
+			Mate2.transform.parent = newParent.transform;
+			Mate2.GetComponent(KeyPiece).Parent(newParent, 2);
 		}
-		if (Mate3 != null && Mated3 && numFrom != 3)
+		if (numFrom != 3 && Mate3 != null && Mated3)
 		{
-			Mate3.GetComponent(KeyPiece).Move(transform.position - Mate3Offset, 3);
+			Mate3.transform.parent = newParent.transform;
+			Mate3.GetComponent(KeyPiece).Parent(newParent, 3);
 		}
-		if (Mate4 != null && Mated4 && numFrom != 4)
+		if (numFrom != 4 && Mate4 != null && Mated4)
 		{
-			Mate4.GetComponent(KeyPiece).Move(transform.position - Mate4Offset, 4);
+			Mate4.transform.parent = newParent.transform;
+			Mate4.GetComponent(KeyPiece).Parent(newParent, 4);
 		}
-		if (Mate5 != null && Mated5 && numFrom != 5)
+		if (numFrom != 5 && Mate5 != null && Mated5)
 		{
-			Mate5.GetComponent(KeyPiece).Move(transform.position - Mate5Offset, 5);
+			Mate5.transform.parent = newParent.transform;
+			Mate5.GetComponent(KeyPiece).Parent(newParent, 5);
 		}
 	}
+	yield WaitForSeconds(0.5);
+	done = false;
 }
 
-function Snap(numFrom : int)
+//snaps this key and all it's matached keys also
+function Snap(numFrom : int) : IEnumerator
 {
-	Selected = false;
+	//clear selected in all mates
+	DragControls.KeySelectOff = true;
+
 	if (!done)
 	{		
 		done = true;
 		if (numFrom == 1) //mate point 1
-		{
-			//check overlapping verts here and on the mate
-			CheckOverlappingVerts(Mate1, Mate1S, Mate1SB, DeathSphere);
-			Mate1.GetComponent(KeyPiece).CheckOverlappingVerts(Mate1.GetComponent(KeyPiece).Mate1, Mate1.GetComponent(KeyPiece).Mate1S, Mate1.GetComponent(KeyPiece).Mate1SB, DeathSphere);
-			
+		{					
 			Mated1 = true;
 			Mate1.GetComponent(KeyPiece).Mated1 = true;
 			transform.position = Mate1.transform.position + Mate1Offset;//snap self
@@ -232,11 +314,7 @@ function Snap(numFrom : int)
 			}	
 		}
 		if (numFrom == 2) //mate point 2
-		{
-			//check overlapping verts here and on the mate
-			CheckOverlappingVerts(Mate2, Mate2S, Mate2SB, DeathSphere);
-			Mate2.GetComponent(KeyPiece).CheckOverlappingVerts(Mate2.GetComponent(KeyPiece).Mate2, Mate2.GetComponent(KeyPiece).Mate2S, Mate2.GetComponent(KeyPiece).Mate2SB, DeathSphere);
-			
+		{						
 			Mated2 = true;
 			Mate2.GetComponent(KeyPiece).Mated2 = true;
 			transform.position = Mate2.transform.position + Mate2Offset;//snap self
@@ -258,11 +336,7 @@ function Snap(numFrom : int)
 			}
 		}
 		if (numFrom == 3) //mate point 3
-		{
-			//check overlapping verts here and on the mate
-			CheckOverlappingVerts(Mate3, Mate3S, Mate3SB, DeathSphere);
-			Mate3.GetComponent(KeyPiece).CheckOverlappingVerts(Mate3.GetComponent(KeyPiece).Mate3, Mate3.GetComponent(KeyPiece).Mate3S, Mate3.GetComponent(KeyPiece).Mate3SB, DeathSphere);
-			
+		{			
 			Mated3 = true;
 			Mate3.GetComponent(KeyPiece).Mated3 = true;
 			transform.position = Mate3.transform.position + Mate3Offset;//snap self
@@ -284,11 +358,7 @@ function Snap(numFrom : int)
 			}
 		}
 		if (numFrom == 4) //mate point 4
-		{
-			//check overlapping verts here and on the mate
-			CheckOverlappingVerts(Mate4, Mate4S, Mate4SB, DeathSphere);
-			Mate4.GetComponent(KeyPiece).CheckOverlappingVerts(Mate4.GetComponent(KeyPiece).Mate4, Mate4.GetComponent(KeyPiece).Mate4S, Mate4.GetComponent(KeyPiece).Mate4SB, DeathSphere);
-			
+		{			
 			Mated4 = true;
 			Mate4.GetComponent(KeyPiece).Mated4 = true;
 			transform.position = Mate4.transform.position + Mate4Offset;//snap self
@@ -309,12 +379,8 @@ function Snap(numFrom : int)
 				Mate5.GetComponent(KeyPiece).Snap(5);
 			}
 		}
-		if (numFrom == 5) //mate point 4
+		if (numFrom == 5) //mate point 5
 		{
-			//check overlapping verts here and on the mate
-			CheckOverlappingVerts(Mate5, Mate5S, Mate5SB, DeathSphere);
-			Mate5.GetComponent(KeyPiece).CheckOverlappingVerts(Mate5.GetComponent(KeyPiece).Mate5, Mate5.GetComponent(KeyPiece).Mate5S, Mate5.GetComponent(KeyPiece).Mate5SB, DeathSphere);
-			
 			Mated5 = true;
 			Mate5.GetComponent(KeyPiece).Mated5 = true;
 			transform.position = Mate5.transform.position + Mate5Offset;//snap self
@@ -335,55 +401,43 @@ function Snap(numFrom : int)
 				Mate4.GetComponent(KeyPiece).Snap(4);
 			}
 		}
-	}	
+	}
 	done = false;
 }
 
-//checks any vertices that overlap with the mated key and remove this objects vertices
-function CheckOverlappingVerts(mate : GameObject, mateS : GameObject, mateSB : GameObject, DeathSphere : GameObject)
+//updates the snap positions based on the current orientation
+function UpdateSnaps(numFrom : int) : IEnumerator
 {
-//	if (this.gameObject.active)
-//	{
-//		vertsChecked = true;
-//		dumTris.Clear();
-//		
-//		var intersectCirc = new Circ(mateS.transform.TransformPoint(mateS.GetComponent(SphereCollider).center), mateS.GetComponent(SphereCollider).radius);
-//		if (mateSB)
-//		{
-//			var intersectCircB = new Circ(mateSB.transform.TransformPoint(mateSB.GetComponent(SphereCollider).center), mateSB.GetComponent(SphereCollider).radius);
-//		}
-//		var keyMesh = this.GetComponentsInChildren(MeshRenderer, false)[0].gameObject;		
-//		
-//		for (var i = 0; i < keyMesh.GetComponent(MeshFilter).mesh.triangles.length; i += 3)
-//		{
-//			//if all three of the triangle's vertices are not inside the intersection circle then add them to the new tris list (dumTris)
-//			if (!(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i]]))) && !(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]]))) && !(intersectCirc.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]]))) )
-//			{
-//				if (mateSB)
-//				{
-//					//check the second circle if there is one
-//					if (!(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i]]))) && !(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]]))) && !(intersectCircB.Contains(keyMesh.transform.TransformPoint(keyMesh.GetComponent(MeshFilter).mesh.vertices[keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]]))) )
-//					{
-//						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i]);
-//						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]);
-//						dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]);
-//					}
-//				}
-//				else
-//				{
-//					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i]);
-//					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+1]);
-//					dumTris.Add(keyMesh.GetComponent(MeshFilter).mesh.triangles[i+2]);
-//				}
-//			}
-//		}
-//		
-//		//update mesh
-//		var dummyTriangles = new int[dumTris.Count];
-//		for (i = 0; i < dumTris.Count; i++)
-//		{
-//			dummyTriangles[i] = dumTris[i];
-//		}
-//		keyMesh.GetComponent(MeshFilter).mesh.triangles = dummyTriangles;
-//	}
+	if (!done2)
+	{		
+		done2 = true;
+		Mate1Offset = Quaternion.Euler(0,0,-90) * Mate1Offset;
+		Mate2Offset = Quaternion.Euler(0,0,-90) * Mate2Offset;
+		Mate3Offset = Quaternion.Euler(0,0,-90) * Mate3Offset;
+		Mate4Offset = Quaternion.Euler(0,0,-90) * Mate4Offset;
+		
+		//update child snaps
+		if (numFrom != 1 && Mate1 != null && Mated1)
+		{
+			Mate1.GetComponent(KeyPiece).UpdateSnaps(1);
+		}
+		if (numFrom != 2 && Mate2 != null && Mated2)
+		{
+			Mate2.GetComponent(KeyPiece).UpdateSnaps(2);
+		}
+		if (numFrom != 3 && Mate3 != null && Mated3)
+		{
+			Mate3.GetComponent(KeyPiece).UpdateSnaps(3);
+		}
+		if (numFrom != 4 && Mate4 != null && Mated4)
+		{
+			Mate4.GetComponent(KeyPiece).UpdateSnaps(4);
+		}
+		if (numFrom != 5 && Mate5 != null && Mated5)
+		{
+			Mate5.GetComponent(KeyPiece).UpdateSnaps(5);
+		}
+	}
+//	yield WaitForSeconds(0.1);
+//	done2 = false;
 }

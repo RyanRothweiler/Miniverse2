@@ -54,6 +54,8 @@ public var nextLevel = false;
 public var skipZoom = true;
 public var PlanetDragging = false; //if the player can drag planets around without moving the view. (this is the old way of doing things, after the PlanetJoystick stuff this should almost always be false
 public var MovingPeople = false; //if people are being moved or not
+public var KeyRotating = false; //if any key is in the process of rotating
+public var KeySelectOff = false;
 
 public var Phase1 = false;
 public var Phase2 = false;
@@ -149,7 +151,7 @@ public var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
 private var FirstClick = false; //used to detect double clicking
 private var stopHidingFileType = false; //used to stop hiding the fail type! what did you think it did?
-private var LevelTimerEnded = false; 
+private var LevelTimerEnded = false;
 
 //Strings
 static var Level : String;
@@ -1685,7 +1687,7 @@ function MainMenu()
 			//check the first touch
 			if (touch.fingerId == 0)
 			{
-				Touch1Tap = true;	
+				Touch1Tap = true;		
 				
 				//get start pos
 				if (Touch1Start)
@@ -1770,15 +1772,21 @@ function LevelSelect()
 	
 	if (PlatformPC)
 	{
+	
 		//for horizontal scrolling
 		LevelOffset.x += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 1000;
 		
 		//selecting level select objects
 		if(Input.GetMouseButtonDown(0))
-		{
+		{			
 			var ray = Camera.main.ScreenPointToRay(Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
 			if(Physics.Raycast(ray, objectInfo, 40))
 			{
+				//key rotating
+				if (objectInfo.collider.tag == "key" && FirstClick)
+				{
+					RotateKey(objectInfo.collider.gameObject);
+				}
 				//if clicked a level tag
 				if (objectInfo.collider.tag == "LevelTag")
 				{
@@ -1807,6 +1815,13 @@ function LevelSelect()
 					tagPressed = true;
 					DepressLevelTag(objectInfo, false);
 				}
+			}
+			
+			//check double clicking
+			if (!FirstClick)
+			{
+				FirstClick = true;
+				ResetFirstClick(); //start the click timer
 			}
 		}
 		
@@ -1888,6 +1903,14 @@ function LevelSelect()
 			//check the first touch
 			if (touch.fingerId == 0)
 			{
+				tapCount++;
+				TapResetWait();
+				if (tapCount >= 2)
+				{
+					Debug.Log("rotating");
+					RotateKey(objectInfo.collider.gameObject);
+				}
+				
 				//get start pos
 				if (Touch1Start)
 				{
@@ -2066,6 +2089,46 @@ function LevelSelect()
 		}
 	}
 } 
+
+function RotateKey(obj : GameObject)	
+{
+	//if this piece is not already rotating then rotate it
+	if (!KeyRotating)
+	{
+		KeyRotating = true;
+		obj.GetComponent(KeyPiece).Rotating = true;
+		
+		//make sure the rotating key is the parent
+		obj.GetComponent(KeyPiece).transform.parent = LevelOffsetController.transform.Find("KeyHolder").transform;
+		obj.GetComponent(KeyPiece).Parent(obj, 10);
+		
+		//rotate the object first
+		obj.GetComponent(KeyPiece).UpdateSnaps(10); //rotate the snaps 90 degrees
+		//change orientation
+		if (obj.GetComponent(KeyPiece).Orientation == 4)
+		{
+			obj.GetComponent(KeyPiece).Orientation = 1;
+		}
+		else
+		{
+			obj.GetComponent(KeyPiece).Orientation++;
+		}
+		//rotate transform
+		var targetRotation = Quaternion.LookRotation(obj.transform.forward, obj.transform.right * -1);
+		for (var i = 0; i < 15; i++)
+		{
+			yield;
+			obj.transform.rotation = Quaternion.Slerp(obj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
+		}
+		
+		//rotate the final small amount to get an exact rotation. so if the piece is rotated many times it doesn't slowly get off rotation a little every rotation, which compounds to a lot.		
+		obj.transform.Rotate(0, 0, Quaternion.Angle(targetRotation, obj.transform.rotation));
+		
+		yield WaitForSeconds(0.1);
+		KeyRotating = false;
+		obj.GetComponent(KeyPiece).Rotating = false;
+	}
+}
 
 //zoom world out and pause everything. go to world view. PinchIn
 function MoveToWorldView()
