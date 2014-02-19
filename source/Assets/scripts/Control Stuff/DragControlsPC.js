@@ -1902,18 +1902,10 @@ function LevelSelect()
 			
 			//check the first touch
 			if (touch.fingerId == 0)
-			{
-				tapCount++;
-				TapResetWait();
-				if (tapCount >= 2)
-				{
-					Debug.Log("rotating");
-					RotateKey(objectInfo.collider.gameObject);
-				}
-				
+			{				
 				//get start pos
 				if (Touch1Start)
-				{
+				{				
 					Movement1Delta = Vector2.zero;
 					Touch1StartPos = touch.position;
 					Touch1Start = false;
@@ -1922,10 +1914,25 @@ function LevelSelect()
 					//check for tag depression
 					if(Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 					{
-						FadeKick = false;
-						DepressLevelTag(objectInfo, true);
-						depressedTag = objectInfo;
-						iosTagDepress = true;
+						if (objectInfo.collider.tag == "key")
+						{
+							//check double tapping to rotate key
+							Debug.Log(tapCount);
+							tapCount++;
+							TapResetWait();
+							if (tapCount >= 2)
+							{
+								Debug.Log("rotating");
+								RotateKey(objectInfo.collider.gameObject);
+							}
+						}
+						else
+						{
+							FadeKick = false;
+							DepressLevelTag(objectInfo, true);
+							depressedTag = objectInfo;
+							iosTagDepress = true;
+						}
 					}
 					
 				}
