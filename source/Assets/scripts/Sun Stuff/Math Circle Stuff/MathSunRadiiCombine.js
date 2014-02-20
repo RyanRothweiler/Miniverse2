@@ -4,6 +4,7 @@
 
 
 //public vars
+public var EdjObj : GameObject; //the objects used to detect the edge of the rings. used for PlanetSpeedBuffer
 public var MathSuns : GameObject[]; //holds all the mathsun game objects in the scene
 public var HolderPrefab : GameObject; //the prefab which is used to hold the final sun shapes. each chain gets its own holder
 public var LiveCombine : boolean;
@@ -159,6 +160,11 @@ function MeshAdd ()
 		holder.GetComponent(MathWireframeRender).CustomLines.Clear();
 	}
 	
+	//create variables for edjObj placement
+	var edjResolution = 1;
+	edjResolution = CircleResolution * 30;
+	var edjCount = 0;
+	
 	//create lines from the circles in chains
 	for (var chain : MathCircleChain in chains) //go through chains
 	{		
@@ -194,6 +200,17 @@ function MeshAdd ()
 						{
 							wireframer.CustomLines.Add(currPoint); //add the current point
 							wireframer.CustomLines.Add(nxtPoint); //and the next point
+							
+							//instantiate edge objects
+							if (edjCount > edjResolution)
+							{
+								GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+								edjCount = 0;
+							}
+							else
+							{
+								edjCount++;
+							}
 						}
 						else //if the second point actaully is an internal point then the next custom line should be connecting to the closest intersect point
 						{
@@ -250,6 +267,17 @@ function MeshAdd ()
 							{
 								wireframer.CustomLines.Add(currPoint); //add the current point
 								wireframer.CustomLines.Add(nxtPoint); //and the next point	
+								
+								//instantiate edge objects
+								if (edjCount > edjResolution)
+								{
+									GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+									edjCount = 0;
+								}
+								else
+								{
+									edjCount++;
+								}
 							}
 							else //else the second point is an internal
 							{
@@ -276,7 +304,18 @@ function MeshAdd ()
 							if (!(circle.Contains(nxtPoint) && chain.members[memberCount - 1].Contains(nxtPoint)))
 							{
 								wireframer.CustomLines.Add(currPoint); //add the current point
-								wireframer.CustomLines.Add(nxtPoint); //and the next point	
+								wireframer.CustomLines.Add(nxtPoint); //and the next point
+								
+								//instantiate edge objects
+								if (edjCount > edjResolution)
+								{
+									GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+									edjCount = 0;
+								}
+								else
+								{
+									edjCount++;
+								}
 							}
 							else
 							{
@@ -326,6 +365,17 @@ function MeshAdd ()
 				
 				circle.object.GetComponent(MathWireframeRender).CustomLines.Add(currPoint); //add the current point
 				circle.object.GetComponent(MathWireframeRender).CustomLines.Add(nxtPoint); //and the next point
+				
+				//instantiate edge objects
+				if (edjCount > edjResolution)
+				{
+					GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+					edjCount = 0;
+				}
+				else
+				{
+					edjCount++;
+				}
 			}
 		}
 	}

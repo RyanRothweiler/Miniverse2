@@ -23,6 +23,10 @@ function Start ()
 
 function Update () 
 {
+	//adjust the drag rate based on the planet buffer speed adjustment
+	var BufferSpeed = speed * (Camera.main.GetComponent(PlanetSpeedBuffer).ActingSlow);
+	
+	//do everything else
 	if (Use)
 	{
 		if (dragControls.PlatformPC)
@@ -39,7 +43,7 @@ function Update ()
 				}
 				
 				//do things each loop
-				direction = (home - Input.mousePosition) * speed * -1 * 0.0005;
+				direction = (home - Input.mousePosition) * BufferSpeed * -1 * 0.0005;
 				
 				//move stuff
 				transform.position += direction;
@@ -67,7 +71,7 @@ function Update ()
 				}
 				
 				//do things each loop
-				direction = (home - dragControls.Touch1EndPos) * speed * -1 * 0.0005;
+				direction = (home - dragControls.Touch1EndPos) * BufferSpeed * -1 * 0.0005;
 				
 				//move stuff
 				transform.position += direction;

@@ -58,6 +58,7 @@
      <Compile Include="Assets\scripts\Control Stuff\DragControlsPC.js" />
      <Compile Include="Assets\scripts\Control Stuff\Joystick.js" />
      <Compile Include="Assets\scripts\Control Stuff\PlanetJoystick.js" />
+     <Compile Include="Assets\scripts\Control Stuff\PlanetSpeedBuffer.js" />
      <Compile Include="Assets\scripts\Control Stuff\TiltControls.js" />
      <Compile Include="Assets\scripts\Debris Stuff\BackgroundAsteroidController.js" />
      <Compile Include="Assets\scripts\Debris Stuff\MetalScrapsDebris.js" />

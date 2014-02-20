@@ -120,7 +120,7 @@ private var MoveDummyNum : int; //used for moving people
 //array
 private var objects : GameObject[];
 public var worldObjects : GameObject[];
-private var sunObjects : GameObject[];
+public var sunObjects : GameObject[];
 private var dummyChildList : Component[];
 private var personObjects : GameObject[];
 
