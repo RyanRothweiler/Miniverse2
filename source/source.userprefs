@@ -2,8 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyPiece.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2097" Column="41" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="198" Column="2" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2092" Column="40" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="48" Column="33" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

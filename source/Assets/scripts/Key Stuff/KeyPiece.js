@@ -4,8 +4,9 @@
 public var DeathSphere : GameObject;
 public var KeyHolder : GameObject;
 
-static public var Orientation = 1; //1 - N, 2 - E, 3 - S, 4 - W. 1 is always the correction orientation, meaning the key won't snap unless in the 1 orientation
-public var Rotating = false; //if the key is in the process of rotating or not
+public var Orientation = 1; //1 - N, 2 - E, 3 - S, 4 - W. 1 is always the correction orientation, meaning the key won't snap unless in the 1 orientation
+public var Rotating = false; //if the key is in the process of rotating or not 
+public var Selected = false;
 
 //holds the object being mated to
 public var Mate1 : GameObject;
@@ -53,7 +54,6 @@ public var Mate5SB : GameObject;
 private var DragControls : DragControlsPC;
 private var objectInfo : RaycastHit;
 private var FirstGrab = true;
-public var Selected = false;
 private var offSet : Vector3;
 private var oldPos : Vector3;
 private var SnapDistance = 0.1; //the range for which to snap
@@ -89,6 +89,17 @@ function Start ()
 	if (Mate5 == null)
 	{
 		Mated5 = true;
+	}
+	
+	//update the snaplocations based on the orientation
+	for (var i = 0; i < Orientation - 1; i++)
+	{
+		Mate1Offset = Quaternion.Euler(0,0,-90) * Mate1Offset;
+		Mate2Offset = Quaternion.Euler(0,0,-90) * Mate2Offset;
+		Mate3Offset = Quaternion.Euler(0,0,-90) * Mate3Offset;
+		Mate4Offset = Quaternion.Euler(0,0,-90) * Mate4Offset; 
+		
+		//UpdateSnaps(10, true);
 	}
 }
 
@@ -188,7 +199,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint1.transform.position, Mate1.GetComponent(KeyPiece).MatePoint1.transform.position) < SnapDistance)
 		{
 			//check orientation
-			if (Orientation == MatePoint1.GetComponent(KeyPiece).Orientation)
+			if (Orientation == Mate1.GetComponent(KeyPiece).Orientation)
 			{
 				Selected = false;
 				Snap(1);
@@ -200,7 +211,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint2.transform.position, Mate2.GetComponent(KeyPiece).MatePoint2.transform.position) < SnapDistance)
 		{
 			//check orientation
-			if (Orientation == MatePoint2.GetComponent(KeyPiece).Orientation)
+			if (Orientation == Mate2.GetComponent(KeyPiece).Orientation)
 			{
 				Selected = false;
 				Snap(2);
@@ -212,7 +223,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint3.transform.position, Mate3.GetComponent(KeyPiece).MatePoint3.transform.position) < SnapDistance)
 		{
 			//check orientation
-			if (Orientation == MatePoint3.GetComponent(KeyPiece).Orientation)
+			if (Orientation == Mate3.GetComponent(KeyPiece).Orientation)
 			{
 				Selected = false;
 				Snap(3);
@@ -224,7 +235,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint4.transform.position, Mate4.GetComponent(KeyPiece).MatePoint4.transform.position) < SnapDistance)
 		{
 			//check orientation
-			if (Orientation == MatePoint4.GetComponent(KeyPiece).Orientation)
+			if (Orientation == Mate4.GetComponent(KeyPiece).Orientation)
 			{
 				Selected = false;
 				Snap(4);
@@ -236,7 +247,7 @@ function Update ()
 		if (Vector3.Distance(MatePoint5.transform.position, Mate5.GetComponent(KeyPiece).MatePoint5.transform.position) < SnapDistance)
 		{
 			//check orientation
-			if (Orientation == MatePoint5.GetComponent(KeyPiece).Orientation)
+			if (Orientation == Mate5.GetComponent(KeyPiece).Orientation)
 			{
 				Selected = false;
 				Snap(5);
@@ -406,36 +417,52 @@ function Snap(numFrom : int) : IEnumerator
 }
 
 //updates the snap positions based on the current orientation
-function UpdateSnaps(numFrom : int) : IEnumerator
+function UpdateSnaps(numFrom : int, intro : boolean) : IEnumerator
 {
 	if (!done2)
 	{		
 		done2 = true;
+
 		Mate1Offset = Quaternion.Euler(0,0,-90) * Mate1Offset;
 		Mate2Offset = Quaternion.Euler(0,0,-90) * Mate2Offset;
 		Mate3Offset = Quaternion.Euler(0,0,-90) * Mate3Offset;
-		Mate4Offset = Quaternion.Euler(0,0,-90) * Mate4Offset;
+		Mate4Offset = Quaternion.Euler(0,0,-90) * Mate4Offset; 
 		
-		//update child snaps
-		if (numFrom != 1 && Mate1 != null && Mated1)
+		if (numFrom != 10)
 		{
-			Mate1.GetComponent(KeyPiece).UpdateSnaps(1);
+			if (Orientation == 4)
+			{
+				Orientation = 1;
+			}
+			else
+			{
+				Orientation++;
+			}
 		}
-		if (numFrom != 2 && Mate2 != null && Mated2)
+		
+		//update child snaps 
+		if (!intro)
 		{
-			Mate2.GetComponent(KeyPiece).UpdateSnaps(2);
-		}
-		if (numFrom != 3 && Mate3 != null && Mated3)
-		{
-			Mate3.GetComponent(KeyPiece).UpdateSnaps(3);
-		}
-		if (numFrom != 4 && Mate4 != null && Mated4)
-		{
-			Mate4.GetComponent(KeyPiece).UpdateSnaps(4);
-		}
-		if (numFrom != 5 && Mate5 != null && Mated5)
-		{
-			Mate5.GetComponent(KeyPiece).UpdateSnaps(5);
+			if (numFrom != 1 && Mate1 != null && Mated1)
+			{
+				Mate1.GetComponent(KeyPiece).UpdateSnaps(1, false);
+			}
+			if (numFrom != 2 && Mate2 != null && Mated2)
+			{
+				Mate2.GetComponent(KeyPiece).UpdateSnaps(2, false);
+			}
+			if (numFrom != 3 && Mate3 != null && Mated3)
+			{
+				Mate3.GetComponent(KeyPiece).UpdateSnaps(3, false);
+			}
+			if (numFrom != 4 && Mate4 != null && Mated4)
+			{
+				Mate4.GetComponent(KeyPiece).UpdateSnaps(4, false);
+			}
+			if (numFrom != 5 && Mate5 != null && Mated5)
+			{
+				Mate5.GetComponent(KeyPiece).UpdateSnaps(5, false);
+			}
 		}
 	}
 //	yield WaitForSeconds(0.1);

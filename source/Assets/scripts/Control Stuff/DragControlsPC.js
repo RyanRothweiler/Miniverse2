@@ -2110,7 +2110,7 @@ function RotateKey(obj : GameObject)
 		obj.GetComponent(KeyPiece).Parent(obj, 10);
 		
 		//rotate the object first
-		obj.GetComponent(KeyPiece).UpdateSnaps(10); //rotate the snaps 90 degrees
+		obj.GetComponent(KeyPiece).UpdateSnaps(10, false); //rotate the snaps 90 degrees
 		//change orientation
 		if (obj.GetComponent(KeyPiece).Orientation == 4)
 		{
