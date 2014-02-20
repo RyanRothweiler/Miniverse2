@@ -6,6 +6,7 @@ public var auso2 : AudioSource;
 
 public var RocketIn : AudioClip;
 public var CameraZoom : AudioClip;
+public var LevelWinClip : AudioClip;
 
 //private vars
 private var DragControls : DragControlsPC;
@@ -30,5 +31,14 @@ function ToLevel()
 		
 		auso2.clip = CameraZoom;
 		auso2.Play(40000);
+	}
+}
+
+function LevelWin()
+{
+	if (!auso1.isPlaying)
+	{
+		auso1.clip = LevelWinClip;
+		auso1.Play();
 	}
 }

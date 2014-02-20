@@ -2,6 +2,8 @@ fileFormatVersion: 2
 guid: f40de658bfa91f745b22affe7992a09d
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - NeonStartup: {fileID: 8300000, guid: 5a528334deca45f4ca34982f2adf8d0a, type: 1}
+  - NeonLoop: {fileID: 8300000, guid: f0c71b02935bba441a2eaceb2717d3b7, type: 1}
   executionOrder: 0
   icon: {instanceID: 0}

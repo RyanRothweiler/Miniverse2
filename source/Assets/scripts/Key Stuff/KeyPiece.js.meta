@@ -2,6 +2,29 @@ fileFormatVersion: 2
 guid: 5a894dc076223a745ac568ca0a8264fd
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - DeathSphere: {instanceID: 0}
+  - KeyHolder: {instanceID: 0}
+  - SnapSound: {fileID: 8300000, guid: be22b1c37e72c2e419a3ef587c486219, type: 1}
+  - Mate1: {instanceID: 0}
+  - Mate2: {instanceID: 0}
+  - Mate3: {instanceID: 0}
+  - Mate4: {instanceID: 0}
+  - Mate5: {instanceID: 0}
+  - MatePoint1: {instanceID: 0}
+  - MatePoint2: {instanceID: 0}
+  - MatePoint3: {instanceID: 0}
+  - MatePoint4: {instanceID: 0}
+  - MatePoint5: {instanceID: 0}
+  - Mate1S: {instanceID: 0}
+  - Mate1SB: {instanceID: 0}
+  - Mate2S: {instanceID: 0}
+  - Mate2SB: {instanceID: 0}
+  - Mate3S: {instanceID: 0}
+  - Mate3SB: {instanceID: 0}
+  - Mate4S: {instanceID: 0}
+  - Mate4SB: {instanceID: 0}
+  - Mate5S: {instanceID: 0}
+  - Mate5SB: {instanceID: 0}
   executionOrder: -400
   icon: {instanceID: 0}

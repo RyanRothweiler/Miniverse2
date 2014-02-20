@@ -162,7 +162,7 @@ function MeshAdd ()
 	
 	//create variables for edjObj placement
 	var edjResolution = 1;
-	edjResolution = CircleResolution * 30;
+	edjResolution = CircleResolution * 15;
 	var edjCount = 0;
 	
 	//create lines from the circles in chains
@@ -201,15 +201,19 @@ function MeshAdd ()
 							wireframer.CustomLines.Add(currPoint); //add the current point
 							wireframer.CustomLines.Add(nxtPoint); //and the next point
 							
-							//instantiate edge objects
-							if (edjCount > edjResolution)
+							//instantiate edge objects if the point is on screen and in play view
+							if (Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 							{
-								GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-								edjCount = 0;
-							}
-							else
-							{
-								edjCount++;
+								//only create an edj object ever 2nd point or so
+								if (edjCount > edjResolution)
+								{
+									GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+									edjCount = 0;
+								}
+								else
+								{
+									edjCount++;
+								}
 							}
 						}
 						else //if the second point actaully is an internal point then the next custom line should be connecting to the closest intersect point
@@ -268,15 +272,19 @@ function MeshAdd ()
 								wireframer.CustomLines.Add(currPoint); //add the current point
 								wireframer.CustomLines.Add(nxtPoint); //and the next point	
 								
-								//instantiate edge objects
-								if (edjCount > edjResolution)
+								//instantiate edge objects if the point is on screen and in play view
+								if (Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 								{
-									GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-									edjCount = 0;
-								}
-								else
-								{
-									edjCount++;
+									//only create an edj object ever 2nd point or so
+									if (edjCount > edjResolution)
+									{
+										GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+										edjCount = 0;
+									}
+									else
+									{
+										edjCount++;
+									}
 								}
 							}
 							else //else the second point is an internal
@@ -306,15 +314,19 @@ function MeshAdd ()
 								wireframer.CustomLines.Add(currPoint); //add the current point
 								wireframer.CustomLines.Add(nxtPoint); //and the next point
 								
-								//instantiate edge objects
-								if (edjCount > edjResolution)
+								//instantiate edge objects if the point is on screen and in play view
+								if (Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 								{
-									GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-									edjCount = 0;
-								}
-								else
-								{
-									edjCount++;
+									//only create an edj object ever 2nd point or so
+									if (edjCount > edjResolution)
+									{
+										GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+										edjCount = 0;
+									}
+									else
+									{
+										edjCount++;
+									}
 								}
 							}
 							else
@@ -366,15 +378,19 @@ function MeshAdd ()
 				circle.object.GetComponent(MathWireframeRender).CustomLines.Add(currPoint); //add the current point
 				circle.object.GetComponent(MathWireframeRender).CustomLines.Add(nxtPoint); //and the next point
 				
-				//instantiate edge objects
-				if (edjCount > edjResolution)
+				//instantiate edge objects if the point is on screen and in play view
+				if (Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 				{
-					GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-					edjCount = 0;
-				}
-				else
-				{
-					edjCount++;
+					//only create an edj object ever 2nd point or so
+					if (edjCount > edjResolution)
+					{
+						GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+						edjCount = 0;
+					}
+					else
+					{
+						edjCount++;
+					}
 				}
 			}
 		}

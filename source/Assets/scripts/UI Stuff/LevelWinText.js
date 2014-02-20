@@ -23,7 +23,7 @@ function Update ()
 	//unparenting on level win
 	if (dragControls.levelWon || dragControls.LevelLost)
 	{
-		transform.parent == null;
-		GetComponent(NeonFlicker).Going = true;
+//		transform.parent == null;
+//		GetComponent(NeonFlicker).Going = true;
 	}
 }

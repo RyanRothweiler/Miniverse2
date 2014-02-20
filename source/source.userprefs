@@ -1,11 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyShowController.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyPiece.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2097" Column="3" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="93" Column="2" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPositions.js" Line="102" Column="23" />
-      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="893" Column="76" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="42" Column="25" />
+      <File FileName="Assets\scripts\Control Stuff\PlanetSpeedBuffer.js" Line="56" Column="4" />
+      <File FileName="Assets\scripts\Human Stuff\HumanShip.js" Line="132" Column="24" />
+      <File FileName="Assets\scripts\UI Stuff\LevelWinText.js" Line="23" Column="28" />
+      <File FileName="Assets\scripts\Audio Stuff\SFXController.js" Line="33" Column="19" />
+      <File FileName="Assets\scripts\Audio Stuff\BackgroundAudioController.js" Line="101" Column="16" />
+      <File FileName="Assets\scripts\Audio Stuff\MusicAudioController.js" Line="29" Column="2" />
+      <File FileName="Assets\scripts\Audio Stuff\ButtonSFX.js" Line="8" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="258" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

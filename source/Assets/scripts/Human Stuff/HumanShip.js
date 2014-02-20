@@ -114,7 +114,7 @@ function FlyAway()
 	Gone = false; //the spaceship has gone and moving to next level so reset
 	
 	//wait a bit
-	yield WaitForSeconds(0.5);
+	yield WaitForSeconds(1);
 	
 	//start fire
 	FlameEffect.GetComponent(ParticleSystem).enableEmission = true; //enable flames
@@ -129,7 +129,7 @@ function FlyAway()
 	ScaleDownFlames();
 	CheckShipSize();
 
-	yield WaitForSeconds(2);
+	yield WaitForSeconds(4);
 	
 	DragControls.SetNextLevel();
 }

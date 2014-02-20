@@ -3,6 +3,7 @@
 //public vars
 public var DeathSphere : GameObject;
 public var KeyHolder : GameObject;
+public var SnapSound : AudioClip;
 
 public var Orientation = 1; //1 - N, 2 - E, 3 - S, 4 - W. 1 is always the correction orientation, meaning the key won't snap unless in the 1 orientation
 public var Rotating = false; //if the key is in the process of rotating or not 
@@ -51,6 +52,7 @@ public var Mate5SB : GameObject;
 
 
 //private vars
+private var auso : AudioSource;
 private var DragControls : DragControlsPC;
 private var objectInfo : RaycastHit;
 private var FirstGrab = true;
@@ -98,8 +100,18 @@ function Start ()
 		Mate2Offset = Quaternion.Euler(0,0,-90) * Mate2Offset;
 		Mate3Offset = Quaternion.Euler(0,0,-90) * Mate3Offset;
 		Mate4Offset = Quaternion.Euler(0,0,-90) * Mate4Offset; 
+	}
+	
+	//see if this objects has an audio source, if not make one
+	if (!GetComponent(AudioSource))
+	{
+		auso = this.gameObject.AddComponent(AudioSource);
+		auso.volume = 0;
+		auso.dopplerLevel = 0;
+		auso.minDistance = 135;
+		auso.clip = SnapSound;
 		
-		//UpdateSnaps(10, true);
+		SoundVolWait();
 	}
 }
 
@@ -256,6 +268,12 @@ function Update ()
 	}
 }
 
+function SoundVolWait()
+{
+	yield WaitForSeconds(0.8);
+	auso.volume = 0.5;
+}
+
 //goes through all mates and parents them to parent
 function Parent(newParent : GameObject, numFrom : int) : IEnumerator
 {
@@ -296,6 +314,9 @@ function Parent(newParent : GameObject, numFrom : int) : IEnumerator
 //snaps this key and all it's matached keys also
 function Snap(numFrom : int) : IEnumerator
 {
+	//play click sound
+	auso.Play();
+	
 	//clear selected in all mates
 	DragControls.KeySelectOff = true;
 

@@ -951,10 +951,6 @@ function Update ()
 			}
 		}
 	}
-//	if (FailType.text.Length > 0) //idk what the fuck this does
-//	{
-//		halt = true;
-//	}
 	
 	//if the level has been beat
 	if (nextLevel)
@@ -1135,28 +1131,27 @@ function MovePeople(Asteroid : boolean)
 				//if moving to the human ship then turn hide the person
 				if (tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.gameObject.name == "humanShip")
 				{
-					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true));
-					dummyChildList[MoveI].gameObject.SetActiveRecursively(false);
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true, MoveI));
 				}
 				else
 				{
-					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false));
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false, MoveI));
 				}
 			}
 			else //else an asteroid
 			{
 				if (tempSelectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.name == "humanShip")
 				{
-					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true));
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true, MoveI));
 				}
 				else
 				{
-					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false));
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false, MoveI));
 				}
 			}
 			MoveN++;
 		}
-		
+
 		//if the people are moving to the spaceship then add their count to the saved people. Need to know if moving people from an asteroid.
 		if (!Asteroid)
 		{
@@ -1178,10 +1173,10 @@ function MovePeople(Asteroid : boolean)
 	MovingPeople = false;
 }
 
-function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean) //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
+function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean, personNum : int) //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
 {
 	//teleport out 'from' child
-	fromChild.GetComponent(HumanPerson).TeleportOut();
+	fromChild.GetComponent(HumanPerson).TeleportOut(personNum);
 	
 	//if moving the people to the ship
 	if (toShip)
@@ -2262,20 +2257,21 @@ function LevelWon()
 {
 	if (!levelWon)
 	{
-		levelWon = true;
-		
+		//sfx
+		if (SFXCont)
+		{
+			SFXCont.LevelWin();
+		}
+				
 		//wait a bit
 		toLevelSelect = true;
-		yield WaitForSeconds(1);
+		yield WaitForSeconds(3.5);
 		
-		//flicker out things
-		//transform.Find("BackArrow").GetComponent(NeonFlicker).FlickerOut = true;
+		levelWon = true;
 		
-		//start level winning type
-//		FailType.GetComponent(TextTypeEffect).ParentCheck = false;
-//		FailType.GetComponent(TextTypeEffect).TextToType = "COMPLETED";
-//		FailType.GetComponent(TextTypeEffect).Done = false;
-		FailType.GetComponent(NeonFlicker).Going = true;
+		transform.Find("BackArrow").GetComponent(NeonFlicker).FlickerOut = true; //flicker out the back button
+		
+		//the fail type will show automatically. 
 		FailType.transform.parent = null; //unparent
 		
 		//set level win level select variables
@@ -2375,8 +2371,14 @@ function MoveTo(time : float, target : Vector3)
 //depress a level tag
 function DepressLevelTag(info : RaycastHit, isLevelTag : boolean) 
 {
-	if (info.collider.tag == "LevelTag" || info.collider.tag == "ui")
+	//play sound
+	if (info.collider.GetComponent(ButtonSFX))
 	{
+		info.collider.GetComponent(ButtonSFX).Pressed();
+	}
+		
+	if (info.collider.tag == "LevelTag" || info.collider.tag == "ui")
+	{		
 		FadeLevelTagSize(info.collider.transform.localScale.x); //fade tag size
 		
 		//here we do the things that pertain only to the level tags. yeah I know the method name is depress level tag, sue me
@@ -2405,6 +2407,12 @@ function DepressLevelTag(info : RaycastHit, isLevelTag : boolean)
 //unpress a level tag. set it back to its normal state
 function UnpressLevelTag(info : RaycastHit, isLevelTag : boolean) 
 {
+	//play sound
+	if (info.collider.GetComponent(ButtonSFX))
+	{
+		info.collider.GetComponent(ButtonSFX).Released();
+	}
+		
 	if (info.collider.tag == "LevelTag")
 	{		
 		//here we do the things that pertain only to the level tags. yeah I know the method name is depress level tag, sue me
