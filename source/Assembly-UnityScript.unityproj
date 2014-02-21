@@ -92,6 +92,7 @@
      <Compile Include="Assets\scripts\Overhead Stuff\LevelTimer.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\PausePlane.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\Platform_type.js" />
+     <Compile Include="Assets\scripts\Overhead Stuff\RytSplash.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\SaveStating.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\StayParented.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\TimeDeath.js" />
