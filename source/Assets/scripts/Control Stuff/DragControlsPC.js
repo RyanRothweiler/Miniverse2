@@ -697,33 +697,6 @@ function Update ()
 					Touch1EndPos = touch.position;
 					Touch1Delta = touch.deltaPosition;
 				}
-				
-				if (touch.fingerId == 1)
-				{
-					//first touch
-					if (Touch2Start)
-					{
-							Touch2Start = false;
-							Touch2StartPos = touch.position;
-							
-							//planet selection
-							if (!LevelPaused && !Touch2WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
-							{
-								//if the planet is draggable
-								if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
-								{
-									Touch2WorldSelected = true;
-									selectedWorld = objectInfo;
-									selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
-									offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y,WorldZDepth - Camera.main.transform.position.z));
-								}
-							}
-					}
-					
-					Touching2 = true;
-					Touch2EndPos = touch.position;
-					Touch2Delta = touch.deltaPosition;
-				}
 			}
 			
 			//check gestures
@@ -756,25 +729,22 @@ function Update ()
 				if (!LevelPaused && !Touch1WorldSelected && Touch1Move && CanViewDrag)
 				{
 					Touch1CameraDragging = true;
-					if ( !(Touching1 && !Touch1WorldSelected))
+					if (CanMoveCameraHorizontal)
 					{
-						if (CanMoveCameraHorizontal)
-						{
-							if (WorldDraggingInverted) {
-								this.transform.Translate(Vector3(Touch1Delta.x * DragRate, Touch1Delta.y * DragRate, 0));
-							}
-							else {
-								this.transform.Translate(Vector3(Touch1Delta.x * DragRate * -1, Touch1Delta.y * DragRate * -1, 0));
-							}
+						if (WorldDraggingInverted) {
+							this.transform.Translate(Vector3(Touch1Delta.x * DragRate, Touch1Delta.y * DragRate, 0));
 						}
-						else
-						{
-							if (WorldDraggingInverted) {
-								this.transform.Translate(0, Touch1Delta.y * DragRate, 0);
-							}
-							else {
-								this.transform.Translate(0, Touch1Delta.y * DragRate * -1, 0);
-							}
+						else {
+							this.transform.Translate(Vector3(Touch1Delta.x * DragRate * -1, Touch1Delta.y * DragRate * -1, 0));
+						}
+					}
+					else
+					{
+						if (WorldDraggingInverted) {
+							this.transform.Translate(0, Touch1Delta.y * DragRate, 0);
+						}
+						else {
+							this.transform.Translate(0, Touch1Delta.y * DragRate * -1, 0);
 						}
 					}
 				}

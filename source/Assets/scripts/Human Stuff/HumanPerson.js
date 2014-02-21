@@ -20,7 +20,7 @@ function Start ()
 	if (!GetComponent(AudioSource))
 	{
 		auso = this.gameObject.AddComponent(AudioSource);
-		auso.volume = 0.4;
+		auso.volume = 0.6;
 		auso.dopplerLevel = 0;
 		auso.minDistance = 135;
 		auso.clip = TeleportClip;

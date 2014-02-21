@@ -27,11 +27,11 @@ function Start ()
 	{
 		GetComponentInChildren(Renderer).material.SetColor("_MainColor",Color(255,0,0));
 	}
-	if (degradationSpeed >= 12 && degradationSpeed < 35) //yellow
+	if (degradationSpeed >= 7 && degradationSpeed < 35) //yellow
 	{
 		GetComponentInChildren(Renderer).material.SetColor("_MainColor",Color(255,255,0));
 	}
-	if (degradationSpeed >= 0 && degradationSpeed < 12) //green
+	if (degradationSpeed >= 0 && degradationSpeed < 7) //green
 	{
 		GetComponentInChildren(Renderer).material.SetColor("_MainColor",Color(0,255,0));
 	}
