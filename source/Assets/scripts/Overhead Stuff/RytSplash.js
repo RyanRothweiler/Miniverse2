@@ -16,6 +16,6 @@ function Update ()
 
 function LoadWait()
 {
-	yield WaitForSeconds(2);
+	yield WaitForSeconds(0.1);
 	Application.LoadLevel("MainMenu");
 }

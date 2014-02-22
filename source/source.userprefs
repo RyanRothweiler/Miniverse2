@@ -1,18 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Overhead Stuff\RytSplash.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="663" Column="9" />
-      <File FileName="Assets\scripts\Control Stuff\PlanetSpeedBuffer.js" Line="56" Column="4" />
-      <File FileName="Assets\scripts\Human Stuff\HumanShip.js" Line="132" Column="24" />
-      <File FileName="Assets\scripts\UI Stuff\LevelWinText.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Audio Stuff\SFXController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Audio Stuff\BackgroundAudioController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Audio Stuff\MusicAudioController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Audio Stuff\ButtonSFX.js" Line="8" Column="1" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="105" Column="1" />
-      <File FileName="Assets\scripts\Human Stuff\HumanPerson.js" Line="27" Column="3" />
-      <File FileName="Assets\scripts\Planet Stuff\planetLifeIndicator.js" Line="30" Column="27" />
+      <File FileName="Assets\scripts\Overhead Stuff\RytSplash.js" Line="17" Column="20" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="616" Column="43" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

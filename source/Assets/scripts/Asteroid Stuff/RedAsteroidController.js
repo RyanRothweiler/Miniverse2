@@ -17,7 +17,9 @@ function Start ()
 	
 	//fix rotation of particles
 	if (Phase == 2)
+	{
 		GetComponentInChildren(ParticleSystem).startRotation = 80;
+	}
 }
 
 function Update () 
@@ -27,7 +29,7 @@ function Update ()
 		Going = true;
 		
 	//if not parented to anything
-	if (transform.parent == null && Going)
+	if (transform.parent.parent == null && Going)
 	{
 		//set kinematic on 'start'
 		if (start)
@@ -38,10 +40,16 @@ function Update ()
 		
 		//move asteroid
 		if (Phase == 1 && Camera.main.GetComponent(DragControlsPC).Phase1)
+		{
 			transform.position += Direction * Time.deltaTime;
+		}
 		if (Phase == 2 && Camera.main.GetComponent(DragControlsPC).Phase2)
+		{
 			transform.position += Direction * Time.deltaTime;
+		}
 		if (Phase == 3 && Camera.main.GetComponent(DragControlsPC).Phase3)
+		{
 			transform.position += Direction * Time.deltaTime;
+		}
 	}
 }

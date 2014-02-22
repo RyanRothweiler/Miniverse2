@@ -492,14 +492,13 @@ function Update ()
 				ResetFirstClick(); //start the click timer
 			}
 			//world dragging shenanigans
-			if (canMoveToWorld && !LevelPaused && Input.GetMouseButtonDown(0) && !AutoMoving && !isLevelSelect)
+			if (canMoveToWorld && !LevelPaused && Input.GetMouseButtonDown(0) && !isLevelSelect)
 			{
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
 					//back arrow
 					if (objectInfo.collider.name == "BackArrow")
 					{
-						Debug.Log(objectInfo.collider.transform.parent.name);
 						LevelLose(true);
 						LevelLost = true;
 					}
@@ -515,6 +514,7 @@ function Update ()
 			//if planet dragging
 			if (PlanetDragging && !LevelPaused && Input.GetMouseButton(0) && worldSelected && selectedWorld.collider != null && selectedWorld.collider.name != "humanShip" && selectedWorld.collider.name != "Asteroid" && selectedWorld.collider.name != "AsteroidCenter" && selectedWorld.transform.gameObject.name != "RedAsteroid")//&& !selectedWorld.collider.GetComponentInChildren(planetLifeIndicator).dead)
 			{
+				//boss level auto moving
 				if (TouchAutoMove)
 				{
 					AutoMoveCheckPhases();
@@ -1229,11 +1229,17 @@ function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean
 function AutoMoveCheckPhases()
 {
 	if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).StartPhase == 1)
+	{
 		selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1 = true;
+	}
 	if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).StartPhase == 2)
+	{
 		selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2 = true;
+	}
 	if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).StartPhase == 3)
+	{
 		selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3 = true;
+	}
 	AutoMoving = true;
 }
 
@@ -1243,33 +1249,41 @@ function AutoMovingStartPhases()
 	//reset offSet
 	offSet = Vector3.zero;
 	
-	//if planet is alive and currently in any of the three phases then planet sticks to mouse
-	if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive && (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3))		
-			selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
-	else
-		AutoMoving = false;
+	
+	if ((worldSelected || Touch1WorldSelected))
+	{
+		//if planet is alive and currently in any of the three phases then planet sticks to mouse
+		if ((selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive && (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3)))		
+		{
+				selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+		}
+		else
+		{
+			AutoMoving = false;
+		}
+				
+		//if phase one then move camera up along the y axis
+		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1)
+		{
+			Phase1 = true;
+			transform.Translate(Vector3(0,DragRate * 0.01,0));
+		}
 			
-	//if phase one then move camera up along the y axis
-	if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1)
-	{
-		Phase1 = true;
-		transform.Translate(Vector3(0,DragRate,0));
-	}
-		
-	//if phase two the move camera horizontally
-	if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2)
-	{
-		Phase1 = false;
-		Phase2 = true;
-		transform.Translate(Vector3(DragRate,0,0));
-	}
-		
-	//if phase three then move camera down along the y axis
-	if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3)
-	{
-		Phase2 = false;
-		Phase3 = true;
-		transform.Translate(Vector3(0,-DragRate,0));
+		//if phase two the move camera horizontally
+		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2)
+		{
+			Phase1 = false;
+			Phase2 = true;
+			transform.Translate(Vector3(DragRate,0,0));
+		}
+			
+		//if phase three then move camera down along the y axis
+		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3)
+		{
+			Phase2 = false;
+			Phase3 = true;
+			transform.Translate(Vector3(0,-DragRate,0));
+		}
 	}
 }
 
