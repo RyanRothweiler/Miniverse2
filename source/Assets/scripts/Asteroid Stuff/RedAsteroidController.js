@@ -1,6 +1,7 @@
 #pragma strict
 
 //public vars
+public var OnScreen : boolean; //if this asteroid is on the screen or not
 public var Direction : Vector3;
 public var Anim : GameObject;
 public var Phase : int; //the phase which this asteroid belongs to
@@ -24,12 +25,24 @@ function Start ()
 
 function Update () 
 {
+	//update on screen
+	if (Camera.main.WorldToViewportPoint(transform.position).x > -1 && Camera.main.WorldToViewportPoint(transform.position).x < 2 && Camera.main.WorldToViewportPoint(transform.position).y > -1 && Camera.main.WorldToViewportPoint(transform.position).y < 2)
+	{
+		OnScreen = true;
+	}
+	else
+	{
+		OnScreen = false;
+	}
+	
 	//set going. Don't go until the planet has been clicked
 	if (Camera.main.GetComponent(DragControlsPC).AutoMoving)
+	{
 		Going = true;
+	}
 		
 	//if not parented to anything
-	if (transform.parent.parent == null && Going)
+	if (transform.parent == null)
 	{
 		//set kinematic on 'start'
 		if (start)
@@ -41,15 +54,15 @@ function Update ()
 		//move asteroid
 		if (Phase == 1 && Camera.main.GetComponent(DragControlsPC).Phase1)
 		{
-			transform.position += Direction * Time.deltaTime;
+			transform.position += Direction * Time.deltaTime * 30;
 		}
 		if (Phase == 2 && Camera.main.GetComponent(DragControlsPC).Phase2)
 		{
-			transform.position += Direction * Time.deltaTime;
+			transform.position += Direction * Time.deltaTime * 30;
 		}
 		if (Phase == 3 && Camera.main.GetComponent(DragControlsPC).Phase3)
 		{
-			transform.position += Direction * Time.deltaTime;
+			transform.position += Direction * Time.deltaTime * 30;
 		}
 	}
 }

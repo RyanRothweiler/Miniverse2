@@ -1252,10 +1252,18 @@ function AutoMovingStartPhases()
 	
 	if ((worldSelected || Touch1WorldSelected))
 	{
+		Debug.Log("TOUCHIN'");
 		//if planet is alive and currently in any of the three phases then planet sticks to mouse
 		if ((selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive && (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3)))		
 		{
+			if (Platform_PC)
+			{
 				selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+			}
+			else
+			{
+				selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Touch1EndPos.x,Touch1EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+			}
 		}
 		else
 		{

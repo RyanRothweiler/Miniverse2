@@ -46,6 +46,8 @@
   <ItemGroup>
      <Compile Include="Assets\scripts\Asteroid Stuff\AsteroidController.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\RedAsteroidController.js" />
+     <Compile Include="Assets\scripts\Asteroid Stuff\RedAsteroidGoal.js" />
+     <Compile Include="Assets\scripts\Asteroid Stuff\RedAsteroidManager.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\UnstableAsteroid.js" />
      <Compile Include="Assets\scripts\Audio Stuff\BackgroundAudioController.js" />
      <Compile Include="Assets\scripts\Audio Stuff\ButtonSFX.js" />
