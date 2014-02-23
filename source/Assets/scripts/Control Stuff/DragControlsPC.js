@@ -1252,11 +1252,11 @@ function AutoMovingStartPhases()
 	
 	if ((worldSelected || Touch1WorldSelected))
 	{
-		Debug.Log("TOUCHIN'");
 		//if planet is alive and currently in any of the three phases then planet sticks to mouse
 		if ((selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive && (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3)))		
 		{
-			if (Platform_PC)
+			FailType.transform.parent = this.transform;
+			if (PlatformPC)
 			{
 				selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
 			}
@@ -1267,30 +1267,27 @@ function AutoMovingStartPhases()
 		}
 		else
 		{
+			LevelLose(false);
 			AutoMoving = false;
 		}
 				
 		//if phase one then move camera up along the y axis
 		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1)
 		{
-			Phase1 = true;
-			transform.Translate(Vector3(0,DragRate * 0.01,0));
-		}
-			
-		//if phase two the move camera horizontally
-		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2)
-		{
-			Phase1 = false;
-			Phase2 = true;
-			transform.Translate(Vector3(DragRate,0,0));
-		}
-			
-		//if phase three then move camera down along the y axis
-		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3)
-		{
-			Phase2 = false;
-			Phase3 = true;
-			transform.Translate(Vector3(0,-DragRate,0));
+			if (transform.position.y < GameObject.Find("humanShip").transform.position.y - 3) 
+			{
+				Phase1 = true;
+				transform.Translate(Vector3(0,DragRate * 0.01,0));
+			}
+			else
+			{
+				//slow the drag rate
+				if (DragRate > 0)
+				{
+					transform.Translate(Vector3(0,DragRate * 0.01,0));
+					DragRate -= 0.5;
+				}				
+			}
 		}
 	}
 }
@@ -2306,6 +2303,46 @@ function LevelWon()
 		if (Application.loadedLevelName == "transporter planet is by the ship - Heron")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level10 = true;
+		}
+		if (Application.loadedLevelName == "planet decay quick and bottle neck - Red Neck")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level11 = true;
+		}
+		if (Application.loadedLevelName == "human level with different playet life speeds - Human")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level12 = true;
+		}
+		if (Application.loadedLevelName == "intro to sun radii shrinking - (2PiR) - t")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level13 = true;
+		}
+		if (Application.loadedLevelName == "introduce checking two paths - Moldorm")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level14 = true;
+		}
+		if (Application.loadedLevelName == "double sided sun radii shrinking - Tie")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level15 = true;
+		}
+		if (Application.loadedLevelName == "introduction to asteroids - Armageddon")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level16 = true;
+		}
+		if (Application.loadedLevelName == "single spinning asteroid with three trails - Three")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level17 = true;
+		}
+		if (Application.loadedLevelName == "asteroid field - Soccer")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level18 = true;
+		}
+		if (Application.loadedLevelName == "small asteroid field, quick radii shrinking, planet life - (2PiR) - 10t")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level19 = true;
+		}
+		if (Application.loadedLevelName == "first planet race - Demon on Wheels")
+		{
+			transform.parent.GetComponent(LevelsCompleted).level20 = true;
 		}
 	}
 }

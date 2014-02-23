@@ -3,7 +3,9 @@
 //public vars
 public var FlameEffect : GameObject;
 public var FlameSmokeEffect : GameObject;
-public var TeleportPS : GameObject; 
+public var TeleportPS : GameObject;
+public var FlameLight1 : GameObject;
+public var FlameLight2 : GameObject;
 static var Gone = false; //if the ship has gone or not. to start the ship has not
 
 //private var
@@ -14,9 +16,17 @@ private var idleStart = false;
 private var switchStart = false;
 private var i : int;
 private var cont = true;
+private var maxIntensity : float;
+private var lightComp1 : Light;
+private var lightComp2 : Light;
 
 function Start () 
-{	
+{
+	//get light stuff
+	lightComp1 = FlameLight1.GetComponent(Light);
+	lightComp2 = FlameLight2.GetComponent(Light);
+	maxIntensity = lightComp1.intensity;
+	
 	//if not gone then hide ship
 	if (!Gone)
 	{
@@ -76,6 +86,7 @@ function Update ()
 	//switch particles
 	if (animation["Intro"].time > 3.5 && !switchStart)
 	{
+		FadeOutLight();
 		SwitchParticles();
 		switchStart = true;
 	}
@@ -115,6 +126,8 @@ function FlyAway()
 	
 	//wait a bit
 	yield WaitForSeconds(1);
+	
+	FadeInLight();
 	
 	//start fire
 	FlameEffect.GetComponent(ParticleSystem).enableEmission = true; //enable flames
@@ -177,4 +190,24 @@ function Teleport() //instantiate and play the teleport animation
 {
 	GameObject.Instantiate(TeleportPS, Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); //instantiate the effect
 	//and do nothing else I guess, I thought I'd need more here.
+}
+
+function FadeOutLight()
+{
+	do
+	{
+		yield;
+		lightComp1.intensity -= 0.18;
+		lightComp2.intensity -= 0.18;
+	} while (lightComp1.intensity > 0);
+}
+
+function FadeInLight()
+{
+	do
+	{
+		yield;
+		lightComp1.intensity += 0.18;
+		lightComp2.intensity += 0.18;
+	} while (lightComp1.intensity < maxIntensity);
 }

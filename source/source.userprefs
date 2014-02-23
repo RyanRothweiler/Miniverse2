@@ -1,6 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Human Stuff\HumanShip.js">
+    <Files>
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2319" Column="77" />
+      <File FileName="Assets\scripts\UI Stuff\MiniverseMenuLogo.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Asteroid Stuff\RedAsteroidController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Asteroid Stuff\RedAsteroidGoal.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Asteroid Stuff\RedAsteroidManager.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="471" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="951" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPositions.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Level Select Stuff\LevelsCompleted.js" Line="14" Column="19" />
+      <File FileName="Assets\scripts\Human Stuff\HumanShip.js" Line="213" Column="2" />
+      <File FileName="Assets\scripts\UI Stuff\NeonFlicker.js" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

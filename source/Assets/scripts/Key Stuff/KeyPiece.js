@@ -65,6 +65,7 @@ private var vertsChecked = false;
 private var dumTris = new List.<int>(); //list of vertices to remove from the circle
 private var parentSwapped = false;
 private var canCheckMouse = true;
+static var started = false;
 
 function Start () 
 {
@@ -119,6 +120,23 @@ function Update ()
 {
 	done = false;
 	done2 = false;
+	
+	//piece one intro tutorial
+	if (this.name == "Piece1")
+	{
+		//check tutorial THE KEY MUST BE IN THIS POSITION FOR THE TUTORIAL TO WORK. if you move the key you must change this.
+		if (!started && !Camera.main.GetComponent(DragControlsPC).halt)
+		{
+			started = true;
+			StartTut();
+		}
+		if (started && transform.Find("Tutorial").GetComponent(NeonFlicker).Going && Orientation == 2)
+		{
+			Debug.Log("Flickering out");
+			transform.Find("Tutorial").GetComponent(NeonFlicker).Going = false;
+			transform.Find("Tutorial").GetComponent(NeonFlicker).FlickerOut = true;
+		}
+	}
 	
 	if (DragControls.PlatformPC)
 	{
@@ -266,6 +284,12 @@ function Update ()
 			}
 		}
 	}
+}
+
+function StartTut()
+{
+	yield WaitForSeconds(0.5);
+	transform.Find("Tutorial").GetComponent(NeonFlicker).Going = true;
 }
 
 function SoundVolWait()

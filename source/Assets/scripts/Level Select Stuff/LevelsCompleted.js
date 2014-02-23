@@ -11,6 +11,7 @@ static var level7 = false;
 static var level8 = false;
 static var level9 = false;
 static var level10 = false;
+static var level11 = false;
 static var level12 = false;
 static var level13 = false;
 static var level14 = false;
@@ -65,6 +66,46 @@ function Start ()
 	if (level10)
 	{
 		GameObject.Find("transporter planet is by the ship - Heron").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level11)
+	{
+		GameObject.Find("planet decay quick and bottle neck - Red Neck").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level12)
+	{
+		GameObject.Find("human level with different playet life speeds - Human").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level13)
+	{
+		GameObject.Find("intro to sun radii shrinking - (2PiR) - t").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level14)
+	{
+		GameObject.Find("introduce checking two paths - Moldorm").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level15)
+	{
+		GameObject.Find("double sided sun radii shrinking - Tie").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level16)
+	{
+		GameObject.Find("introduction to asteroids - Armageddon").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level17)
+	{
+		GameObject.Find("single spinning asteroid with three trails - Three").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level18)
+	{
+		GameObject.Find("asteroid field - Soccer").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level19)
+	{
+		GameObject.Find("small asteroid field, quick radii shrinking, planet life - (2PiR) - 10t").transform.Find("CompletedPlane").gameObject.active = true;
+	}
+	if (level20)
+	{
+		GameObject.Find("first planet race - Demon on Wheels").transform.Find("CompletedPlane").gameObject.active = true;
 	}
 }
 
