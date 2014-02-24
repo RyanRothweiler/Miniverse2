@@ -208,6 +208,7 @@ private var PinchIn = false;
 private var PinchOut = false;
 public var tapCount = 0; //the number of taps within the tap time limit. used for detecting doubel taps
 private var tapTimeLimit = 0.3; //the time to wait unitl resetting tapCount
+private var lastPos : Vector3;
 
 
 //camera zooming
@@ -377,6 +378,11 @@ function Start ()
 		WorldDraggingInverted = true;
 	}
 	
+	if (isSettingsMenu)
+	{
+		Debug.Log(this.GetComponent(AudioListener).volume);
+		lastPos = transform.Find("SceneScaleController").Find("volume marker").position;
+	}
 	#if UNITY_IPHONE
 		//start metrics level timer
 		if ((Application.loadedLevel > 0) && (Application.loadedLevel < 21))

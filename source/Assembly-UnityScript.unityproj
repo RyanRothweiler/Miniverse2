@@ -98,6 +98,7 @@
      <Compile Include="Assets\scripts\Overhead Stuff\SaveStating.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\StayParented.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\TimeDeath.js" />
+     <Compile Include="Assets\scripts\Overhead Stuff\VolSlider.js" />
      <Compile Include="Assets\scripts\Overhead Stuff\XmlHandler.js" />
      <Compile Include="Assets\scripts\Planet Stuff\PlanetController.js" />
      <Compile Include="Assets\scripts\Planet Stuff\PlanetSearcher.js" />
