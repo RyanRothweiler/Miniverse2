@@ -4,6 +4,7 @@
 public var DeathSphere : GameObject;
 public var KeyHolder : GameObject;
 public var SnapSound : AudioClip;
+public var Completed = false;
 
 public var Orientation = 1; //1 - N, 2 - E, 3 - S, 4 - W. 1 is always the correction orientation, meaning the key won't snap unless in the 1 orientation
 public var Rotating = false; //if the key is in the process of rotating or not 
@@ -121,6 +122,29 @@ function Update ()
 	done = false;
 	done2 = false;
 	
+	//check completed
+	Completed = true;
+	if (Mate1 != null && !Mated1)
+	{
+		Completed = false;
+	}
+	if (Mate2 != null && !Mated2)
+	{
+		Completed = false;
+	}
+	if (Mate3 != null && !Mated3)
+	{
+		Completed = false;
+	}
+	if (Mate4 != null && !Mated4)
+	{
+		Completed = false;
+	}
+	if (Mate5 != null && !Mated5)
+	{
+		Completed = false;
+	}
+	
 	//piece one intro tutorial
 	if (this.name == "Piece1")
 	{
@@ -132,7 +156,6 @@ function Update ()
 		}
 		if (started && transform.Find("Tutorial").GetComponent(NeonFlicker).Going && Orientation == 2)
 		{
-			Debug.Log("Flickering out");
 			transform.Find("Tutorial").GetComponent(NeonFlicker).Going = false;
 			transform.Find("Tutorial").GetComponent(NeonFlicker).FlickerOut = true;
 		}

@@ -21,18 +21,14 @@ function Start ()
 
 function Update () 
 {
-	matedCount = 0;
+	Locked = false;
 	//check
-	for (i = 0; i < keys.Length; i++)
+	for (var key : GameObject in keys)
 	{
-		keypiece = keys[i].GetComponent(KeyPiece);
-		if (keypiece.Mated1 && keypiece.Mated2 && keypiece.Mated3 && keypiece.Mated4)
+		if (!key.GetComponent(KeyPiece).Completed)
 		{
-			matedCount++;
+			Locked = true;
 		}
-	}
-	if (matedCount == 20)
-	{
-		Locked = false;
+		
 	}
 }

@@ -15,6 +15,11 @@ class CameraCustomControls extends Editor
             Camera.main.transform.position = Camera.main.GetComponent(DragControlsPC).CameraZoomOutPos;
             EditorUtility.SetDirty(target);
         }
+        if(GUILayout.Button("Reset Saved Data"))
+        {
+            PlayerPrefs.DeleteAll();
+            EditorUtility.SetDirty(target);
+        }
         
         DrawDefaultInspector ();
     }

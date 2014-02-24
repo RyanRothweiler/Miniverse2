@@ -27,9 +27,11 @@ static var level20 = false;
 
 function Start () 
 {	
-	if (level1)
+	if (level1 || PlayerPrefs.GetInt("1") == 1)
 	{
-		GameObject.Find("intro to moving people - The The Impotence").transform.Find("CompletedPlane").gameObject.active = true;
+		PlayerPrefs.SetInt("1", 1); //save this level
+		PlayerPrefs.Save();
+		GameObject.Find("intro to moving people - The The Impotence").transform.Find("CompletedPlane").gameObject.active = true; //show completed plane
 	}
 	if (level2)
 	{
