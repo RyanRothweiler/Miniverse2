@@ -36,6 +36,7 @@ public var CanMoveCameraHorizontal : boolean; //if the player can move the camer
 public var TouchAutoMove : boolean; //if true then when a planet is touched, the camera will automatically move up until the end of the level. used on the boss level
 public var sunShrink : boolean;
 public var AutoMoving = false; //boss level moving
+private var AutoGoing = false; //if moving auto'ly
 public var isLevelSelect : boolean;
 public var isMainMenu : boolean; //if this level is the main menu
 public var isSettingsMenu : boolean; //if this scene is the settings menu
@@ -209,7 +210,7 @@ private var PinchOut = false;
 public var tapCount = 0; //the number of taps within the tap time limit. used for detecting doubel taps
 private var tapTimeLimit = 0.3; //the time to wait unitl resetting tapCount
 private var lastPos : Vector3;
-
+public var iosDrag : boolean;
 
 //camera zooming
 function OnLevelWasLoaded()
@@ -348,7 +349,14 @@ function Start ()
 	if (Application.platform == RuntimePlatform.IPhonePlayer)
 	{
 		print("IOS");
-		DragRate = 0.02;
+		if (iosDrag)
+		{
+			DragRate = 0.02;
+		}
+		else
+		{
+			DragRate = 20;
+		}
 		PlatformIOS = true;
 		PlatformPC = false;
 	}
@@ -1261,6 +1269,7 @@ function AutoMovingStartPhases()
 		//if planet is alive and currently in any of the three phases then planet sticks to mouse
 		if ((selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive && (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase2 || selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase3)))		
 		{
+			AutoGoing = true;
 			FailType.transform.parent = this.transform;
 			if (PlatformPC)
 			{
@@ -1275,10 +1284,11 @@ function AutoMovingStartPhases()
 		{
 			LevelLose(false);
 			AutoMoving = false;
+			AutoGoing = false;
 		}
-				
+		
 		//if phase one then move camera up along the y axis
-		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1)
+		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Phase1 && !PlatformIOS)
 		{
 			if (transform.position.y < GameObject.Find("humanShip").transform.position.y - 3) 
 			{
@@ -1294,6 +1304,32 @@ function AutoMovingStartPhases()
 					DragRate -= 0.5;
 				}				
 			}
+		}
+	}
+	
+	if (AutoGoing && PlatformIOS)
+	{
+		if (transform.position.y < GameObject.Find("humanShip").transform.position.y - 3) 
+		{
+			Phase1 = true;
+			transform.Translate(Vector3(0,DragRate * 0.01,0));
+			if (!Touch1WorldSelected)
+			{
+				selectedWorld.transform.Translate(Vector3(0,DragRate * 0.01,0));
+			}
+		}
+		else
+		{
+			//slow the drag rate
+			if (DragRate > 0)
+			{
+				transform.Translate(Vector3(0,DragRate * 0.01,0));
+				DragRate -= 0.5;
+			}
+			if (!Touch1WorldSelected)
+			{
+				selectedWorld.transform.Translate(Vector3(0,DragRate * 0.01,0));
+			}			
 		}
 	}
 }
@@ -1918,10 +1954,28 @@ function LevelSelect()
 						}
 						else
 						{
-							FadeKick = false;
-							DepressLevelTag(objectInfo, true);
-							depressedTag = objectInfo;
-							iosTagDepress = true;
+							if (objectInfo.collider.name == "boss level - 900,000")
+							{
+								if (!Camera.main.GetComponent(KeyLockingController).Locked)
+								{
+									FadeKick = false;
+									iosTagDepress = true;
+									DepressLevelTag(objectInfo, true); 
+									depressedTag = objectInfo;
+								}
+								else
+								{
+									iosTagDepress = false;
+									Debug.Log("locked");
+								}
+							}
+							else
+							{
+								FadeKick = false;
+								DepressLevelTag(objectInfo, true);
+								depressedTag = objectInfo;
+								iosTagDepress = true;
+							}
 						}
 					}
 					
@@ -1954,7 +2008,7 @@ function LevelSelect()
 						//LevelOffset.x = 0; 
 						return; //then kick out
 					}
-					if (LevelOffset.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -146) //right side
+					if (LevelOffset.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -157.5) //right side
 					{ 
 						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
 					}
@@ -1996,14 +2050,14 @@ function LevelSelect()
 			if (Touch1Move)
 			{				
 				//limit movement
-				if (LevelOffset.x - Movement1Delta.x > -146) //right side
+				if (LevelOffset.x - Movement1Delta.x > -157.5) //right side
 				{ 
 					LevelOffset.x -= (Movement1Delta.x);
 				}
 				else
 				{
 					//end the flick
-					LevelOffset.x = -145;
+					LevelOffset.x = -156;
 					
 					Touch1StartPos = Vector2(0,0);
 					Touch1EndPos = Vector2(1000,1000);		
@@ -2045,35 +2099,65 @@ function LevelSelect()
 				{
 					if (objectInfo.collider.tag != "key")
 					{
-						FadeOutKeys(); //fade out keys
-						
-						//save level offset
-						leveloffsetX = LevelOffset.x;
-						leveloffsetY = LevelOffset.y;
-						leveloffsetZ = LevelOffset.z;
-						
-						//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-						previousLevel = int.Parse(objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text);
-						Level = objectInfo.collider.name;
-						nextLevel = true;
-						toLevel = true;
-						isLevelSelect = false;
-						//isMenu = false;
-						inGame = true;
-						fromLSelect = true;
-						
-						//Goes back to main menu	
-						if(objectInfo.collider.name == "mainmenu")
+						//if the boss level then check if it's locked
+						if (objectInfo.collider.name == "boss level - 900,000")
 						{
-							transform.DetachChildren();
-							Application.LoadLevel("mainmenu");
-							isLevelSelect = false;
-							//isMenu = true;
+							if (!Camera.main.GetComponent(KeyLockingController).Locked)
+							{
+								FadeOutKeys(); //fade out keys
+							
+								//save level offset
+								leveloffsetX = LevelOffset.x;
+								leveloffsetY = LevelOffset.y;
+								leveloffsetZ = LevelOffset.z;
+								
+								//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
+								previousLevel = 21;
+								Level = objectInfo.collider.name;
+								nextLevel = true;
+								toLevel = true;
+								isLevelSelect = false;
+								//isMenu = false;
+								inGame = true;
+								fromLSelect = true;
+								
+								Touch1Tap = false;
+								Touch1StartPos = Vector2(0,0);
+								Touch1EndPos = Vector2(1000,1000);
+							}
 						}
-						
-						Touch1Tap = false;
-						Touch1StartPos = Vector2(0,0);
-						Touch1EndPos = Vector2(1000,1000);
+						else //else do your regular stuff
+						{
+							FadeOutKeys(); //fade out keys
+							
+							//save level offset
+							leveloffsetX = LevelOffset.x;
+							leveloffsetY = LevelOffset.y;
+							leveloffsetZ = LevelOffset.z;
+							
+							//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
+							previousLevel = int.Parse(objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text);
+							Level = objectInfo.collider.name;
+							nextLevel = true;
+							toLevel = true;
+							isLevelSelect = false;
+							//isMenu = false;
+							inGame = true;
+							fromLSelect = true;
+							
+							//Goes back to main menu	
+							if(objectInfo.collider.name == "mainmenu")
+							{
+								transform.DetachChildren();
+								Application.LoadLevel("mainmenu");
+								isLevelSelect = false;
+								//isMenu = true;
+							}
+							
+							Touch1Tap = false;
+							Touch1StartPos = Vector2(0,0);
+							Touch1EndPos = Vector2(1000,1000);
+						}
 					}
 				}
 				else
