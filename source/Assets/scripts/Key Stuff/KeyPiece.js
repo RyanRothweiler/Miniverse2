@@ -148,16 +148,25 @@ function Update ()
 	//piece one intro tutorial
 	if (this.name == "Piece1")
 	{
-		//check tutorial THE KEY MUST BE IN THIS POSITION FOR THE TUTORIAL TO WORK. if you move the key you must change this.
-		if (!started && !Camera.main.GetComponent(DragControlsPC).halt)
+		//if the saved data key exists then don't show the 
+		if (!PlayerPrefs.HasKey("PuzzleTut"))
 		{
-			started = true;
-			StartTut();
+			//check tutorial THE KEY MUST BE IN THIS POSITION FOR THE TUTORIAL TO WORK. if you move the key you must change this.
+			if (!started && !Camera.main.GetComponent(DragControlsPC).halt)
+			{
+				started = true;
+				StartTut();
+			}
+			if (started && transform.Find("Tutorial").GetComponent(NeonFlicker).Going && Orientation == 2)
+			{
+				PlayerPrefs.SetInt("PuzzleTut", 1);
+				transform.Find("Tutorial").GetComponent(NeonFlicker).Going = false;
+				transform.Find("Tutorial").GetComponent(NeonFlicker).FlickerOut = true;
+			}
 		}
-		if (started && transform.Find("Tutorial").GetComponent(NeonFlicker).Going && Orientation == 2)
+		else
 		{
 			transform.Find("Tutorial").GetComponent(NeonFlicker).Going = false;
-			transform.Find("Tutorial").GetComponent(NeonFlicker).FlickerOut = true;
 		}
 	}
 	
