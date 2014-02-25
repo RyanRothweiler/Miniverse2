@@ -1,14 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
-    <Files>
-      <File FileName="Assets\scripts\Key Stuff\KeyLockingController.js" Line="28" Column="34" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="152" Column="8" />
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1084" Column="23" />
-      <File FileName="Assets\scripts\Level Select Stuff\LevelsCompleted.js" Line="125" Column="46" />
-      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="309" Column="31" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

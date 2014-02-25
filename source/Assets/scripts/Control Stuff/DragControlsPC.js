@@ -89,6 +89,7 @@ public var KeyMat : Material; //the material used for the keys
 public var GlowMat : Material; //the material used for the glow behind the keys
 public var LevelOffsetController : GameObject; //the level select object to move when scrolling level select stuff
 public var FailTexture : Texture2D; //the texture which sail fail on it. lolz
+public var ClickTolerance : Vector2; //the tolerance which to designate a tap or move
 
 
 
@@ -153,6 +154,7 @@ private var toMainMenu = false; //moving to the main menu scene
 private var FirstClick = false; //used to detect double clicking
 private var stopHidingFileType = false; //used to stop hiding the fail type! what did you think it did?
 private var LevelTimerEnded = false;
+public var OverTolerance = false; 
 
 //Strings
 static var Level : String;
@@ -203,7 +205,7 @@ public var Touching2 = false;
 public var Touch2WorldSelected = false;
 public var Touch2CameraDragging = false;
 
-private var TouchTapBounds = Vector2(10,10); //the amount of movement to allow which stil constitutes a tap.
+private var TouchTapBounds = Vector2(20,20); //the amount of movement to allow which stil constitutes a tap.
 private var dummyVect : Vector3; //a dummy vector 2
 private var MovementControllerOldPos : Vector2;
 private var PinchIn = false;
@@ -507,7 +509,7 @@ function Update ()
 				FirstClick = true;
 				ResetFirstClick(); //start the click timer
 			}
-			//world dragging shenanigans
+			//planet dragging shenanigans
 			if (canMoveToWorld && !LevelPaused && Input.GetMouseButtonDown(0) && !isLevelSelect)
 			{
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
@@ -594,8 +596,16 @@ function Update ()
 					selectedWorld = objectInfo;
 					peopleDragging = true;
 				}
-			}		
-										
+			}	
+				
+			//check if over drag tolerance
+			if (Input.GetMouseButton(0))
+			{
+				if (!((Input.mousePosition.x + ClickTolerance.x > mousePos.x) && (Input.mousePosition.x - ClickTolerance.x < mousePos.x) && (Input.mousePosition.y + ClickTolerance.y > mousePos.y) && (Input.mousePosition.y - ClickTolerance.y < mousePos.y)))
+				{
+					OverTolerance = true;
+				}
+			}						
 			//moving people. 
 			if(Input.GetMouseButtonUp(0) && peopleDragging == true && !LevelPaused)
 			{
@@ -603,7 +613,7 @@ function Update ()
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
 					if (objectInfo.collider.name == "AsteroidCenter" && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != selectedWorld.collider.gameObject) //if selected an asteroid and the asteroids nearest planet is not itself
-					{	
+					{
 						//if mouse didn't move
 						if (mousePos == Input.mousePosition && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != null && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != selectedWorld.collider.gameObject)
 						{
@@ -612,13 +622,14 @@ function Update ()
 					}
 					if (objectInfo.collider.name == "HumanPlanet" && selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet != selectedWorld.collider.gameObject) //if selected a human planet
 					{
-						//if mouse didn't move
-						if (mousePos == Input.mousePosition)
+						//if mouse didn't move, with a small tolerance
+						if (!OverTolerance && (Input.mousePosition.x + ClickTolerance.x > mousePos.x) && (Input.mousePosition.x - ClickTolerance.x < mousePos.x) && (Input.mousePosition.y + ClickTolerance.y > mousePos.y) && (Input.mousePosition.y - ClickTolerance.y < mousePos.y))
 						{
 							MovePeople(false);
 						}
 					}
 				}
+				OverTolerance = false;
 			}
 		}
 		
@@ -720,7 +731,9 @@ function Update ()
 			{
 				//check tap 
 				if ((Touch1StartPos.x + TouchTapBounds.x > Touch1EndPos.x) && (Touch1StartPos.x - TouchTapBounds.x < Touch1EndPos.x) && (Touch1StartPos.y + TouchTapBounds.y > Touch1EndPos.y) && (Touch1StartPos.y - TouchTapBounds.y < Touch1EndPos.y))
+				{
 					Touch1Tap = true;
+				}
 				else
 				{
 					Touch1Tap = false;
@@ -737,8 +750,10 @@ function Update ()
 					}
 				
 					//if the planet is alive then move the planet
-					if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)		
+					if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
+					{
 						selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Touch1EndPos.x,Touch1EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+					}
 				}
 				
 				//camera dragging
