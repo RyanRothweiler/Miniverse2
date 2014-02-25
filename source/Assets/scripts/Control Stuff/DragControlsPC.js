@@ -920,7 +920,7 @@ function Update ()
 			}
 			else
 			{
-				#if UNITY_IPHONEa
+				#if UNITY_IPHONE
 					if (!LevelTimerEnded)
 					{
 						Debug.Log("logging fail");
