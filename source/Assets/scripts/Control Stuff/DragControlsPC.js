@@ -1569,6 +1569,7 @@ function ContactMenu()
 			//twitter button
 			if (objectInfo.collider.name == "twitter")
 			{
+				PlayerPrefs.DeleteAll();	
 				Application.OpenURL("https://twitter.com/RytGames");
 			}
 			
@@ -2234,6 +2235,8 @@ function MoveToWorldView()
 {
 	if (canMoveToWorld)
 	{
+		FailType.transform.parent = this.transform;
+		
 		LevelPaused = true;
 		CanZoom = false;
 		
@@ -2259,6 +2262,8 @@ function MoveToPlayView()
 {	
 	if (canMoveToPlay)
 	{
+		FailType.transform.parent = this.transform;
+		
 		LevelPaused = false;
 		CanZoom = true;
 		

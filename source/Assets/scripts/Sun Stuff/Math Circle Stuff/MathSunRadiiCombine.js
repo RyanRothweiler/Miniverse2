@@ -162,7 +162,7 @@ function MeshAdd ()
 	
 	//create variables for edjObj placement
 	var edjResolution = 1;
-	edjResolution = CircleResolution * 15;
+	edjResolution = CircleResolution * 20;
 	var edjCount = 0;
 	
 	//create lines from the circles in chains
