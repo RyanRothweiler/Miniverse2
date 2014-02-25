@@ -184,6 +184,7 @@ public var Touch1StartPos = Vector2(0,0); //the start position of a touch
 public var Touch1EndPos = Vector2(100,100); //the end position of a touch
 private var Touch1Delta : Vector2; //delta of first touch
 private var Touch1Tap = false; //if the touch is a tap
+private var Touch1DoubleTap = false; //if this touch is a double tap. duh.
 private var Touch1Move = false; //if the touch is a moving one
 private var Movement1Delta : Vector2; //used for flicking
 public var Touch1Start = true;
@@ -461,6 +462,7 @@ function Update ()
 				//zooming in
 				else if (CanScrollZoom && LevelPaused)
 				{
+					
 					//detect the planet closest to the touch pos and zoom into that instead of where the player actually touched
 					var closestPla : GameObject; //holds the current closest planet
 					var smallDist = 1000; //holds the distance between the current closest planet and the touchTarget
@@ -642,7 +644,7 @@ function Update ()
 						{
 							tapCount = 0;
 							if (LevelPaused) 
-							{
+							{								
 								//detect the planet closest to the touch pos and zoom into that instead of where the player actually touched
 								//closestPla : GameObject; //holds the current closest planet
 								smallDist = 1000; //holds the distance between the current closest planet and the touchTarget
@@ -1077,9 +1079,9 @@ function SetNextLevel()
 //move people between objects
 function MovePeople(Asteroid : boolean)
 {
-	MovingPeople = true;
-	if (canMoveToWorld)
+	if (canMoveToWorld && !MovingPeople)
 	{
+		MovingPeople = true;
 		//Get the childCount and store it in num
 		tempSelectedWorld = selectedWorld;
 		MoveNum = tempSelectedWorld.transform.childCount;
@@ -1161,6 +1163,7 @@ function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean
 {
 	//teleport out 'from' child
 	fromChild.GetComponent(HumanPerson).TeleportOut(personNum);
+	fromChild.transform.parent = null;
 	
 	//if moving the people to the ship
 	if (toShip)
