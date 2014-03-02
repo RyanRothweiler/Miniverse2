@@ -67,6 +67,8 @@ function Update ()
 		//if the sun is totally shrunk
 		if (radiiSize <= 1 && !dead)
 		{
+			radiiSize = 0;
+			
 			//create explosion
 			GameObject.Instantiate(PlanetExplosion, transform.position, Quaternion(0,0,0,0)); 
 			

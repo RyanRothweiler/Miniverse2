@@ -9,5 +9,12 @@ function Start ()
 
 function Update () 
 {
-	this.transform.parent = Parent.transform;
+	if (!Camera.main.GetComponent(DragControlsPC).LevelLost)
+	{
+		this.transform.parent = Parent.transform;
+	}
+	else
+	{
+		this.transform.parent = null;
+	}
 }

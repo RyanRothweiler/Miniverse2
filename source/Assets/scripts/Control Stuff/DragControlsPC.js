@@ -205,7 +205,7 @@ public var Touching2 = false;
 public var Touch2WorldSelected = false;
 public var Touch2CameraDragging = false;
 
-private var TouchTapBounds = Vector2(20,20); //the amount of movement to allow which stil constitutes a tap.
+private var TouchTapBounds = Vector2(23,23); //the amount of movement to allow which stil constitutes a tap.
 private var dummyVect : Vector3; //a dummy vector 2
 private var MovementControllerOldPos : Vector2;
 private var PinchIn = false;
@@ -514,13 +514,13 @@ function Update ()
 			{
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
-					//back arrow
-					if (objectInfo.collider.name == "BackArrow")
-					{
-						LevelLose(true);
-						LevelLost = true;
-					}
-					else if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
+//					//back arrow
+//					if (objectInfo.collider.name == "BackArrow" ||)
+//					{
+//						LevelLose(true);
+//						LevelLost = true;
+//					}
+					if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
 					{
 						worldSelected = true;
 						selectedWorld = objectInfo;
@@ -703,14 +703,8 @@ function Update ()
 						//planet selection
 						if (canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 						{
-							//back arrow
-							if (objectInfo.collider.name == "BackArrow")
-							{	
-								LevelLose(true);
-								LevelLost = true;
-							}
 							//if the planet is draggable
-							else if (objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
+							if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
 							{
 								Touch1WorldSelected = true;
 								selectedWorld = objectInfo;
@@ -856,6 +850,38 @@ function Update ()
 					GameObject.Instantiate(PlanetExplosion, worldObjects[i].transform.position, Quaternion(0,0,0,0)); //create explosion
 					worldObjects[i].SendMessage("KillPlanet"); //kill planet
 					worldObjects = GameObject.FindGameObjectsWithTag("world"); //recreate world objects, removing the dead world
+				}
+			}
+		}
+	}
+	
+	//check back button
+	if (PlatformPC) //on pc
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
+			{
+				if (objectInfo.collider.name == "BackArrow" || objectInfo.collider.name == "ResetButton")
+				{
+					selectedWorld = objectInfo;
+					LevelLose(true);
+					LevelLost = true;
+				}
+			}
+		}
+	}
+	if (PlatformIOS) //on ios
+	{
+		if (Touching1)
+		{
+			if (Physics.Raycast(Camera.main.ScreenPointToRay(Touch1EndPos), objectInfo))
+			{
+				if (objectInfo.collider.name == "BackArrow" || objectInfo.collider.name == "ResetButton")
+				{
+					selectedWorld = objectInfo;
+					LevelLose(true);
+					LevelLost = true;
 				}
 			}
 		}
@@ -2337,7 +2363,10 @@ function CameraViewPlanetPushing()
 //if the level was lost
 function LevelLose(back : boolean)
 {
-	stopHidingFileType = true; //stop hiding that type! dog!
+	if (!back)
+	{
+		stopHidingFileType = true; //stop hiding that type! dog!
+	}
 	FailType.renderer.material.mainTexture = FailTexture;
 	halt = true;
 	
@@ -2347,6 +2376,10 @@ function LevelLose(back : boolean)
 	{
 		FailType.transform.parent = null; //unparent
 		FailType.GetComponent(NeonFlicker).Going = true;
+	}
+	else
+	{
+		FailType.GetComponent(NeonFlicker).Going = false;
 	}
 	
 	yield WaitForSeconds(2);
