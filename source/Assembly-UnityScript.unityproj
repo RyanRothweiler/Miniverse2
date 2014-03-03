@@ -61,12 +61,14 @@
      <Compile Include="Assets\scripts\Control Stuff\DragControlsPC.js" />
      <Compile Include="Assets\scripts\Control Stuff\Joystick.js" />
      <Compile Include="Assets\scripts\Control Stuff\PlanetJoystick.js" />
-     <Compile Include="Assets\scripts\Control Stuff\PlanetSpeedBuffer.js" />
      <Compile Include="Assets\scripts\Control Stuff\TiltControls.js" />
      <Compile Include="Assets\scripts\Debris Stuff\BackgroundAsteroidController.js" />
      <Compile Include="Assets\scripts\Debris Stuff\MetalScrapsDebris.js" />
      <Compile Include="Assets\scripts\Debris Stuff\SateliteDebris.js" />
      <Compile Include="Assets\scripts\Debris Stuff\ShipDebris.js" />
+     <Compile Include="Assets\scripts\EdjObject Stuff\EdgeObjManager.js" />
+     <Compile Include="Assets\scripts\EdjObject Stuff\EdjObjController.js" />
+     <Compile Include="Assets\scripts\EdjObject Stuff\PlanetSpeedBuffer.js" />
      <Compile Include="Assets\scripts\Effects\ExplosionParticleEffect.js" />
      <Compile Include="Assets\scripts\Effects\HumanTeleportEffectController.js" />
      <Compile Include="Assets\scripts\Effects\ShipTeleportController.js" />

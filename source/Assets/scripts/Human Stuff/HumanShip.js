@@ -184,6 +184,8 @@ function ShowShip()
 	this.renderer.enabled = true;
 	FlameEffect.renderer.enabled = true;
 	FlameSmokeEffect.renderer.enabled = true;
+	FlameLight1.light.enabled = true;
+	FlameLight2.light.enabled = true;
 }
 
 function Teleport() //instantiate and play the teleport animation
@@ -204,6 +206,8 @@ function FadeOutLight()
 
 function FadeInLight()
 {
+	FlameLight1.light.enabled = true;
+	FlameLight2.light.enabled = true;
 	do
 	{
 		yield;

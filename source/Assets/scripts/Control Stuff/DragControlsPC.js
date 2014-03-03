@@ -958,8 +958,16 @@ function Update ()
 			StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
 			if (selectedWorld.collider.name == "BackArrow")
 			{
-				transform.DetachChildren();
-				Application.LoadLevel("levelselect"); 
+				if (Application.loadedLevelName == "Contact_SCE" || Application.loadedLevelName == "levelselect")
+				{
+					transform.DetachChildren();
+					Application.LoadLevel("MainMenu");
+				}
+				else
+				{
+					transform.DetachChildren();
+					Application.LoadLevel("levelselect");
+				}
 			}
 			else
 			{
