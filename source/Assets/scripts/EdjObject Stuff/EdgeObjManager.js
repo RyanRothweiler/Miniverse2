@@ -38,7 +38,6 @@ function Taken(pos : Vector3) : boolean
 	//go through all the edj objects
 	for (var eo : GameObject in edjObjs)
 	{
-		//found an edj object that is not on screen
 		if (eo.transform.position == pos)
 		{
 			return true;

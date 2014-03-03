@@ -166,9 +166,9 @@ function MeshAdd ()
 	}
 	
 	//create variables for edjObj placement
-	var edjResolution = 1;
-	edjResolution = CircleResolution * 40;
+	var edjResolution = 2;
 	var edjCount = 0;
+	var pointCount = 0;
 	
 	//create lines from the circles in chains
 	for (var chain : MathCircleChain in chains) //go through chains
@@ -184,7 +184,9 @@ function MeshAdd ()
 			
 			//go through the points on the circle
 			for (var a = 0.0; a < 6.5; a += CircleResolution)
-			{				
+			{
+				pointCount++;
+					
 				//get the points
 				var x = circle.center.x + (circle.radius * Mathf.Cos(a));
 				var y = circle.center.y + (circle.radius * Mathf.Sin(a));
@@ -210,9 +212,8 @@ function MeshAdd ()
 							if (edjUsing && Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 							{
 								//only create an edj object every 2nd point or so
-								if (edjCount > edjResolution)
+								if (pointCount % edjResolution == 0)
 								{
-									edjCount = 0;
 									//if the point is not taken
 									if (!EMan.Taken(currPoint))
 									{
@@ -220,13 +221,8 @@ function MeshAdd ()
 										if (!EMan.MoveObj(currPoint))
 										{
 											GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-											
 										}
 									}
-								}
-								else
-								{
-									edjCount++;
 								}
 							}
 						}
@@ -290,9 +286,8 @@ function MeshAdd ()
 								if (edjUsing && Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 								{
 									//only create an edj object every 2nd point or so
-									if (edjCount > edjResolution)
+									if (pointCount % edjResolution == 0)
 									{
-										edjCount = 0;
 										//if the point is not taken
 										if (!EMan.Taken(currPoint))
 										{
@@ -303,10 +298,6 @@ function MeshAdd ()
 												
 											}
 										}
-									}
-									else
-									{
-										edjCount++;
 									}
 								}
 							}
@@ -341,7 +332,7 @@ function MeshAdd ()
 								if (edjUsing && Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 								{
 									//only create an edj object every 2nd point or so
-									if (edjCount > edjResolution)
+									if (pointCount % edjResolution == 0)
 									{
 										edjCount = 0;
 										//if the point is not taken
@@ -354,10 +345,6 @@ function MeshAdd ()
 												
 											}
 										}
-									}
-									else
-									{
-										edjCount++;
 									}
 								}
 							}
@@ -383,6 +370,7 @@ function MeshAdd ()
 		}
 	}
 	
+	pointCount = 0;
 	//find the circles that don't intersect with anything, and render them straight up! dog, don't even trip.
 	for (var circle : MathCircle in circles)
 	{
@@ -398,6 +386,8 @@ function MeshAdd ()
 			//go through the points on the circle
 			for (a = 0.0; a < 6.5; a += CircleResolution)
 			{
+				pointCount++;
+				
 				//get the current point
 				x = circle.center.x + ((circle.radius) * Mathf.Cos(a));
 				y = circle.center.y + ((circle.radius) * Mathf.Sin(a));
@@ -414,9 +404,8 @@ function MeshAdd ()
 				if (edjUsing && Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 				{
 					//only create an edj object every 2nd point or so
-					if (edjCount > edjResolution)
+					if (pointCount % edjResolution == 0)
 					{
-						edjCount = 0;
 						//if the point is not taken
 						if (!EMan.Taken(currPoint))
 						{
@@ -427,10 +416,6 @@ function MeshAdd ()
 								
 							}
 						}
-					}
-					else
-					{
-						edjCount++;
 					}
 				}
 			}
