@@ -5,6 +5,7 @@
 
 //public vars
 public var EdjObj : GameObject; //the objects used to detect the edge of the rings. used for PlanetSpeedBuffer
+public var EdjTimer : boolean; 
 public var MathSuns : GameObject[]; //holds all the mathsun game objects in the scene
 public var HolderPrefab : GameObject; //the prefab which is used to hold the final sun shapes. each chain gets its own holder
 public var LiveCombine : boolean;
@@ -214,14 +215,21 @@ function MeshAdd ()
 								//only create an edj object every 2nd point or so
 								if (pointCount % edjResolution == 0)
 								{
-									//if the point is not taken
-									if (!EMan.Taken(currPoint))
+									if (!EdjTimer)
 									{
-										//try to move one of the objects, if can't then create one
-										if (!EMan.MoveObj(currPoint))
+										//if the point is not taken
+										if (!EMan.Taken(currPoint))
 										{
-											GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+											//try to move one of the objects, if can't then create one
+											if (!EMan.MoveObj(currPoint))
+											{
+												GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+											}
 										}
+									}
+									else
+									{
+										GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
 									}
 								}
 							}
@@ -287,16 +295,23 @@ function MeshAdd ()
 								{
 									//only create an edj object every 2nd point or so
 									if (pointCount % edjResolution == 0)
-									{
-										//if the point is not taken
-										if (!EMan.Taken(currPoint))
+									{	
+										if (!EdjTimer)
 										{
-											//try to move one of the objects, if can't then create one
-											if (!EMan.MoveObj(currPoint))
+											//if the point is not taken
+											if (!EMan.Taken(currPoint))
 											{
-												GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-												
+												//try to move one of the objects, if can't then create one
+												if (!EMan.MoveObj(currPoint))
+												{
+													GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+													
+												}
 											}
+										}
+										else
+										{
+											GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
 										}
 									}
 								}
@@ -334,16 +349,22 @@ function MeshAdd ()
 									//only create an edj object every 2nd point or so
 									if (pointCount % edjResolution == 0)
 									{
-										edjCount = 0;
-										//if the point is not taken
-										if (!EMan.Taken(currPoint))
+										if (!EdjTimer)
 										{
-											//try to move one of the objects, if can't then create one
-											if (!EMan.MoveObj(currPoint))
+											edjCount = 0;
+											//if the point is not taken
+											if (!EMan.Taken(currPoint))
 											{
-												GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-												
+												//try to move one of the objects, if can't then create one
+												if (!EMan.MoveObj(currPoint))
+												{
+													GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+												}
 											}
+										}
+										else
+										{
+											GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
 										}
 									}
 								}
@@ -406,15 +427,22 @@ function MeshAdd ()
 					//only create an edj object every 2nd point or so
 					if (pointCount % edjResolution == 0)
 					{
-						//if the point is not taken
-						if (!EMan.Taken(currPoint))
+						if (!EdjTimer)
 						{
-							//try to move one of the objects, if can't then create one
-							if (!EMan.MoveObj(currPoint))
+							//if the point is not taken
+							if (!EMan.Taken(currPoint))
 							{
-								GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-								
+								//try to move one of the objects, if can't then create one
+								if (!EMan.MoveObj(currPoint))
+								{
+									GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
+								}
 							}
+							
+						}
+						else
+						{
+							GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
 						}
 					}
 				}

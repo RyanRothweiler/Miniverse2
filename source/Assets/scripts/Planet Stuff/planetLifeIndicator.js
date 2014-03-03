@@ -61,6 +61,9 @@ function Update ()
 			//if percentage is at 100 then the planet is dead
 		if (xPercentage >= 100 && !dead)
 		{
+			//play explosion
+			this.transform.parent.GetComponent(AudioSource).Play();
+			
 			//create explosion
 			GameObject.Instantiate(PlanetExplosion, transform.position, Quaternion(0,0,0,0)); 
 			

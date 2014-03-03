@@ -260,6 +260,7 @@ function OnTriggerEnter(info : Collider)
 
 function KillPlanet()
 {
+	this.GetComponent(AudioSource).Play();
 	Alive = false;
 	transform.position = Vector3(1000, 1000, 1000);
 	transform.gameObject.tag = "DEAD";

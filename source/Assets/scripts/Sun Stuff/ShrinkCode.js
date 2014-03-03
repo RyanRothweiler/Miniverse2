@@ -77,6 +77,8 @@ function Update ()
 			
 			//sun is dead
 			dead = true;
+			
+			this.GetComponent(AudioSource).Play();
 		}
 	}
 }

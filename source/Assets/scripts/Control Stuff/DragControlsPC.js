@@ -956,7 +956,7 @@ function Update ()
 		if (transform.position.z >= WorldZDepth + 10)
 		{
 			StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
-			if (selectedWorld.collider.name == "BackArrow")
+			if (selectedWorld.collider != null && selectedWorld.collider.name == "BackArrow")
 			{
 				if (Application.loadedLevelName == "Contact_SCE" || Application.loadedLevelName == "levelselect")
 				{
@@ -1603,7 +1603,6 @@ function ContactMenu()
 			//twitter button
 			if (objectInfo.collider.name == "twitter")
 			{
-				PlayerPrefs.DeleteAll();	
 				Application.OpenURL("https://twitter.com/RytGames");
 			}
 			
@@ -1674,6 +1673,7 @@ function ContactMenu()
 				//twitter button
 				if (objectInfo.collider.name == "twitter")
 				{
+					PlayerPrefs.DeleteAll();
 					Application.OpenURL("https://twitter.com/RytGames");
 				}
 				
