@@ -1018,7 +1018,7 @@ function Update ()
 		
 		//moving to the level select scene
 		if (toLevelSelect)
-		{
+		{			
 			isPlayOne = true;
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 100)
@@ -2400,6 +2400,13 @@ function LevelWon()
 {
 	if (!levelWon)
 	{
+		//fade out reset button and back button
+		if (Camera.main.transform.Find("BackArrow") && Camera.main.transform.Find("ResetButton"))
+		{
+			Camera.main.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
+			Camera.main.transform.Find("ResetButton").GetComponent(NeonFlicker).KillOut();
+		}
+			
 		//sfx
 		if (SFXCont)
 		{

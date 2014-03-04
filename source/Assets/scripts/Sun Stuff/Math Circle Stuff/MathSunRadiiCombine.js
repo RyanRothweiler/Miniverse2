@@ -29,11 +29,13 @@ private var EMan : EdgeObjManager;
 private var tempChain : MathCircleChain;
 private var tempCircle : MathCircle;
 private var edjUsing = false;
+private var dragControls : DragControlsPC;
 
 private var holdersInstantiated : boolean; //if the holders have been instantiate 
 
 function Start () 
 {
+	dragControls = Camera.main.GetComponent(DragControlsPC);
 	EMan = Camera.main.GetComponent(EdgeObjManager);
 	EdjUsingWait();
 	
@@ -212,26 +214,7 @@ function MeshAdd ()
 							//instantiate edge objects if the point is on screen and in play view
 							if (edjUsing && Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 							{
-								//only create an edj object every 2nd point or so
-								if (pointCount % edjResolution == 0)
-								{
-									if (!EdjTimer)
-									{
-										//if the point is not taken
-										if (!EMan.Taken(currPoint))
-										{
-											//try to move one of the objects, if can't then create one
-											if (!EMan.MoveObj(currPoint))
-											{
-												GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-											}
-										}
-									}
-									else
-									{
-										GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-									}
-								}
+								Edger(currPoint, pointCount, edjResolution);
 							}
 						}
 						else //if the second point actaully is an internal point then the next custom line should be connecting to the closest intersect point
@@ -293,27 +276,7 @@ function MeshAdd ()
 								//instantiate edge objects if the point is on screen and in play view
 								if (edjUsing && Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 								{
-									//only create an edj object every 2nd point or so
-									if (pointCount % edjResolution == 0)
-									{	
-										if (!EdjTimer)
-										{
-											//if the point is not taken
-											if (!EMan.Taken(currPoint))
-											{
-												//try to move one of the objects, if can't then create one
-												if (!EMan.MoveObj(currPoint))
-												{
-													GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-													
-												}
-											}
-										}
-										else
-										{
-											GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-										}
-									}
+									Edger(currPoint, pointCount, edjResolution);
 								}
 							}
 							else //else the second point is an internal
@@ -346,27 +309,7 @@ function MeshAdd ()
 								//instantiate edge objects if the point is on screen and in play view
 								if (edjUsing && Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 								{
-									//only create an edj object every 2nd point or so
-									if (pointCount % edjResolution == 0)
-									{
-										if (!EdjTimer)
-										{
-											edjCount = 0;
-											//if the point is not taken
-											if (!EMan.Taken(currPoint))
-											{
-												//try to move one of the objects, if can't then create one
-												if (!EMan.MoveObj(currPoint))
-												{
-													GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-												}
-											}
-										}
-										else
-										{
-											GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-										}
-									}
+									Edger(currPoint, pointCount, edjResolution);
 								}
 							}
 							else
@@ -424,27 +367,7 @@ function MeshAdd ()
 				//instantiate edge objects if the point is on screen and in play view
 				if (edjUsing && Camera.main.GetComponent(DragControlsPC).canMoveToWorld && (Camera.main.WorldToViewportPoint(currPoint).x < 1) && (Camera.main.WorldToViewportPoint(currPoint).x > 0) && (Camera.main.WorldToViewportPoint(currPoint).y < 1) && (Camera.main.WorldToViewportPoint(currPoint).y > 0)) //if the point is on screen
 				{
-					//only create an edj object every 2nd point or so
-					if (pointCount % edjResolution == 0)
-					{
-						if (!EdjTimer)
-						{
-							//if the point is not taken
-							if (!EMan.Taken(currPoint))
-							{
-								//try to move one of the objects, if can't then create one
-								if (!EMan.MoveObj(currPoint))
-								{
-									GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-								}
-							}
-							
-						}
-						else
-						{
-							GameObject.Instantiate(EdjObj, currPoint, Quaternion.identity);
-						}
-					}
+					Edger(currPoint, pointCount, edjResolution);
 				}
 			}
 		}
@@ -483,4 +406,33 @@ function EdjUsingWait()
 {
 	yield WaitForSeconds(1);
 	edjUsing = true;
+}
+
+//create edge objects
+function Edger(point : Vector3, pointNum : int, res : float)
+{
+	if ((dragControls.worldSelected || dragControls.Touch1WorldSelected) && dragControls.selectedWorld.collider.name == "HumanPlanet" && Vector3.Distance(dragControls.selectedWorld.collider.transform.position, point) < 2)
+	{
+		//only create an edj object every 2nd point or so
+		if (pointNum % res == 0)
+		{
+			if (!EdjTimer)
+			{
+				//if the point is not taken
+				if (!EMan.Taken(point))
+				{
+					//try to move one of the objects, if can't then create one
+					if (!EMan.MoveObj(point))
+					{
+						GameObject.Instantiate(EdjObj, point, Quaternion.identity);
+					}
+				}
+				
+			}
+			else
+			{
+				GameObject.Instantiate(EdjObj, point, Quaternion.identity);
+			}
+		}
+	}
 }

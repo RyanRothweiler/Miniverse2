@@ -4,21 +4,21 @@
 public var OnScreen : boolean; //if this object is on the screen or not
 
 //private vars
+private var dragControls : DragControlsPC;
 
 function Start () 
 {
-
+	dragControls = Camera.main.GetComponent(DragControlsPC);
 }
 
 function Update () 
 {
-	//update on screen
-	if (Camera.main.WorldToViewportPoint(transform.position).x > 0 && Camera.main.WorldToViewportPoint(transform.position).x < 1 && Camera.main.WorldToViewportPoint(transform.position).y > 0 && Camera.main.WorldToViewportPoint(transform.position).y < 1)
+	if ((dragControls.worldSelected || dragControls.Touch1WorldSelected) && dragControls.selectedWorld.collider.name == "HumanPlanet" && Vector3.Distance(dragControls.selectedWorld.collider.transform.position, this.transform.position) > 3)
 	{
-		OnScreen = true;
+		OnScreen = false;
 	}
 	else
 	{
-		OnScreen = false;
+		OnScreen = true;
 	}
 }
