@@ -416,23 +416,24 @@ function Edger(point : Vector3, pointNum : int, res : float)
 		//only create an edj object every 2nd point or so
 		if (pointNum % res == 0)
 		{
-			if (!EdjTimer)
-			{
-				//if the point is not taken
-				if (!EMan.Taken(point))
-				{
-					//try to move one of the objects, if can't then create one
-					if (!EMan.MoveObj(point))
-					{
-						GameObject.Instantiate(EdjObj, point, Quaternion.identity);
-					}
-				}
-				
-			}
-			else
-			{
-				GameObject.Instantiate(EdjObj, point, Quaternion.identity);
-			}
+			GameObject.Instantiate(EdjObj, point, Quaternion.identity);
+//			if (!EdjTimer)
+//			{
+//				//if the point is not taken
+//				if (!EMan.Taken(point))
+//				{
+//					//try to move one of the objects, if can't then create one
+//					if (!EMan.MoveObj(point))
+//					{
+//						GameObject.Instantiate(EdjObj, point, Quaternion.identity);
+//					}
+//				}
+//				
+//			}
+//			else
+//			{
+//				GameObject.Instantiate(EdjObj, point, Quaternion.identity);
+//			}
 		}
 	}
 }
