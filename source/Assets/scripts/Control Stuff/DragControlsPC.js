@@ -1868,8 +1868,7 @@ function LevelSelect()
 				}
 				//if clicked a level tag
 				if (objectInfo.collider.tag == "LevelTag")
-				{
-					//print(objectInfo.collider.name);					
+				{			
 					if (objectInfo.collider.name == "boss level - 900,000")
 					{
 						if (!camera.main.GetComponent(KeyLockingController).Locked)
