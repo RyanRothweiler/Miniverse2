@@ -2371,6 +2371,8 @@ function CameraViewPlanetPushing()
 //if the level was lost
 function LevelLose(back : boolean)
 {
+	Touch1WorldSelected = false;
+	
 	if (!back)
 	{
 		stopHidingFileType = true; //stop hiding that type! dog!

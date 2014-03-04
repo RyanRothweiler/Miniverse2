@@ -20,6 +20,8 @@ private var virgin = true;
 private var virginOut = true;
 private var flickerVirgin = true;
 private var LightIntensity = 0.0;
+private var changeBack = false;
+private var changed = false;
 
 function Start () 
 {	
@@ -43,8 +45,8 @@ function Update()
 	if (!Kill)
 	{
 		//if the level is done introing (this if statement is the worst bit of code I've ever written)
-		if ((this.name == "Level fail") || (this.name == "BackArrow" && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0) || (this.name != "BackArrow" && (!transform.parent.parent || this.name == "Number" || this.name == "CompletedPlane") && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0))
-		{
+		if ((this.name == "Level fail") || ((this.name == "BackArrow" || this.name == "ResetButton") && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0) || ((this.name != "BackArrow" && this.name != "ResetButton") && (!transform.parent.parent || this.name == "Number" || this.name == "CompletedPlane") && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0))
+		{			
 			virgin = false;
 			WaitABit();
 		}
