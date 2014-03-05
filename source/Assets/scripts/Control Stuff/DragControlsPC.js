@@ -365,14 +365,14 @@ function Start ()
 	}
 	else
 	{
-//		print("IOS");
-//		DragRate = 0.02;
-//		PlatformIOS = true;
-//		PlatformPC = false;
-		print("PC");
-		PlatformPC = true;
-		PlatformIOS = false;
-		WorldDraggingInverted = true;
+		print("IOS");
+		DragRate = 0.02;
+		PlatformIOS = true;
+		PlatformPC = false;
+//		print("PC");
+//		PlatformPC = true;
+//		PlatformIOS = false;
+//		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -2370,10 +2370,19 @@ function CameraViewPlanetPushing()
 //if the level was lost
 function LevelLose(back : boolean)
 {
+	//fade out reset button and back button
+	if (Camera.main.transform.Find("BackArrow") && Camera.main.transform.Find("ResetButton"))
+	{
+		Camera.main.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
+		Camera.main.transform.Find("ResetButton").GetComponent(NeonFlicker).KillOut();
+		Camera.main.transform.Find("PausePlane").GetComponent(NeonFlicker).KillOut();
+	}
+		
 	Touch1WorldSelected = false;
 	
 	if (!back)
 	{
+		Debug.Log("thising");
 		stopHidingFileType = true; //stop hiding that type! dog!
 	}
 	FailType.renderer.material.mainTexture = FailTexture;

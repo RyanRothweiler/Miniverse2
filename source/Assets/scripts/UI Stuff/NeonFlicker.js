@@ -44,11 +44,14 @@ function Update()
 {
 	if (!Kill)
 	{
-		//if the level is done introing (this if statement is the worst bit of code I've ever written)
-		if ((this.name == "Level fail") || ((this.name == "BackArrow" || this.name == "ResetButton") && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0) || ((this.name != "BackArrow" && this.name != "ResetButton") && (!transform.parent.parent || this.name == "Number" || this.name == "CompletedPlane") && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0))
-		{			
-			virgin = false;
-			WaitABit();
+		if (Use)
+		{
+			//if the level is done introing (this if statement is the worst bit of code I've ever written)
+			if ((this.name == "Level fail") || ((this.name == "BackArrow" || this.name == "ResetButton") && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0) || ((this.name != "BackArrow" && this.name != "ResetButton") && (!transform.parent.parent || this.name == "Number" || this.name == "CompletedPlane") && virgin && Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount == 0))
+			{			
+				virgin = false;
+				WaitABit();
+			}
 		}
 		
 		//if on the level select and moving on to the next level then flicker out. 
@@ -236,7 +239,7 @@ function KillOut()
 	
 	do
 	{
-		renderer.material.SetColor("_Color", Color(1,1,1,renderer.material.GetColor("_Color").a - 0.1));
+		renderer.material.SetColor("_Color", Color(1,1,1,renderer.material.GetColor("_Color").a - 0.2));
 		yield;
-	} while (renderer.material.GetColor("_Color").a < 0);
+	} while (renderer.material.GetColor("_Color").a > 0);
 }
