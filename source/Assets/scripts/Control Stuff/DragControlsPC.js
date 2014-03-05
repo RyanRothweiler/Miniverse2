@@ -239,6 +239,13 @@ function Start ()
 		}
 	#endif
 	
+	//main menu intro stuff
+	if (isMainMenu)
+	{
+		CanZoom = false;
+		MainMenuIntroWait();
+	}
+	
 	//set fps
 	Application.targetFrameRate = 40; //set to 60 fps?
 	
@@ -365,14 +372,14 @@ function Start ()
 	}
 	else
 	{
-		print("IOS");
-		DragRate = 0.02;
-		PlatformIOS = true;
-		PlatformPC = false;
-//		print("PC");
-//		PlatformPC = true;
-//		PlatformIOS = false;
-//		WorldDraggingInverted = true;
+//		print("IOS");
+//		DragRate = 0.02;
+//		PlatformIOS = true;
+//		PlatformPC = false;
+		print("PC");
+		PlatformPC = true;
+		PlatformIOS = false;
+		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -2653,4 +2660,10 @@ function TapResetWait()
 {
 	yield WaitForSeconds (tapTimeLimit);
 	tapCount = 0;
+}
+
+function MainMenuIntroWait()
+{
+	yield WaitForSeconds(3);
+	CanZoom = true;
 }

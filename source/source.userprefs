@@ -1,17 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\UI Stuff\RytLogo.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2019" Column="10" />
-      <File FileName="Assets\scripts\EdjObject Stuff\EdgeObjManager.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\EdjObject Stuff\EdjObjController.js" Line="16" Column="236" />
-      <File FileName="Assets\scripts\EdjObject Stuff\PlanetSpeedBuffer.js" Line="16" Column="58" />
-      <File FileName="Assets\scripts\Sun Stuff\Math Circle Stuff\MathSunRadiiCombine.js" Line="420" Column="3" />
-      <File FileName="Assets\scripts\UI Stuff\NeonFlicker.js" Line="33" Column="43" />
-      <File FileName="Assets\scripts\Control Stuff\PlanetJoystick.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="473" Column="1" />
-      <File FileName="Assets\scripts\Overhead Stuff\BossLevelLocking.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Key Stuff\KeyLockingController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2667" Column="24" />
+      <File FileName="Assets\scripts\UI Stuff\NeonFlicker.js" Line="240" Column="1" />
+      <File FileName="Assets\scripts\UI Stuff\RytLogo.js" Line="26" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

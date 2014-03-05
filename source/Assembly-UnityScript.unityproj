@@ -137,6 +137,7 @@
      <Compile Include="Assets\scripts\UI Stuff\PauseText.js" />
      <Compile Include="Assets\scripts\UI Stuff\PeopleCounter.js" />
      <Compile Include="Assets\scripts\UI Stuff\ProximityIndicator.js" />
+     <Compile Include="Assets\scripts\UI Stuff\RytLogo.js" />
      <Compile Include="Assets\scripts\UI Stuff\SpriteSheetOffsetAnimation.js" />
      <Compile Include="Assets\scripts\UI Stuff\TextTypeEffect.js" />
      <Compile Include="Assets\scripts\UI Stuff\WarningController.js" />
