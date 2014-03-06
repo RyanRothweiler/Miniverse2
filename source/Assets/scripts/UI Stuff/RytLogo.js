@@ -4,7 +4,10 @@ function Start ()
 {
 	renderer.material.SetColor("_Color", Color(1,1,1,0));
 	
-	Go();
+	if (!Camera.main.GetComponent(DragControlsPC).rytIntroAlready)
+	{
+		Go();
+	}
 }
 
 function Update () 

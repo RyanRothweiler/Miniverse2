@@ -19,6 +19,7 @@ public var peopleAlive : int; //People # Monitor
 public var WorldZDepth : int; //depth of the plane which all interactable object sit on
 public var CameraLocDepth : int; //the z depth which the camer sits on
 public static var previousLevel = 0; //the level num which the player was in last
+public var world : int; //what world we're on
 
 public var worldDist : float; //distance which the worlds must stay to the sun
 public var DragRate : float; //speed which player moves the world around
@@ -36,11 +37,16 @@ public var CanMoveCameraHorizontal : boolean; //if the player can move the camer
 public var TouchAutoMove : boolean; //if true then when a planet is touched, the camera will automatically move up until the end of the level. used on the boss level
 public var sunShrink : boolean;
 public var AutoMoving = false; //boss level moving
-private var AutoGoing = false; //if moving auto'ly
-public var isLevelSelect : boolean;
+private var AutoGoing = false; //if moving auto'
+
+public var is1LevelSelect : boolean; //if is world 1 level select
+public var is2LevelSelect : boolean;
+public var isLevelSelect : boolean; //if is either in the world 1 or world 2 level select
+public var isWorldSelect : boolean;
 public var isMainMenu : boolean; //if this level is the main menu
 public var isSettingsMenu : boolean; //if this scene is the settings menu
 public var isContactMenu : boolean; //if this scene is the contact menu
+
 public var CanScrollZoom : boolean; //if the level can scrool zoom, also pinch zoom
 public var DoubleTapZoom : boolean; //if the level can double tap / double click zoom
 public var LevelPaused : boolean; //if the level is paused. Only zoom controls work if the level is paused. 
@@ -148,9 +154,11 @@ private var iosTagDepress = false;  //if a tag is depressed
 private var FadeKick = false; //if kick out of the level tag fading
 private var toSettings = false; //moving to the setting scene
 private var toContact = false; //moving to the contact scene
-public var toLevelSelect = false; //move to the level select scene
+public var to1LevelSelect = false; //move to the level select scene
+public var to2LevelSelect = false; //move to the level select scene
 public var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
+private var toWorldSelect = false;
 private var FirstClick = false; //used to detect double clicking
 private var stopHidingFileType = false; //used to stop hiding the fail type! what did you think it did?
 private var LevelTimerEnded = false;
@@ -215,6 +223,8 @@ private var tapTimeLimit = 0.3; //the time to wait unitl resetting tapCount
 private var lastPos : Vector3;
 public var iosDrag : boolean;
 
+static var rytIntroAlready : boolean;
+
 //camera zooming
 function OnLevelWasLoaded()
 {	
@@ -229,6 +239,7 @@ function OnLevelWasLoaded()
 
 function Start () 
 {
+	//analytics shenanigans
 	#if UNITY_IPHONE
 		//setup analytics
 		if (Application.loadedLevel == 0)
@@ -237,13 +248,38 @@ function Start ()
 			
 			FlurryBinding.startSession( "BBGNNPQWKBYN7WXGTWWZ" );
 		}
+		
+		//start metrics level timer
+		if ((Application.loadedLevel > 0) && (Application.loadedLevel < 21))
+		{
+			Debug.Log("level starting event");
+			FlurryBinding.logEvent(" "+Application.loadedLevel + " - Level Time", true );
+		}
 	#endif
+
+	
+	if (is1LevelSelect || is2LevelSelect)
+	{
+		isLevelSelect = true;
+	}
+	if (is1LevelSelect)
+	{
+		world = 1;
+	}
+	if (is2LevelSelect)
+	{
+		world = 2;
+	}
 	
 	//main menu intro stuff
-	if (isMainMenu)
+	if (isMainMenu && !rytIntroAlready)
 	{
 		CanZoom = false;
 		MainMenuIntroWait();
+	}
+	else if (isMainMenu)
+	{
+		transform.Find("RytLogo").renderer.material.SetColor("_Color", Color(0,0,0,0));
 	}
 	
 	//set fps
@@ -401,14 +437,6 @@ function Start ()
 		Debug.Log(this.GetComponent(AudioListener).volume);
 		lastPos = transform.Find("SceneScaleController").Find("volume marker").position;
 	}
-	#if UNITY_IPHONE
-		//start metrics level timer
-		if ((Application.loadedLevel > 0) && (Application.loadedLevel < 21))
-		{
-			Debug.Log("level starting event");
-			FlurryBinding.logEvent(" "+Application.loadedLevel + " - Level Time", true );
-		}
-	#endif
 }
 
 //main update function
@@ -438,6 +466,10 @@ function Update ()
 	if (isContactMenu)
 	{
 		ContactMenu();
+	}
+	if (isWorldSelect)
+	{
+		WorldSelect();
 	}
 
 	//autoMoving moving up
@@ -965,15 +997,28 @@ function Update ()
 			StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
 			if (selectedWorld.collider != null && selectedWorld.collider.name == "BackArrow")
 			{
-				if (Application.loadedLevelName == "Contact_SCE" || Application.loadedLevelName == "levelselect")
+				if (Application.loadedLevelName == "Contact_SCE" || Application.loadedLevelName == "WorldSelect_SCE")
 				{
 					transform.DetachChildren();
-					Application.LoadLevel("MainMenu");
+					Application.LoadLevel("MainMenu_SCE");
+				}
+				else if (Application.loadedLevelName == "w1_levelselect" || Application.loadedLevelName == "w2_levelselect")
+				{
+					transform.DetachChildren();
+					Application.LoadLevel("WorldSelect_SCE");
 				}
 				else
 				{
 					transform.DetachChildren();
-					Application.LoadLevel("levelselect");
+					if (World == 1)
+					{
+						Application.LoadLevel("w1_levelselect");
+					}
+					if (World == 2)
+					{
+						Application.LoadLevel("w2_levelselect");
+					}
+					
 				}
 			}
 			else
@@ -1000,7 +1045,8 @@ function Update ()
 		//moving to the settings scene
 		if (toSettings)
 		{
-			toLevelSelect = false;
+			to1LevelSelect = false;
+			to2LevelSelect = false;
 			isPlayOne = true;
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 10)
@@ -1013,7 +1059,8 @@ function Update ()
 		//moving to the contact scene
 		if (toContact)
 		{
-			toLevelSelect = false;
+			to1LevelSelect = false;
+			to2LevelSelect = false;
 			isPlayOne = true;
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 100)
@@ -1023,8 +1070,8 @@ function Update ()
 			}
 		}
 		
-		//moving to the level select scene
-		if (toLevelSelect)
+		//moving to the world 1 level select scene
+		if (to1LevelSelect)
 		{			
 			isPlayOne = true;
 			ZoomIn();
@@ -1032,7 +1079,33 @@ function Update ()
 			{
 				transform.DetachChildren();
 				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
-				Application.LoadLevel("levelselect"); 
+				Application.LoadLevel("w1_levelselect"); 
+			}
+		}
+		
+		//moving to the world 2 level select scene
+		if (to1LevelSelect)
+		{			
+			isPlayOne = true;
+			ZoomIn();
+			if (transform.position.z >= WorldZDepth + 100)
+			{
+				transform.DetachChildren();
+				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
+				Application.LoadLevel("w2_levelselect"); 
+			}
+		}
+		
+		//moving to world select
+		if (toWorldSelect)
+		{
+			isPlayOne = true;
+			ZoomIn();
+			if (transform.position.z >= WorldZDepth + 100)
+			{
+				transform.DetachChildren();
+				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
+				Application.LoadLevel("WorldSelect_SCE"); 
 			}
 		}
 		
@@ -1069,7 +1142,7 @@ function Update ()
 			if (transform.position.z >= WorldZDepth + 100)
 			{
 				transform.DetachChildren();
-				Application.LoadLevel("MainMenu");
+				Application.LoadLevel("MainMenu_SCE");
 			}
 		}
 	}
@@ -1428,6 +1501,161 @@ function shrinkCheck()
 	//why the fuck is this here
 }
 
+//world select stuff
+function WorldSelect()
+{
+	halt = true;
+	
+	if (PlatformPC)
+	{
+		//selecting level select objects
+		if(Input.GetMouseButtonDown(0))
+		{
+			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
+			{
+				//back arrow
+				if (objectInfo.collider.name == "BackArrow")
+				{
+					tagPressed = true;
+					worldSelected = true;
+					selectedWorld = objectInfo;
+					DepressLevelTag(objectInfo, false);
+				}
+				
+				//w1
+				if (objectInfo.collider.name == "w1")
+				{
+					tagPressed = true;
+					worldSelected = true;
+					selectedWorld = objectInfo;
+					DepressLevelTag(objectInfo, false);
+				}
+			}			
+		}
+		//when letting go of the mouse then do stuff
+		if (Input.GetMouseButtonUp(0))
+		{
+			StopAllCoroutines();
+			if (tagPressed)
+			{
+				UnpressLevelTag(objectInfo, false);
+			}
+			
+			if (worldSelected && selectedWorld.collider.name == "BackArrow")
+			{
+				//reset tag pressed
+				tagPressed = false;
+				
+				//move back to main menu
+				nextLevel = true;
+				toMainMenu = true;
+			}
+			
+			if (worldSelected && selectedWorld.collider.name == "w1")
+			{
+				//reset tag pressed
+				tagPressed = false;
+				
+				//move back to main menu
+				nextLevel = true;
+				to1LevelSelect = true;
+			}
+			
+			if (worldSelected && selectedWorld.collider.name == "w2")
+			{
+				//reset tag pressed
+				tagPressed = false;
+				
+				//move back to main menu
+				nextLevel = true;
+				to2LevelSelect = true;
+			}
+			worldSelected = false;
+		}
+	}
+	
+	//if ios platform
+	if (PlatformIOS)
+	{
+		//reset
+		Touching1 = false;
+		
+		//get touches
+		for (var touch : Touch in Input.touches)
+		{
+			Touching1 = true;
+			Touch1EndPos = touch.position;
+			
+			//check the first touch
+			if (touch.fingerId == 0)
+			{
+				Touch1Tap = true;	
+				
+				//get start pos
+				if (Touch1Start)
+				{
+					Touch1StartPos = touch.position;
+					Touch1Start = false;
+					Touch1Move = false;
+					
+					//check for tag depression
+					if (Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
+					{
+						//back button						
+						if (objectInfo.collider.name == "BackArrow")
+						{
+							DepressLevelTag(objectInfo, false);
+							depressedTag = objectInfo;
+							iosTagDepress = true;
+						}
+						
+						//to world 1 level select
+						if (worldSelected && selectedWorld.collider.name == "w1")
+						{
+							//reset tag pressed
+							tagPressed = false;
+							
+							//move back to main menu
+							nextLevel = true;
+							to1LevelSelect = true;
+						}
+						
+						//to world 1 level select
+						if (worldSelected && selectedWorld.collider.name == "w2")
+						{
+							//reset tag pressed
+							tagPressed = false;
+							
+							//move back to main menu
+							nextLevel = true;
+							to2LevelSelect = true;
+						}
+					}					
+				}
+			}
+		}
+		
+		//if not touching
+		if (!Touching1)
+		{
+			//reset
+			Touch1Start = true;
+			worldSelected = false;
+			
+			//unpress level tag
+			if (iosTagDepress)
+			{
+				iosTagDepress = false;
+				UnpressLevelTag(depressedTag, false);
+				
+				//move back to main menu
+				nextLevel = true;
+				toMainMenu = true;
+			}
+		}
+	}
+}
+
 //code for settings menu functionality
 function SettingsMenu()
 {
@@ -1733,8 +1961,9 @@ function MainMenu()
 			if (objectInfo.collider.name == "Start")
 			{
 				nextLevel = true;
-				toLevelSelect = true;
-				isLevelSelect = false;
+				toWorldSelect = true;
+				is1LevelSelect = false;
+				is2LevelSelect = false;
 				inGame = true;
 			}
 			
@@ -1743,7 +1972,8 @@ function MainMenu()
 			{
 				nextLevel = true;
 				toSettings = true;
-				isLevelSelect = false;
+				is1LevelSelect = false;
+				is2LevelSelect = false;
 				inGame = false;
 			}
 			
@@ -1752,7 +1982,8 @@ function MainMenu()
 			{				
 				nextLevel = true;
 				toContact = true;
-				isLevelSelect = false;
+				is1LevelSelect = false;
+				is2LevelSelect = false;
 				inGame = false;
 			}
 		}		
@@ -1805,7 +2036,9 @@ function MainMenu()
 				//if clicked the start button
 				if (objectInfo.collider.name == "Start")
 				{
-					toLevelSelect = true;
+					toWorldSelect = true;
+					is1LevelSelect = false;
+					is2LevelSelect = false;
 					nextLevel = true;
 					isLevelSelect = false;
 					inGame = true;
@@ -1816,7 +2049,8 @@ function MainMenu()
 				{
 					toSettings = true;
 					nextLevel = true;
-					isLevelSelect = false;
+					is1LevelSelect = false;
+					is2LevelSelect = false;
 					inGame = true;
 				}
 				
@@ -1825,7 +2059,8 @@ function MainMenu()
 				{				
 					toContact = true;
 					nextLevel = true;					
-					isLevelSelect = false;
+					is1LevelSelect = false;
+					is2LevelSelect = false;
 					inGame = true;
 				}
 				
@@ -1833,12 +2068,6 @@ function MainMenu()
 				Touch1StartPos = Vector2(0,0);
 				Touch1EndPos = Vector2(1000,1000);
 			}
-//			else
-//			{
-//				Touch1StartPos = Vector2(0,0);
-//				Touch1EndPos = Vector2(1000,1000);
-//				Touch1Tap = false;
-//			}
 			
 			//unpress level tag
 			if (iosTagDepress)
@@ -2389,7 +2618,6 @@ function LevelLose(back : boolean)
 	
 	if (!back)
 	{
-		Debug.Log("thising");
 		stopHidingFileType = true; //stop hiding that type! dog!
 	}
 	FailType.renderer.material.mainTexture = FailTexture;
@@ -2431,7 +2659,14 @@ function LevelWon()
 		}
 				
 		//wait a bit
-		toLevelSelect = true;
+		if (world == 1)
+		{
+			to1LevelSelect = true;
+		}
+		if (world == 2)
+		{
+			to2LevelSelect = true;
+		}
 		yield WaitForSeconds(3.5);
 		
 		levelWon = true;
@@ -2666,4 +2901,5 @@ function MainMenuIntroWait()
 {
 	yield WaitForSeconds(3);
 	CanZoom = true;
+	rytIntroAlready = true;
 }

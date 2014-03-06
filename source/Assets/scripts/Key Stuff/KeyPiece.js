@@ -370,6 +370,9 @@ function Parent(newParent : GameObject, numFrom : int) : IEnumerator
 //snaps this key and all it's matached keys also
 function Snap(numFrom : int) : IEnumerator
 {
+	//clear parent
+	this.transform.parent = null;
+	
 	//play click sound
 	auso.Play();
 	
