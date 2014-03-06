@@ -9,6 +9,7 @@ import Prime31; //get flurry plugin
 //objects cannot have a z larger than 100
 
 //public vars
+public var Beta : boolean; //if this is the beta build. This just skips the world selection and only alows the player world 1 stuf
 public var objectInfo : RaycastHit;
 public var selectedWorld : RaycastHit;
 public var tempSelectedWorld : RaycastHit;
@@ -262,13 +263,10 @@ function Start ()
 	{
 		isLevelSelect = true;
 	}
-	if (is1LevelSelect)
+	
+	if (Application.loadedLevel < 22)
 	{
 		world = 1;
-	}
-	if (is2LevelSelect)
-	{
-		world = 2;
 	}
 	
 	//main menu intro stuff
@@ -1005,7 +1003,14 @@ function Update ()
 				else if (Application.loadedLevelName == "w1_levelselect" || Application.loadedLevelName == "w2_levelselect")
 				{
 					transform.DetachChildren();
-					Application.LoadLevel("WorldSelect_SCE");
+					if (!Beta)
+					{
+						Application.LoadLevel("WorldSelect_SCE");
+					}
+					else
+					{
+						Application.LoadLevel("MainMenu_SCE");
+					}
 				}
 				else
 				{
@@ -1969,11 +1974,23 @@ function MainMenu()
 			//if clicked the start button
 			if (objectInfo.collider.name == "Start")
 			{
-				nextLevel = true;
-				toWorldSelect = true;
-				is1LevelSelect = false;
-				is2LevelSelect = false;
-				inGame = true;
+				if (!Beta)
+				{
+					nextLevel = true;
+					toWorldSelect = true;
+					is1LevelSelect = false;
+					is2LevelSelect = false;
+					inGame = true;
+				}
+				else
+				{
+					nextLevel = true;
+					to1LevelSelect = true;
+					is1LevelSelect = false;
+					is2LevelSelect = false;
+					inGame = true;
+				}
+				
 			}
 			
 			//if clicked the Settings button
