@@ -1084,7 +1084,7 @@ function Update ()
 		}
 		
 		//moving to the world 2 level select scene
-		if (to1LevelSelect)
+		if (to2LevelSelect)
 		{			
 			isPlayOne = true;
 			ZoomIn();
@@ -1530,6 +1530,15 @@ function WorldSelect()
 					selectedWorld = objectInfo;
 					DepressLevelTag(objectInfo, false);
 				}
+				
+				//w1
+				if (objectInfo.collider.name == "w2")
+				{
+					tagPressed = true;
+					worldSelected = true;
+					selectedWorld = objectInfo;
+					DepressLevelTag(objectInfo, false);
+				}
 			}			
 		}
 		//when letting go of the mouse then do stuff
@@ -1610,7 +1619,7 @@ function WorldSelect()
 						}
 						
 						//to world 1 level select
-						if (worldSelected && selectedWorld.collider.name == "w1")
+						if (selectedWorld.collider.name == "w1")
 						{
 							//reset tag pressed
 							tagPressed = false;
@@ -1621,7 +1630,7 @@ function WorldSelect()
 						}
 						
 						//to world 1 level select
-						if (worldSelected && selectedWorld.collider.name == "w2")
+						if (selectedWorld.collider.name == "w2")
 						{
 							//reset tag pressed
 							tagPressed = false;
@@ -1647,7 +1656,7 @@ function WorldSelect()
 			{
 				iosTagDepress = false;
 				UnpressLevelTag(depressedTag, false);
-				
+								
 				//move back to main menu
 				nextLevel = true;
 				toMainMenu = true;
