@@ -1619,7 +1619,7 @@ function WorldSelect()
 						}
 						
 						//to world 1 level select
-						if (selectedWorld.collider.name == "w1")
+						if (objectInfo.collider.name == "w1")
 						{
 							//reset tag pressed
 							tagPressed = false;
@@ -1630,7 +1630,7 @@ function WorldSelect()
 						}
 						
 						//to world 1 level select
-						if (selectedWorld.collider.name == "w2")
+						if (objectInfo.collider.name == "w2")
 						{
 							//reset tag pressed
 							tagPressed = false;
