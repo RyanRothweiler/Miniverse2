@@ -2062,12 +2062,25 @@ function MainMenu()
 				//if clicked the start button
 				if (objectInfo.collider.name == "Start")
 				{
-					toWorldSelect = true;
-					is1LevelSelect = false;
-					is2LevelSelect = false;
-					nextLevel = true;
-					isLevelSelect = false;
-					inGame = true;
+					if (!Beta)
+					{
+						toWorldSelect = true;
+						is1LevelSelect = false;
+						is2LevelSelect = false;
+						nextLevel = true;
+						isLevelSelect = false;
+						inGame = true;
+					}
+					else
+					{
+						to1LevelSelect = true;
+						toWorldSelect = false;
+						is1LevelSelect = false;
+						is2LevelSelect = false;
+						nextLevel = true;
+						isLevelSelect = false;
+						inGame = true;
+					}
 				}
 				
 				//if clicked the Settings button
