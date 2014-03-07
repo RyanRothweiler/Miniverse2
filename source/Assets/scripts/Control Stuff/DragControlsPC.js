@@ -1924,7 +1924,7 @@ function ContactMenu()
 				//twitter button
 				if (objectInfo.collider.name == "twitter")
 				{
-					PlayerPrefs.DeleteAll();
+//					PlayerPrefs.DeleteAll();
 					Application.OpenURL("https://twitter.com/RytGames");
 				}
 				
