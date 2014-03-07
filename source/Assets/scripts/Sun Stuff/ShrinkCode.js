@@ -52,7 +52,7 @@ function Update ()
 	}
 	else
 	{
-		shrinkSpeed = 0;
+		shrinkSpeed = 0.01;
 	}
 	
 	///shrink the sun

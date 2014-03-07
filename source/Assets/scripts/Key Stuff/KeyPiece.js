@@ -371,7 +371,7 @@ function Parent(newParent : GameObject, numFrom : int) : IEnumerator
 function Snap(numFrom : int) : IEnumerator
 {
 	//clear parent
-	this.transform.parent = null;
+	this.transform.parent = KeyHolder.transform;
 	
 	//play click sound
 	auso.Play();

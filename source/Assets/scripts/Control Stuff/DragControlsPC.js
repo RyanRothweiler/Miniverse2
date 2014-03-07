@@ -1014,12 +1014,13 @@ function Update ()
 				}
 				else
 				{
+					Debug.Log(World);
 					transform.DetachChildren();
-					if (World == 1)
+					if (world == 1)
 					{
 						Application.LoadLevel("w1_levelselect");
 					}
-					if (World == 2)
+					if (world == 2)
 					{
 						Application.LoadLevel("w2_levelselect");
 					}
@@ -1373,7 +1374,8 @@ function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean
 	}
 	
 	//offset each person animation
-	yield WaitForSeconds(0.1); 
+	yield;
+	yield WaitForSeconds(0.04); 
 }
 
 //check phases for automove
