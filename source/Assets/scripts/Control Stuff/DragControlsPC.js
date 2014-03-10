@@ -375,6 +375,16 @@ function Start ()
 		{
 			objects[i].transform.parent = SceneScaleController.transform;
 		}
+
+		if (objects[i].tag == "AlienShip")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
+		
+		if (objects[i].tag == "AlienShipProjectile")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
 		//red asteroids
 //		if (objects[i].name == "RedAsteroid")
 //			objects[i].transform.parent = SceneScaleController.transform;

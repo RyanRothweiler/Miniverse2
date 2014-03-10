@@ -44,6 +44,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\scripts\AlienShip\AlienShipGenerator.js" />
+     <Compile Include="Assets\scripts\AlienShip\AlienShipProjectileController.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\AsteroidController.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\RedAsteroidController.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\RedAsteroidGoal.js" />
@@ -62,8 +64,6 @@
      <Compile Include="Assets\scripts\Control Stuff\Joystick.js" />
      <Compile Include="Assets\scripts\Control Stuff\PlanetJoystick.js" />
      <Compile Include="Assets\scripts\Control Stuff\TiltControls.js" />
-     <Compile Include="Assets\scripts\Death Wall Stuff\DeathAsteroidController.js" />
-     <Compile Include="Assets\scripts\Death Wall Stuff\DeathWallGenerator.js" />
      <Compile Include="Assets\scripts\Debris Stuff\BackgroundAsteroidController.js" />
      <Compile Include="Assets\scripts\Debris Stuff\MetalScrapsDebris.js" />
      <Compile Include="Assets\scripts\Debris Stuff\SateliteDebris.js" />
@@ -76,6 +76,7 @@
      <Compile Include="Assets\scripts\Effects\ShipTeleportController.js" />
      <Compile Include="Assets\scripts\Effects\TransitionStars.js" />
      <Compile Include="Assets\scripts\Human Stuff\HumanPerson.js" />
+     <Compile Include="Assets\scripts\Human Stuff\HumanPlanet.js" />
      <Compile Include="Assets\scripts\Human Stuff\HumanShip.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyLockingController.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyPiece.js" />
