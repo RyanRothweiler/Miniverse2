@@ -27,6 +27,13 @@ function OnTriggerEnter (collision : Collider)
 			GameObject.Instantiate(dragControls.PlanetExplosion, transform.position, Quaternion(0,0,0,0)); //create explosion
 			this.SendMessage("KillPlanet"); //kill planet
 			dragControls.worldObjects = GameObject.FindGameObjectsWithTag("world"); //recreate world objects, removing the dead world
+			
+			//lost level if there is a human on this planet
+			if (transform.Find("HumanPerson") != null)
+			{
+				dragControls.LevelLose(false);
+//				dragControls.LevelLost = true;
+			}
 		}
 	}
 }

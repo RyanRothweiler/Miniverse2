@@ -1,7 +1,11 @@
 #pragma strict
 
 //public vars
+public var Rotater : boolean; //if this ship rotates
+public var RotateSpeed : float; //at what speed does this ship rotate
+
 public var DeathAsteroid : GameObject; //the death asteroid prefab
+public var ProjectileLight : GameObject; //this are distributed evenly along the line (will need to be moved for dynamic moving alien ships
 public var End : GameObject; //where the wall ends. The wall starts here.
 public var speed = 0.2; //the speed at which to move the death asteroid
 
@@ -15,22 +19,30 @@ private var projectileNum = 16;
 function Start ()
 {
 	End.transform.parent = null;
+	
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
 	PreBake(); //create and setup all the projectiles
 }
 
 function Update () 	
 {
+	//if the game isn't introing
 	if (!dragControls.halt)
 	{
 		UpdateCollider();
+		
+		//if rotating and the level isn't paused
+		if (Rotater && !dragControls.LevelPaused)
+		{
+			Rotate();
+		}
+		
 	}
 }
 
 //setup everything as if it had been already running for some time
 function PreBake()
 {
-	Debug.Log("baking");
 	//create correct number of asteroids
 	for (var i = 0; i < projectileNum; i++)
 	{
@@ -50,6 +62,14 @@ function PreBake()
 		projectile.transform.position.z = 15;
 		projectile.transform.position = Vector3(Random.Range(projectile.transform.position.x - positionRand, projectile.transform.position.x + positionRand), Random.Range(projectile.transform.position.y - positionRand, projectile.transform.position.y + positionRand), Random.Range(projectile.transform.position.z - positionRand, projectile.transform.position.z + positionRand));
 	}
+	
+	//create the lights
+	for (i = 0; i < projectileNum / 4; i++)
+	{
+		//create light
+		GameObject.Instantiate(ProjectileLight, (i * ((End.transform.position - this.transform.position) / (projectileNum / 4))) + this.transform.position, Quaternion.identity);
+	}
+	
 	preBaked = true;
 }
 
@@ -65,4 +85,11 @@ function UpdateCollider()
 	End.GetComponent(BoxCollider).center.x = 0;
 	End.GetComponent(BoxCollider).size.y = Vector3.Distance(this.transform.position, End.transform.position);
 	End.GetComponent(BoxCollider).size.z = 0.2;
+}
+
+//rotate the ship at the speed
+function Rotate()
+{
+	End.transform.parent = this.transform;
+	transform.Rotate(0,0,RotateSpeed/2);
 }
