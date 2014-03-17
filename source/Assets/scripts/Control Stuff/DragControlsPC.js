@@ -387,6 +387,11 @@ function Start ()
 		{
 			objects[i].transform.parent = SceneScaleController.transform;
 		}
+		
+		if (objects[i].tag == "Shield")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
 		//red asteroids
 //		if (objects[i].name == "RedAsteroid")
 //			objects[i].transform.parent = SceneScaleController.transform;
@@ -563,12 +568,6 @@ function Update ()
 			{
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
-//					//back arrow
-//					if (objectInfo.collider.name == "BackArrow" ||)
-//					{
-//						LevelLose(true);
-//						LevelLost = true;
-//					}
 					if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
 					{
 						worldSelected = true;
@@ -628,7 +627,7 @@ function Update ()
 			{
 				if(!TouchAutoMove)
 				{
-					if (!isLevelSelect && selectedWorld.collider != null && selectedWorld.collider.name != "BackArrow")
+					if (!isLevelSelect && selectedWorld.collider != null && (selectedWorld.collider.name != "BackArrow" && selectedWorld.collider.name != "Shield"))
 					{
 						selectedWorld.collider.GetComponent(PlanetSearcher).Selected = false;
 					}
@@ -661,7 +660,6 @@ function Update ()
 				//make sure the player clicked on a planet
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
-//					Debug.Log(selectedWorld.);
 					if (objectInfo.collider.name == "AsteroidCenter" && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != selectedWorld.collider.gameObject) //if selected an asteroid and the asteroids nearest planet is not itself
 					{
 						//if mouse didn't move
