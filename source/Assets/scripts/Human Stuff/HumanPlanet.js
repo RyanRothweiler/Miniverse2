@@ -19,8 +19,9 @@ function OnTriggerEnter (collision : Collider)
 {
 	if (!dragControls.halt)
 	{
+		Debug.Log(collision.tag);
 		//alien ship
-		if (collision.tag == "AlienShip")
+		if (collision.tag == "AlienShipProjectile")
 		{
 			//clean up scene and delete planet
 			dragControls.worldSelected = false; //world not selected

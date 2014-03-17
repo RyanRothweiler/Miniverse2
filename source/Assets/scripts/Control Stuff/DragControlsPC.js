@@ -74,6 +74,8 @@ public var PlatformPC = false;
 
 public var canMoveToWorld = true; //if can zoom to world
 public var canMoveToPlay = false; //if can zoom to play
+public var MovingToWorldView : boolean; //if currently  in the moving process
+public var MovingToPlayView : boolean; //if currently  in the moving process
 
 public var ZoomSpeed = 25; //speed which player controls zoom
 public var CamFOVStop = 39; //the field of vision to stop at when the camera is zooming in during the level intro transition
@@ -659,6 +661,7 @@ function Update ()
 				//make sure the player clicked on a planet
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
+//					Debug.Log(selectedWorld.);
 					if (objectInfo.collider.name == "AsteroidCenter" && selectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet != selectedWorld.collider.gameObject) //if selected an asteroid and the asteroids nearest planet is not itself
 					{
 						//if mouse didn't move
@@ -2555,6 +2558,8 @@ function MoveToWorldView()
 {
 	if (canMoveToWorld)
 	{
+		MovingToWorldView = true;
+		
 		FailType.transform.parent = this.transform;
 		
 		LevelPaused = true;
@@ -2574,6 +2579,8 @@ function MoveToWorldView()
 		canMoveToWorld = false;
 		canMoveToPlay = true;
 		tapCount = 0;
+		
+		MovingToWorldView = false;
 	}
 }
 
@@ -2582,6 +2589,8 @@ function MoveToPlayView()
 {	
 	if (canMoveToPlay)
 	{
+		MovingToPlayView = true;
+		
 		FailType.transform.parent = this.transform;
 		
 		LevelPaused = false;
@@ -2598,6 +2607,8 @@ function MoveToPlayView()
 		canMoveToPlay = false;
 		canMoveToWorld = true;
 		tapCount = 0;
+		
+		MovingToPlayView = false;
 	}
 }
 

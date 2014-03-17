@@ -1,15 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\AlienShip\AlienShipGenerator.js">
-    <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="638" Column="52" />
-      <File FileName="Assets\scripts\Sun Stuff\ShrinkCode.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\AlienShip\AlienShipGenerator.js" Line="93" Column="40" />
-      <File FileName="Assets\scripts\AlienShip\AlienShipProjectileController.js" Line="7" Column="33" />
-      <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="35" Column="3" />
-      <File FileName="Assets\scripts\Planet Stuff\PlanetSearcher.js" Line="228" Column="70" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

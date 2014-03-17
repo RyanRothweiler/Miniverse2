@@ -46,6 +46,7 @@
   <ItemGroup>
      <Compile Include="Assets\scripts\AlienShip\AlienShipGenerator.js" />
      <Compile Include="Assets\scripts\AlienShip\AlienShipProjectileController.js" />
+     <Compile Include="Assets\scripts\AlienShip\AlienShipSpinIndicator.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\AsteroidController.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\RedAsteroidController.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\RedAsteroidGoal.js" />
