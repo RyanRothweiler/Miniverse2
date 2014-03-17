@@ -19,7 +19,6 @@ function OnTriggerEnter (collision : Collider)
 {
 	if (!dragControls.halt)
 	{
-		Debug.Log(collision.tag);
 		//alien ship
 		if (collision.tag == "AlienShipProjectile")
 		{

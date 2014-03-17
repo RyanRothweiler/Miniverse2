@@ -56,7 +56,6 @@ function Update ()
 		if (dragControls.MovingToWorldView && !fadedIn)
 		{
 			FadeIn();
-						Debug.Log("set rotation");
 		}
 	}
 }
