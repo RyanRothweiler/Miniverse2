@@ -8,8 +8,10 @@ public var OutsidePoint : GameObject;
 //private vars
 private var dragControls : DragControlsPC;
 private var objectInfo : RaycastHit;
-private var screenMoveBuffer = Vector2(0.2,0.2); //the inset of the edge to start moving the screen
-private var speed = 0.35;
+private var screenMoveBuffer = Vector2(0.35,0.35); //the inset of the edge to start moving the screen
+private var speed = 5;
+private var moveDistx = 0.0;
+private var moveDisty = 0.0;
 
 function Start () 
 {
@@ -20,7 +22,7 @@ function Start ()
 function Update () 
 {
 	//if this is selected
-	if(Input.GetMouseButtonDown(0))
+	if(Input.GetMouseButtonDown(0) && dragControls.canMoveToWorld)
 	{
 		if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 		{
@@ -41,8 +43,10 @@ function Update ()
 	if (Selected)
 	{
 		ShieldMovement(); //move the shield
-		ScreenMovement(); //move the screen
+		
 	}
+	
+	ScreenMovement(); //move the screen
 }
 
 //what to do when this is currently selected
@@ -91,27 +95,88 @@ function ShieldMovement()
 //move the screen when this gets close to the edges
 function ScreenMovement()
 {
+	var moveCap = 3;
+	
+	var hittingx = 0;
+	var hittingy = 0;
+	
 	//get the objects position in screen space, dug
 	var screenPoint = Camera.main.WorldToViewportPoint(OutsidePoint.transform.position);
 	
 	//shield on left of screen
 	if (screenPoint.x < screenMoveBuffer.x)
 	{
-		Camera.main.transform.position.x += speed;
+		hittingx = -1;
 	}
 	//shield on right of screen
 	if (screenPoint.x > (1 - screenMoveBuffer.x))
 	{
-		Camera.main.transform.position.x -= speed;
+		hittingx = 1;
 	}
 	//shield on bottom of screen
 	if (screenPoint.y < screenMoveBuffer.y)
 	{
-		Camera.main.transform.position.y -= speed;
+		hittingy = -1;
 	}
 	//shield on top of screen
 	if (screenPoint.y > (1 - screenMoveBuffer.y))
 	{
-		Camera.main.transform.position.y += speed;
+		hittingy = 1;
+	}
+	
+	//x
+	//if not hitting then slow down the move distance
+	if (hittingx == 0)
+	{
+		if (Mathf.Abs(moveDistx) < 0.01)
+		{
+			moveDistx = 0;
+		}
+		else
+		{
+			moveDistx = Mathf.Lerp(moveDistx, 0, Time.deltaTime * 10);
+		}
+	}
+	else //if hitting then increase the move distance
+	{
+		if (Mathf.Abs(moveDistx) < moveCap)
+		{
+			moveDistx += 1 * hittingx;
+		}
+		else
+		{
+			moveDistx = moveCap * hittingx;
+		}
+	}
+	
+	//y
+	//if not hitting then slow down the move distance
+	if (hittingy == 0)
+	{
+		if (Mathf.Abs(moveDisty) < 0.01)
+		{
+			moveDisty = 0;
+		}
+		else
+		{
+			moveDisty = Mathf.Lerp(moveDisty, 0, Time.deltaTime * 10);
+		}
+	}
+	else //if hitting then increase the move distance
+	{
+		if (Mathf.Abs(moveDisty) < moveCap)
+		{
+			moveDisty += 1 * hittingy;
+		}
+		else
+		{
+			moveDisty = moveCap * hittingy;
+		}
+	}
+	
+	if (Selected)
+	{
+		Camera.main.transform.position.x = Mathf.Lerp(Camera.main.transform.position.x, (Camera.main.transform.position.x + moveDistx), Time.deltaTime * speed);
+		Camera.main.transform.position.y = Mathf.Lerp(Camera.main.transform.position.y, (Camera.main.transform.position.y + moveDisty), Time.deltaTime * speed);
 	}
 }

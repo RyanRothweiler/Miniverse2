@@ -134,6 +134,7 @@ public var worldObjects : GameObject[];
 public var sunObjects : GameObject[];
 private var dummyChildList : Component[];
 private var personObjects : GameObject[];
+private var shieldObjects : GameObject[];
 
 //booleans
 private var peopleDragging : boolean;
@@ -343,6 +344,7 @@ function Start ()
 	worldObjects = GameObject.FindGameObjectsWithTag("world");
 	sunObjects = GameObject.FindGameObjectsWithTag("sun");
 	personObjects = GameObject.FindGameObjectsWithTag("humanPerson");
+	shieldObjects = GameObject.FindGameObjectsWithTag("Shield");
 
 	//This is kinda important, it keeps everything properly parented so this sorting step is necessary
 	for (i = 0; i < objects.length; i++)
@@ -527,19 +529,34 @@ function Update ()
 					touchTarget = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, WorldZDepth - Camera.main.transform.position.z)); 
 					touchTarget.z = CameraLocDepth;   
 					
+					//go through world objects
 					for (var i = 0; i < worldObjects.Length; i++)
 					{
+						//zoom into asteroid
 						if (worldObjects[i].name == "Asteroid" && Vector3.Distance(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.TransformPoint(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.position), touchTarget) < smallDist)
 						{
 							//set new smallest planet
 							smallDist = Vector3.Distance(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.TransformPoint(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.position), touchTarget);
 							closestPla = worldObjects[i].GetComponent(AsteroidController).AsteroidCenter;
 						}
+
+						//zoom into a human planet
 						if (worldObjects[i].name == "HumanPlanet" && Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
 						{
 							//set new smallest planet
 							smallDist = Vector3.Distance(worldObjects[i].transform.position, touchTarget);
 							closestPla = worldObjects[i];
+						}
+					}
+					//go through shield objects also
+					for (i = 0; i < shieldObjects.Length; i++)
+					{
+						//zoom into a shield
+						if (shieldObjects[i].name == "Shield" && Vector3.Distance(shieldObjects[i].transform.TransformPoint(shieldObjects[i].transform.Find("Shield_MO").transform.position), touchTarget) < smallDist)
+						{
+							//set new smallest planet
+							smallDist = Vector3.Distance(shieldObjects[i].Find("Shield_MO").transform.position, touchTarget);
+							closestPla = shieldObjects[i].transform.Find("Shield_MO").gameObject;
 						}
 					}
 					 
@@ -712,13 +729,34 @@ function Update ()
 								touchTarget = Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y, WorldZDepth - Camera.main.transform.position.z));
 								touchTarget.z = CameraLocDepth;   
 								
+								//go through world objects
 								for (i = 0; i < worldObjects.Length; i++)
 								{
-									if ((worldObjects[i].name != "humanShip") && (Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist))
+									//zoom into asteroid
+									if (worldObjects[i].name == "Asteroid" && Vector3.Distance(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.TransformPoint(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.position), touchTarget) < smallDist)
+									{
+										//set new smallest planet
+										smallDist = Vector3.Distance(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.TransformPoint(worldObjects[i].GetComponent(AsteroidController).AsteroidCenter.transform.position), touchTarget);
+										closestPla = worldObjects[i].GetComponent(AsteroidController).AsteroidCenter;
+									}
+			
+									//zoom into a human planet
+									if (worldObjects[i].name == "HumanPlanet" && Vector3.Distance(worldObjects[i].transform.position, touchTarget) < smallDist)
 									{
 										//set new smallest planet
 										smallDist = Vector3.Distance(worldObjects[i].transform.position, touchTarget);
 										closestPla = worldObjects[i];
+									}
+								}
+								//go through shield objects also
+								for (i = 0; i < shieldObjects.Length; i++)
+								{
+									//zoom into a shield
+									if (shieldObjects[i].name == "Shield" && Vector3.Distance(shieldObjects[i].transform.TransformPoint(shieldObjects[i].transform.Find("Shield_MO").transform.position), touchTarget) < smallDist)
+									{
+										//set new smallest planet
+										smallDist = Vector3.Distance(shieldObjects[i].Find("Shield_MO").transform.position, touchTarget);
+										closestPla = shieldObjects[i].transform.Find("Shield_MO").gameObject;
 									}
 								}
 								 
