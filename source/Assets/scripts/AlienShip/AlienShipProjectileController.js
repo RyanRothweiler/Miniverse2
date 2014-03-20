@@ -1,6 +1,7 @@
 #pragma strict
 
 //public vars
+public var inPlay : boolean; //if this projectile
 public var move : Vector3; //the speed and direction to move this each frame
 public var end : GameObject; //the end of the line
 public var start : GameObject; //the start of the line
@@ -22,15 +23,43 @@ function Update ()
 	if (!dragControls.LevelPaused)
 	{
 		this.transform.position += move;
+		
+		//check length death
+		if (Vector3.Distance(this.transform.position, start.transform.position) > Vector3.Distance(end.transform.position, start.transform.position))
+		{
+			PushAway();
+		}
 	}
-	
-	//check death
-	if (Vector3.Distance(this.transform.position, start.transform.position) > Vector3.Distance(end.transform.position, start.transform.position))
+}
+
+//if collide with something
+function OnTriggerEnter (collision : Collider) 
+{
+	if (!Camera.main.GetComponent(DragControlsPC).halt && !Camera.main.GetComponent(DragControlsPC).LevelPaused)
 	{
-		//move back to start position
-		startPos = start.GetComponent(AlienShipGenerator).Center;
-		transform.position = Vector3(Random.Range(startPos.x - positionRand, startPos.x + positionRand), Random.Range(startPos.y - positionRand, startPos.y + positionRand), Random.Range(startPos.z - positionRand, startPos.z + positionRand));
-		move = (start.transform.position - end.transform.position).normalized * start.GetComponent(AlienShipGenerator).speed * -1; //get new direction
-		transform.rotation = Quaternion.LookRotation((start.transform.position - end.transform.position), start.transform.up); //get new orientation
+		//if collide with a shield the
+		if (collision.name == "Shield")
+		{
+			PushAway();
+		}
 	}
+}
+
+//pull this projectile into play
+function PullToPlay()
+{
+	inPlay = true;
+	
+	//move back to start position
+	startPos = start.GetComponent(AlienShipGenerator).Center;
+	transform.position = Vector3(Random.Range(startPos.x - positionRand, startPos.x + positionRand), Random.Range(startPos.y - positionRand, startPos.y + positionRand), Random.Range(startPos.z - positionRand, startPos.z + positionRand));
+	move = (start.transform.position - end.transform.position).normalized * start.GetComponent(AlienShipGenerator).speed * -1; //get new direction
+	transform.rotation = Quaternion.LookRotation((start.transform.position - end.transform.position), start.transform.up); //get new orientation
+}
+
+//push this projectile away from play
+function PushAway()
+{
+	inPlay = false;
+	transform.position = Vector3(1000,1000,1000);
 }

@@ -12,6 +12,7 @@ private var screenMoveBuffer = Vector2(0.35,0.35); //the inset of the edge to st
 private var speed = 5;
 private var moveDistx = 0.0;
 private var moveDisty = 0.0;
+private var SunChain : MathCircleChain; //the chain of suns that this shield can be on
 
 function Start () 
 {
@@ -58,8 +59,11 @@ function ShieldMovement()
 	{
 		if (Vector3.Distance(dragControls.sunObjects[i].transform.position, OutsidePoint.transform.position) < sDist)
 		{
-			sDist = Vector3.Distance(dragControls.sunObjects[i].transform.position, OutsidePoint.transform.position);
-			NearestSun = dragControls.sunObjects[i];
+			if (CanMoveTo(dragControls.sunObjects[i]))
+			{
+				sDist = Vector3.Distance(dragControls.sunObjects[i].transform.position, OutsidePoint.transform.position);
+				NearestSun = dragControls.sunObjects[i];
+			}
 		}
 	}
 	//get the point to look at aka mouse position.
@@ -178,5 +182,18 @@ function ScreenMovement()
 	{
 		Camera.main.transform.position.x = Mathf.Lerp(Camera.main.transform.position.x, (Camera.main.transform.position.x + moveDistx), Time.deltaTime * speed);
 		Camera.main.transform.position.y = Mathf.Lerp(Camera.main.transform.position.y, (Camera.main.transform.position.y + moveDisty), Time.deltaTime * speed);
+	}
+}
+
+//true if can move to the given sun, false if can't. just checks if the given sun intersects the current sun
+function CanMoveTo(toSun : GameObject) : boolean
+{
+	if (Vector3.Distance(NearestSun.transform.position, toSun.transform.position) < (NearestSun.GetComponent(ShrinkCode).radiiSize + toSun.GetComponent(ShrinkCode).radiiSize))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }

@@ -1,10 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Shield Stuff\ShieldController.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="733" Column="14" />
-      <File FileName="Assets\scripts\Shield Stuff\ShieldController.js" Line="30" Column="5" />
-      <File FileName="Assets\scripts\Planet Stuff\PlanetSearcher.js" Line="145" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Shield Stuff\ShieldController.js" Line="51" Column="2" />
+      <File FileName="Assets\scripts\Planet Stuff\PlanetSearcher.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\AlienShip\AlienShipProjectileController.js" Line="38" Column="97" />
+      <File FileName="Assets\scripts\AlienShip\AlienShipGenerator.js" Line="167" Column="101" />
+      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\Math Circle Stuff\MathCircle.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\Math Circle Stuff\MathSunRadiiCombine.js" Line="137" Column="13" />
+      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\Math Circle Stuff\MathCircleChain.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
