@@ -15,7 +15,6 @@ private var objectPos : Vector3;
 private var gameObjects = new Array();
 private var nearestDistanceSqr : float; 
 private var distanceSqr : float;
-private var dragControls : DragControlsPC;
 private var found : boolean;
 private var radiiVirgin : boolean;;
 private var indicatorFirstShow = true;
@@ -23,6 +22,8 @@ private var indicatorFirstHide = true;
 private var oldRot : Vector3;
 private var newRot : Vector3;
 private var lookAtPos : Vector3; //the moving position target for the porximity indicator to look at
+private var dragControls : DragControlsPC;
+
 
 function Start ()
 {

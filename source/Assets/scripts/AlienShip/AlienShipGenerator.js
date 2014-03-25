@@ -15,12 +15,13 @@ public var speed = 0.2; //the speed at which to move the death asteroid
 private var dragControls : DragControlsPC;
 private var direction : Vector3;
 private var positionRand = 0.1;
-private var projectileNum = 15;
+private var projectileNum : int;
 private var NewProjectileDist : float; //the distance at which to add a new projectile
 
 function Start ()
 {
 	End.transform.parent = null;
+	projectileNum = Vector3.Distance(End.transform.position, this.transform.position) * 1.5;
 	
 	Center = transform.Find("EmitterMO").transform.position; //get initial center
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
@@ -54,58 +55,51 @@ function PreBake()
 	var hit = Physics.Raycast(Center, (Center - End.transform.position)*-1, hitObj, Vector3.Distance(Center, End.transform.position));
 	
 	//if hit then distribute projectiles between this and the shield that hit
+	for (var i = 0; i < projectileNum; i++)
+	{
+		//create a projectile
+		var obj = GameObject.Instantiate(DeathAsteroid, Vector3(Random.Range(Center.x - positionRand, Center.x + positionRand), Random.Range(Center.y - positionRand, Center.y + positionRand), Random.Range(Center.z - positionRand, Center.z + positionRand)), Quaternion.identity);
+		obj.transform.rotation = Quaternion.LookRotation((this.transform.position - End.transform.position), this.transform.up);
+		
+		var projectile = obj.GetComponent(AlienShipProjectileController);
+		projectile.move = (this.transform.position - End.transform.position).normalized * speed * -1;
+		projectile.end = this.End;
+		projectile.start = this.gameObject;
+		projectile.positionRand = positionRand;
+		
+		//distribute the projectile evenly along it's direction
+		projectile.transform.position = (i * ((End.transform.position - Center) / projectileNum)) + Center;
+		//randomize the position a bit
+		projectile.transform.position.z = 15;
+		projectile.transform.position = Vector3(Random.Range(projectile.transform.position.x - positionRand, projectile.transform.position.x + positionRand), Random.Range(projectile.transform.position.y - positionRand, projectile.transform.position.y + positionRand), Random.Range(projectile.transform.position.z - positionRand, projectile.transform.position.z + positionRand));
+	}
+	
+	//if hit then push away the projectiles behind the shield
+	var projectiles = GameObject.FindGameObjectsWithTag("AlienShipProjectile");
 	if (hit && hitObj.collider.name == "Shield")
 	{
-		for (var i = 0; i < projectileNum; i++)
+		for (var jectile : GameObject in projectiles)
 		{
-			//create a projectile
-			var obj = GameObject.Instantiate(DeathAsteroid, Vector3(Random.Range(Center.x - positionRand, Center.x + positionRand), Random.Range(Center.y - positionRand, Center.y + positionRand), Random.Range(Center.z - positionRand, Center.z + positionRand)), Quaternion.identity);
-			obj.transform.rotation = Quaternion.LookRotation((this.transform.position - End.transform.position), this.transform.up);
-			
-			var projectile = obj.GetComponent(AlienShipProjectileController);
-			projectile.move = (this.transform.position - End.transform.position).normalized * speed * -1;
-			projectile.end = this.End;
-			projectile.start = this.gameObject;
-			projectile.positionRand = positionRand;
-			
-			//distribute the projectile evenly along it's direction
-			projectile.transform.position = (i * ((hitObj.transform.Find("OutsidePoint").position - Center) / projectileNum)) + Center;
-			//randomize the position a bit
-			projectile.transform.position.z = 15;
-			projectile.transform.position = Vector3(Random.Range(projectile.transform.position.x - positionRand, projectile.transform.position.x + positionRand), Random.Range(projectile.transform.position.y - positionRand, projectile.transform.position.y + positionRand), Random.Range(projectile.transform.position.z - positionRand, projectile.transform.position.z + positionRand));
-		}
-	}
-	else //else just distribute projectiles between this and the end
-	{
-		for (i = 0; i < projectileNum; i++)
-		{
-			//create a projectile
-			obj = GameObject.Instantiate(DeathAsteroid, Vector3(Random.Range(Center.x - positionRand, Center.x + positionRand), Random.Range(Center.y - positionRand, Center.y + positionRand), Random.Range(Center.z - positionRand, Center.z + positionRand)), Quaternion.identity);
-			obj.transform.rotation = Quaternion.LookRotation((this.transform.position - End.transform.position), this.transform.up);
-			
-			projectile = obj.GetComponent(AlienShipProjectileController);
-			projectile.move = (this.transform.position - End.transform.position).normalized * speed * -1;
-			projectile.end = this.End;
-			projectile.start = this.gameObject;
-			projectile.positionRand = positionRand;
-			
-			//distribute the projectile evenly along it's direction
-			projectile.transform.position = (i * ((End.transform.position - Center) / projectileNum)) + Center;
-			//randomize the position a bit
-			projectile.transform.position.z = 15;
-			projectile.transform.position = Vector3(Random.Range(projectile.transform.position.x - positionRand, projectile.transform.position.x + positionRand), Random.Range(projectile.transform.position.y - positionRand, projectile.transform.position.y + positionRand), Random.Range(projectile.transform.position.z - positionRand, projectile.transform.position.z + positionRand));
+			//find a projectile that uses this as a start
+			if (jectile.GetComponent(AlienShipProjectileController).start == this.gameObject)
+			{
+				//if the distance to the hit shield is less than the distance to the start then push the projectile
+				if (Vector3.Distance(jectile.transform.position, hitObj.transform.position) < Vector3.Distance(jectile.transform.position, jectile.GetComponent(AlienShipProjectileController).start.transform.position))
+				{
+					jectile.GetComponent(AlienShipProjectileController).PushAway();
+				}
+			}
 		}
 	}
 	
 	//find the closest projectile to another projectile and make the NewProjectileDist that distance
 	var sDist = 1000.0;
 	var sObj : GameObject;
-	var projectiles = GameObject.FindGameObjectsWithTag("AlienShipProjectile");
 	//first find just any projectile that uses this as a start
 	var proj1 : GameObject;
 	for (var jectile : GameObject in projectiles)
 	{
-		if (jectile.GetComponent(AlienShipProjectileController).start == this.gameObject)
+		if (jectile.GetComponent(AlienShipProjectileController).start == this.gameObject && jectile.transform.position != Vector3(1000,1000,1000))
 		{
 			proj1 = jectile; 
 		}
@@ -113,7 +107,7 @@ function PreBake()
 	//now find the projectile closest to that proj1
 	for (var jectile : GameObject in projectiles)
 	{
-		if (jectile != proj1 && jectile.GetComponent(AlienShipProjectileController).start == this.gameObject && Vector3.Distance(jectile.transform.position, proj1.transform.position) < sDist)
+		if (jectile.transform.position != Vector3(1000,1000,1000) && jectile != proj1 && jectile.GetComponent(AlienShipProjectileController).start == this.gameObject && Vector3.Distance(jectile.transform.position, proj1.transform.position) < sDist)
 		{
 			sDist = Vector3.Distance(jectile.transform.position, proj1.transform.position);
 			sObj = jectile;

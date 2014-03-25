@@ -4,12 +4,13 @@
 public var Selected = false;
 public var NearestSun : GameObject; 
 public var OutsidePoint : GameObject;
+public var Asteroid : boolean; //if this shield is attached to an asteroid
 
 //private vars
 private var dragControls : DragControlsPC;
 private var objectInfo : RaycastHit;
 private var screenMoveBuffer = Vector2(0.35,0.35); //the inset of the edge to start moving the screen
-private var speed = 5;
+private var speed = 6;
 private var moveDistx = 0.0;
 private var moveDisty = 0.0;
 private var SunChain : MathCircleChain; //the chain of suns that this shield can be on
@@ -27,7 +28,7 @@ function Update ()
 	{
 		if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 		{
-			if (objectInfo.collider.tag == "Shield")
+			if (objectInfo.collider.tag == "Shield" && objectInfo.collider.gameObject == this.gameObject)
 			{
 				Selected = true;
 			}
@@ -35,19 +36,29 @@ function Update ()
 	}
 	
 	//unselecting
-	if(Input.GetMouseButtonUp(0))
+	if(Input.GetMouseButtonUp(0)) //through mouse button
 	{
 		Selected = false;
 	}
+	if (Asteroid && !NearestSun.GetComponent(PlanetSearcher).Alive) //through death of the nearest sun
+	{
+		Selected = false;
+	}
+	
 	
 	//if selected
 	if (Selected)
 	{
 		ShieldMovement(); //move the shield
-		
 	}
 	
-	ScreenMovement(); //move the screen
+	//if this is centered on an asteroid then stay center on it
+	if (Asteroid)
+	{
+		this.transform.position = NearestSun.transform.position;
+	}
+	
+	ScreenMovement(); //the screen's movement should decay even if not selected	
 }
 
 //what to do when this is currently selected
@@ -55,16 +66,19 @@ function ShieldMovement()
 {	
 	//first find the sun nearest to the outside point and center this on that
 	var sDist = 1000;
+	var nextSun : GameObject;
 	for (var i = 0; i < dragControls.sunObjects.length; i++)
 	{
 		if (Vector3.Distance(dragControls.sunObjects[i].transform.position, OutsidePoint.transform.position) < sDist)
 		{
-			if (CanMoveTo(dragControls.sunObjects[i]))
-			{
-				sDist = Vector3.Distance(dragControls.sunObjects[i].transform.position, OutsidePoint.transform.position);
-				NearestSun = dragControls.sunObjects[i];
-			}
+			sDist = Vector3.Distance(dragControls.sunObjects[i].transform.position, OutsidePoint.transform.position);
+			nextSun = dragControls.sunObjects[i];
+
 		}
+	}
+	if (CanMoveTo(nextSun)) //if the next sun intersecs with the current sun then set the next sun as the current sun
+	{
+		NearestSun = nextSun;
 	}
 	//get the point to look at aka mouse position.
 	var lookPoint = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, dragControls.WorldZDepth - Camera.main.transform.position.z));
@@ -78,18 +92,31 @@ function ShieldMovement()
 			closeNum++;
 		}
 	}
-	if (closeNum < 2)
+	if (closeNum < 2 && !Asteroid)
 	{
 		this.transform.position = Vector3.Lerp(this.transform.position, NearestSun.transform.position, Time.deltaTime * 13); //then lerp the location
 	}
 	
 	//point this at the cursor
-	if ((Vector3.Distance(NearestSun.transform.position, lookPoint) > (NearestSun.GetComponent(ShrinkCode).radiiSize - 1.5)))
+	if (!Asteroid)
 	{
-		var oldRot = this.transform.rotation; //get old rotation
+		if ((Vector3.Distance(NearestSun.transform.position, lookPoint) > (NearestSun.GetComponent(ShrinkCode).radiiSize - 1.5)))
+		{
+			var oldRot = this.transform.rotation; //get old rotation
+			
+			this.transform.LookAt(lookPoint, Vector3(0,0,-1)); //set and get new rotation
+			var newRot = this.transform.rotation;
+			
+			//lerp between the old and new
+			this.transform.rotation = Quaternion.Lerp(oldRot, newRot, Time.deltaTime * 10);
+		}
+	}
+	else
+	{
+		oldRot = this.transform.rotation; //get old rotation
 		
 		this.transform.LookAt(lookPoint, Vector3(0,0,-1)); //set and get new rotation
-		var newRot = this.transform.rotation;
+		newRot = this.transform.rotation;
 		
 		//lerp between the old and new
 		this.transform.rotation = Quaternion.Lerp(oldRot, newRot, Time.deltaTime * 10);
@@ -188,9 +215,16 @@ function ScreenMovement()
 //true if can move to the given sun, false if can't. just checks if the given sun intersects the current sun
 function CanMoveTo(toSun : GameObject) : boolean
 {
-	if (Vector3.Distance(NearestSun.transform.position, toSun.transform.position) < (NearestSun.GetComponent(ShrinkCode).radiiSize + toSun.GetComponent(ShrinkCode).radiiSize))
+	if (!Asteroid)
 	{
-		return true;
+		if (Vector3.Distance(NearestSun.transform.position, toSun.transform.position) < (NearestSun.GetComponent(ShrinkCode).radiiSize + toSun.GetComponent(ShrinkCode).radiiSize))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	else
 	{
