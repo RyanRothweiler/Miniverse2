@@ -9,7 +9,7 @@ public var preBaked = false;
 public var DeathAsteroid : GameObject; //the death asteroid prefab
 public var ProjectileLight : GameObject; //this are distributed evenly along the line (will need to be moved for dynamic moving alien ships
 public var End : GameObject; //where the wall ends. The wall starts here.
-public var speed = 0.2; //the speed at which to move the death asteroid
+public var speed = 0.8; //the speed at which to move the death asteroid
 
 //private vars
 private var dragControls : DragControlsPC;

@@ -1,15 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Asteroid Stuff\AsteroidController.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\AlienShip\AlienShipGenerator.js">
     <Files>
       <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Shield Stuff\ShieldController.js" Line="47" Column="2" />
+      <File FileName="Assets\scripts\Shield Stuff\ShieldController.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\AlienShip\AlienShipProjectileController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\AlienShip\AlienShipGenerator.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\AlienShip\AlienShipGenerator.js" Line="12" Column="23" />
       <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Planet Stuff\PlanetSearcher.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Asteroid Stuff\AsteroidController.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Asteroid Stuff\AsteroidProjectileCollision.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Planet Stuff\planetLifeIndicator.js" Line="18" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
