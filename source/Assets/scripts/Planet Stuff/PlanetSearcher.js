@@ -7,6 +7,7 @@ public var Alive = true; //if this planet is alive
 public var EndLevel = false; //if hit the end level cube
 public var Invincible = false; //does exactly what you think it does
 public var Draggable = true; //if the planet is draggable or not. used for level select planets
+public var Wormhole : boolean;
 public var nearestPlanet : GameObject;
 public var selectLine : GameObject; //everything must have its own select line
 public var PlanetExplosion : GameObject; //the explosion prefab

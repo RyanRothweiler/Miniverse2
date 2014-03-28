@@ -8,6 +8,7 @@ public var RotateSpeed = 1.0; //the speed of the asteroid
 public var nearestPlanet : GameObject;
 public var selectLine : GameObject; //the proximity indicator
 public var RadiiObj : GameObject; //the radii object. no shit.
+public var Wormhole : GameObject;
 
 //private vars
 private var fVector : Vector3;
@@ -59,6 +60,12 @@ function Start ()
 
 function Update () 
 {
+	//if this is a wormhole then stay parented to it
+//	if (Wormhole)
+//	{
+//		this.transform.parent = Wormhole.transform;
+//	}
+	
 	//animation pausing
 	if (!dragControls.LevelPaused)
 	{

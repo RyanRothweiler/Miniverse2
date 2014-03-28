@@ -394,6 +394,10 @@ function Start ()
 		{
 			objects[i].transform.parent = SceneScaleController.transform;
 		}
+		if (objects[i].tag == "Wormhole")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
 		//red asteroids
 //		if (objects[i].name == "RedAsteroid")
 //			objects[i].transform.parent = SceneScaleController.transform;
@@ -1264,12 +1268,19 @@ function SetNextLevel()
 function MovePeople(Asteroid : boolean)
 {
 	if (canMoveToWorld && !MovingPeople)
-	{
+	{	
 		MovingPeople = true;
 		//Get the childCount and store it in num
 		tempSelectedWorld = selectedWorld;
 		MoveNum = tempSelectedWorld.transform.childCount;
 		MoveN = 0;
+		var wormhole = false;
+		
+		//if an asteroid then there is a possibility it's actually a wormhole
+		if (!Asteroid)
+		{
+			wormhole = tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.GetComponent(PlanetSearcher).Wormhole;
+		}
 			
 		//find how many children are already on the planet being moved to
 		MoveDummyNum = 0;
@@ -1301,22 +1312,22 @@ function MovePeople(Asteroid : boolean)
 				//if moving to the human ship then turn hide the person
 				if (tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.gameObject.name == "humanShip")
 				{
-					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true, MoveI));
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true, MoveI, wormhole));
 				}
 				else
 				{
-					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false, MoveI));
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false, MoveI, wormhole));
 				}
 			}
 			else //else an asteroid
 			{
 				if (tempSelectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.name == "humanShip")
 				{
-					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true, MoveI));
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), true, MoveI, wormhole));
 				}
 				else
 				{
-					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false, MoveI));
+					yield StartCoroutine(ReparentChild(dummyChildList[MoveI].gameObject, (-25 * MoveN) + (-25 * MoveDummyNum), false, MoveI, wormhole));
 				}
 			}
 			MoveN++;
@@ -1343,7 +1354,7 @@ function MovePeople(Asteroid : boolean)
 	MovingPeople = false;
 }
 
-function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean, personNum : int) //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
+function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean, personNum : int, toWormhole : boolean) //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
 {
 	//teleport out 'from' child
 	fromChild.GetComponent(HumanPerson).TeleportOut(personNum);
@@ -1373,19 +1384,38 @@ function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean
 			dummyObj.transform.localScale = Vector3(1,1,1);
 		}
 	
-		//planet to asteroid
+		//planet to asteroid (or planet to wormhole)
 		if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.name == "AsteroidCenter")
 		{
-			dummyObj = GameObject.Instantiate(HumanPersonFab, selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.position, Quaternion(0,0,0,0));
-			dummyObj.transform.position = selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.position;
-			dummyObj.transform.parent = selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform;
-			dummyObj.GetComponent(HumanPerson).TeleportIn();
-			
-			//offset the person rotation
-			dummyObj.transform.Rotate(0, 0, rotOffset, Space.Self);
-			
-			//reset person scale and rotate up
-			dummyObj.transform.localScale = Vector3(1.2,1.2,1.2);
+			if (!toWormhole) //to asteroid
+			{
+				dummyObj = GameObject.Instantiate(HumanPersonFab, selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.position, Quaternion(0,0,0,0));
+				dummyObj.transform.position = selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.position;
+				dummyObj.transform.parent = selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform;
+				dummyObj.GetComponent(HumanPerson).TeleportIn();
+				
+				//offset the person rotation
+				dummyObj.transform.Rotate(0, 0, rotOffset, Space.Self);
+				
+				//reset person scale and rotate up
+				dummyObj.transform.localScale = Vector3(1.2,1.2,1.2);
+			}
+			else //to wormhole
+			{
+				var hole = selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.parent.parent.GetComponent(AsteroidController).Wormhole;
+				var holeto = hole.GetComponent(WormholeController_SCR).TunnelTo.GetComponent(WormholeController_SCR).ChildAsteroid;
+				
+				dummyObj = GameObject.Instantiate(HumanPersonFab, selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.position, Quaternion(0,0,0,0));
+				dummyObj.transform.position = holeto.transform.position;
+				dummyObj.transform.parent = holeto.transform;
+				dummyObj.GetComponent(HumanPerson).TeleportIn();
+				
+				//offset the person rotation
+				dummyObj.transform.Rotate(0, 0, rotOffset, Space.Self);
+				
+				//reset person scale and rotate up
+				dummyObj.transform.localScale = Vector3(1.2,1.2,1.2);
+			}
 		}
 	}
 	

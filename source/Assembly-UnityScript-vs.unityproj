@@ -44,9 +44,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\scripts\AlienShip\AlienShipGenerator.js" />
-     <Compile Include="Assets\scripts\AlienShip\AlienShipProjectileController.js" />
-     <Compile Include="Assets\scripts\AlienShip\AlienShipSpinIndicator.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\AsteroidController.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\AsteroidProjectileCollision.js" />
      <Compile Include="Assets\scripts\Asteroid Stuff\RedAsteroidController.js" />
@@ -110,7 +107,6 @@
      <Compile Include="Assets\scripts\Planet Stuff\PlanetController.js" />
      <Compile Include="Assets\scripts\Planet Stuff\PlanetSearcher.js" />
      <Compile Include="Assets\scripts\Planet Stuff\planetLifeIndicator.js" />
-     <Compile Include="Assets\scripts\Shield Stuff\ShieldController.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\AnywhereTutorial.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\ArrowStrip.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\EyesTutorialPlane.js" />
@@ -148,6 +144,11 @@
      <Compile Include="Assets\scripts\UI Stuff\TextTypeEffect.js" />
      <Compile Include="Assets\scripts\UI Stuff\WarningController.js" />
      <Compile Include="Assets\scripts\UI Stuff\ZoomStarStreaks.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipGenerator.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipProjectileController.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipSpinIndicator.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\Shield Stuff\ShieldController.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js" />
      <None Include="Assets\shaders\RampRim.shader" />
      <None Include="Assets\shaders\CustFontShader.shader" />
      <None Include="Assets\shaders\RampRimSpecBump.shader" />
