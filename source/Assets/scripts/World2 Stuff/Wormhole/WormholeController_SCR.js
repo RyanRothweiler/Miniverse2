@@ -4,6 +4,7 @@
 public var TunnelTo : GameObject; //where this wormhole tunnels to
 public var ChildAsteroid : GameObject; //the child asteroid used as sort of a dummy to make these work
 public var Dot : GameObject;
+public var SendDots = true;
 
 public var DotSend : GameObject;
 public var DotReceive : GameObject;
@@ -17,8 +18,11 @@ function Start ()
 	//slow anim speed
 	transform.Find("WormholeMO/Wormhole_MO").animation["Default Take"].speed = 0.1;
 	
-	projectileNum = Vector3.Distance(this.transform.position, TunnelTo.transform.position) * 1;
-	PlaceDots();
+	if (SendDots)
+	{
+		projectileNum = Vector3.Distance(this.transform.position, TunnelTo.transform.position) * 1;
+		PlaceDots();
+	}
 }
 
 function Update () 
