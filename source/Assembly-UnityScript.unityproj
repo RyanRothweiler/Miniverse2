@@ -148,6 +148,7 @@
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipProjectileController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipSpinIndicator.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Shield Stuff\ShieldController.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\Wormhole\Dot_SCR.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js" />
      <None Include="Assets\shaders\RampRim.shader" />
      <None Include="Assets\shaders\CustFontShader.shader" />

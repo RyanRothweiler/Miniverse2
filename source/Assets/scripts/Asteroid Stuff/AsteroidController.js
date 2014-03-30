@@ -59,13 +59,7 @@ function Start ()
 }
 
 function Update () 
-{
-	//if this is a wormhole then stay parented to it
-//	if (Wormhole)
-//	{
-//		this.transform.parent = Wormhole.transform;
-//	}
-	
+{	
 	//animation pausing
 	if (!dragControls.LevelPaused)
 	{
@@ -108,15 +102,14 @@ function Update ()
 	
 	//other stuff
 	if (transform.parent == null)
-	{
+	{		
 		//reset variables
 		nearestDistanceSqr = Mathf.Infinity;
 	    gameObjects = dragControls.worldObjects;
 	    nearestPlanet = AsteroidCenter;
 	    distanceSqr = 0.0;
 	    objectPos = Vector3.zero;
-	    found = false;
-	    
+	    found = false;	    
 	
 	    // loop through each tagged object, remembering nearest one found
 	    for (var obj : GameObject in gameObjects) 
@@ -157,7 +150,7 @@ function Update ()
 		        //reset nearest planet
 		        nearestPlanet = nearestPlanet.GetComponent(AsteroidController).AsteroidCenter;
 		        
-		        if (indicatorFirstShow)
+		        if (!Wormhole && indicatorFirstShow)
 				{
 					indicatorFirstShow = false;
 					indicatorFirstHide = true;
@@ -181,7 +174,7 @@ function Update ()
 			}
 			else //if found a planet
 			{
-				if (indicatorFirstShow)
+		        if (!Wormhole && indicatorFirstShow)
 				{
 					indicatorFirstShow = false;
 					indicatorFirstHide = true;
@@ -213,7 +206,7 @@ function Update ()
 				selectLine.GetComponentInChildren(ProximityIndicator).Hide();
 				lookAtPos = Vector3.zero;
 			}
-		}
+		}		
 	}
 }
 
