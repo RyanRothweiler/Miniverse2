@@ -250,13 +250,6 @@ function OnTriggerEnter(info : Collider)
 		transform.position = Vector3(1000, 1000, 1000);
 		transform.gameObject.tag = "DEAD"; 
 	}
-	//Debris Fields Functionality
-	if(info.gameObject.name == "Debris" && transform.parent == null && !Invincible)
-	{
-		//dragControls.selectedWorld = null;
-		dragControls.worldSelected = false;
-	}
-
 }
 
 function KillPlanet()

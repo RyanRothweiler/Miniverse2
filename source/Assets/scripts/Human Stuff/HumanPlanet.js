@@ -20,6 +20,13 @@ function OnTriggerEnter (collision : Collider)
 {
 	if (!dragControls.halt)
 	{
+		//plant canister
+		if (collision.tag == "Canister")
+		{
+			transform.Find("planetShrinkingEffect").GetComponent(planetLifeIndicator).Refill();
+			collision.gameObject.GetComponent(PlantCanister).KillTo(this.gameObject);
+		}
+		
 		//alien ship
 		if (collision.tag == "AlienShipProjectile" && !killed)
 		{

@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1417" Column="78" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="405" Column="34" />
       <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Planet Stuff\PlanetSearcher.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Asteroid Stuff\AsteroidController.js" Line="1" Column="1" />

@@ -14,6 +14,7 @@ private var x = 0.0;
 private var fadeTime = 0.0;
 private var first = true;
 private var DragControls : DragControlsPC;
+private var refilling = false;
 
 
 function Start ()
@@ -43,7 +44,7 @@ function Start ()
 function Update () 
 {
 	//if the level is not paused
-	if (!DragControls.LevelPaused)
+	if (!DragControls.LevelPaused && !refilling)
 	{
 		//degrade the planet
 		if (transform.parent.GetComponent(PlanetSearcher) != null)
@@ -58,7 +59,7 @@ function Update ()
 		//set animation frame
 		animation["ArmatureAction"].time = (animation["ArmatureAction"].length * (xPercentage / 100));
 		
-			//if percentage is at 100 then the planet is dead
+		//if percentage is at 100 then the planet is dead
 		if (xPercentage >= 100 && !dead)
 		{
 			//play explosion
@@ -105,4 +106,17 @@ function CheckLoss()
 	{
 		DragControls.LevelLose(false);
 	}
+}
+
+//totally refills up the life. "resets the timer"
+function Refill()
+{
+	refilling = true;
+	do 
+	{
+		yield; //let things pass
+		xPercentage = Mathf.Lerp(xPercentage, 0, Time.deltaTime * 15); //drive down xPercentage to 0
+		animation["ArmatureAction"].time = (animation["ArmatureAction"].length * (xPercentage / 100)); //set animation
+	} while (xPercentage > 0.1);
+	refilling = false;	
 }
