@@ -10,6 +10,7 @@ public var DeathAsteroid : GameObject; //the death asteroid prefab
 public var ProjectileLight : GameObject; //this are distributed evenly along the line (will need to be moved for dynamic moving alien ships
 public var End : GameObject; //where the wall ends. The wall starts here.
 public var speed : float; //the speed at which to move the death asteroid
+public var NextBullet : GameObject; //the bullets themselves set this, when one is available it will set itself to this
 
 //private vars
 private var dragControls : DragControlsPC;
@@ -19,10 +20,18 @@ private var projectileNum : int;
 private var NewProjectileDist : float; //the distance at which to add a new projectile
 private var lastProjectile : GameObject; //the last projectile to be pulled, thus the closest one aswell
 
+//cached stuff
+private var endTransform : Transform;
+private var thisTransform : Transform;
+
 function Start ()
 {
 	End.transform.parent = null;
 	projectileNum = Vector3.Distance(End.transform.position, this.transform.position) * 0.4;
+	
+	//set caches
+	endTransform = End.transform;
+	thisTransform = this.transform;
 	
 	Center = transform.Find("EmitterMO").transform.position; //get initial center
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
@@ -52,23 +61,23 @@ function Update ()
 function PreBake()
 {
 	var hitObj : RaycastHit; 
-	var hit = Physics.Raycast(Center, (Center - End.transform.position)*-1, hitObj, Vector3.Distance(Center, End.transform.position));
+	var hit = Physics.Raycast(Center, (Center - endTransform.position)*-1, hitObj, Vector3.Distance(Center, endTransform.position));
 	
 	//if hit then distribute projectiles between this and the shield that hit
 	for (var i = 0; i < projectileNum; i++)
 	{
 		//create a projectile
 		var obj = GameObject.Instantiate(DeathAsteroid, Vector3(Random.Range(Center.x - positionRand, Center.x + positionRand), Random.Range(Center.y - positionRand, Center.y + positionRand), Random.Range(Center.z - positionRand, Center.z + positionRand)), Quaternion.identity);
-		obj.transform.rotation = Quaternion.LookRotation((this.transform.position - End.transform.position), this.transform.up);
+		obj.transform.rotation = Quaternion.LookRotation((thisTransform.position - endTransform.position), thisTransform.up);
 		
 		var projectile = obj.GetComponent(AlienShipProjectileController);
-		projectile.move = (this.transform.position - End.transform.position).normalized * speed * -1;
+		projectile.move = (thisTransform.position - endTransform.position).normalized * speed * -1;
 		projectile.end = this.End;
 		projectile.start = this.gameObject;
 		projectile.positionRand = positionRand;
 		
 		//distribute the projectile evenly along it's direction
-		projectile.transform.position = (i * ((End.transform.position - Center) / projectileNum)) + Center;
+		projectile.transform.position = (i * ((endTransform.position - Center) / projectileNum)) + Center;
 		//randomize the position a bit
 		projectile.transform.position.z = 15;
 		projectile.transform.position = Vector3(Random.Range(projectile.transform.position.x - positionRand, projectile.transform.position.x + positionRand), Random.Range(projectile.transform.position.y - positionRand, projectile.transform.position.y + positionRand), Random.Range(projectile.transform.position.z - positionRand, projectile.transform.position.z + positionRand));
@@ -136,14 +145,14 @@ function PreBake()
 function UpdateCollider()
 {
 	//rotate the end object
-	End.transform.rotation = Quaternion.LookRotation((this.transform.position - End.transform.position), this.transform.up); //rotate this to face the end point
-	End.transform.Rotate(Vector3(90,0,0));
+	endTransform.rotation = Quaternion.LookRotation((thisTransform.position - endTransform.position), thisTransform.up); //rotate this to face the end point
+	endTransform.Rotate(Vector3(90,0,0));
 }
 
 //rotate the ship at the speed
 function Rotate()
 {
-	End.transform.parent = this.transform;
+	endTransform.parent = thisTransform;
 	transform.Rotate(0,0,RotateSpeed/2);
 }
 
@@ -153,46 +162,24 @@ function CheckAddProjectiles()
 	//get all projectiles
 	var projectiles = GameObject.FindGameObjectsWithTag("AlienShipProjectile");
 	
-	//get the closest projectile that uses this as a start
-//	if (!lastProjectil)
-//	{
-//		var sDist = 1000.0;
-//		var sObj : GameObject;
-//		for (var projectile : GameObject in projectiles)
-//		{
-//			if (projectile.GetComponent(AlienShipProjectileController).start == this.gameObject && Vector3.Distance(projectile.transform.position, Center) < sDist)
-//			{
-//				sDist = Vector3.Distance(projectile.transform.position, Center);
-//				sObj = projectile;
-//			}
-//		}
-//		sObj = lastProjectile;
-//	}
-	
 	//if the closest projectile is farther than NewProjectileDist then either pull one from the pool or make a new one
 	if (Vector3.Distance(lastProjectile.transform.position, Center) > NewProjectileDist)
 	{
-		//if find a projectile not in play then use it
-		var found = false;
-		for (var projectile : GameObject in projectiles)
+		//if there is a bullet ready then use it
+		if (NextBullet != null)
 		{
-			if (!found && projectile.GetComponent(AlienShipProjectileController).start == this.gameObject && !projectile.GetComponent(AlienShipProjectileController).inPlay)
-			{
-				found = true;
-				projectile.GetComponent(AlienShipProjectileController).PullToPlay();
-				lastProjectile = projectile;
-			}
+			NextBullet.GetComponent(AlienShipProjectileController).PullToPlay();
+			lastProjectile = NextBullet.gameObject;
+			NextBullet = null;
 		}
-		
-		//if didn't find any such projectile then make one
-		if (!found)
+		else //else make a new one
 		{
 			var obj = GameObject.Instantiate(DeathAsteroid, Vector3(Random.Range(Center.x - positionRand, Center.x + positionRand), Random.Range(Center.y - positionRand, Center.y + positionRand), Random.Range(Center.z - positionRand, Center.z + positionRand)), Quaternion.identity);
-			obj.transform.rotation = Quaternion.LookRotation((this.transform.position - End.transform.position), this.transform.up);
+			obj.transform.rotation = Quaternion.LookRotation((thisTransform.position - End.transform.position), thisTransform.up);
 			lastProjectile = obj;
 			
 			var projectile = obj.GetComponent(AlienShipProjectileController);
-			projectile.move = (this.transform.position - End.transform.position).normalized * speed * -1;
+			projectile.move = (thisTransform.position - End.transform.position).normalized * speed * -1;
 			projectile.end = this.End;
 			projectile.start = this.gameObject;
 			projectile.positionRand = positionRand;

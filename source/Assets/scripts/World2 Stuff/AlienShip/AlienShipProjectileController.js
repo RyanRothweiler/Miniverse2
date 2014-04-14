@@ -52,6 +52,12 @@ function Update ()
 		{
 			PushAway();
 		}
+		
+		//if this bullet has been pushed and it's generator doesn't have a bullet ready then volunteer
+		if (thisTransform.position == Vector3(1000,1000,1000) && startGen.NextBullet == null)
+		{
+			startGen.NextBullet = this.gameObject;
+		}
 	}
 }
 
