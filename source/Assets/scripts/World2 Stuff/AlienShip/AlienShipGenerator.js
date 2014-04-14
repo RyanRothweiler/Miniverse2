@@ -21,7 +21,7 @@ private var NewProjectileDist : float; //the distance at which to add a new proj
 function Start ()
 {
 	End.transform.parent = null;
-	projectileNum = Vector3.Distance(End.transform.position, this.transform.position) * 1.5;
+	projectileNum = Vector3.Distance(End.transform.position, this.transform.position) * 0.7;
 	
 	Center = transform.Find("EmitterMO").transform.position; //get initial center
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
