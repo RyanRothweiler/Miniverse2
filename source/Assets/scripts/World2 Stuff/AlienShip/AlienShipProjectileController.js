@@ -10,6 +10,7 @@ public var positionRand : float;
 //private vars
 private var dragControls : DragControlsPC;
 private var startPos : Vector3; //the position to start the projectiles at
+private var killDist = 1000.0; //the distance at which to push away this projectile
 
 function Start () 
 {
@@ -18,14 +19,20 @@ function Start ()
 }
 
 function Update () 
-{
+{	
 	//move this shit
 	if (!dragControls.LevelPaused)
 	{
-		this.transform.position += move;
+		//get the kill distance if it hasn't already been got
+		if (killDist == 1000.0)
+		{
+			killDist = Vector3.Distance(end.transform.position, start.transform.position);
+		}
+	
+		this.transform.position += move * Time.deltaTime * 40;
 		
 		//check length death
-		if (Vector3.Distance(this.transform.position, start.transform.position) > Vector3.Distance(end.transform.position, start.transform.position))
+		if (Vector3.Distance(this.transform.position, start.transform.position) > killDist)
 		{
 			PushAway();
 		}
