@@ -64,6 +64,7 @@ public var PlanetDragging = false; //if the player can drag planets around witho
 public var MovingPeople = false; //if people are being moved or not
 public var KeyRotating = false; //if any key is in the process of rotating
 public var KeySelectOff = false;
+public var introing = true; //if the level is intro zooming
 
 public var Phase1 = false;
 public var Phase2 = false;
@@ -1029,6 +1030,7 @@ function Update ()
 			LevelPaused = true;
 			CanZoom = false;
 		}
+		introing = false;
 	}
 	
 	//if player hit the people goal. win condition
@@ -2750,7 +2752,7 @@ function CameraViewPlanetPushing()
 
 //if the level was lost
 function LevelLose(back : boolean)
-{	
+{
 	//fade out reset button and back button
 	if (Camera.main.transform.Find("BackArrow") && Camera.main.transform.Find("ResetButton"))
 	{

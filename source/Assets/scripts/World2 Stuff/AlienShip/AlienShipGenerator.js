@@ -9,7 +9,7 @@ public var preBaked = false;
 public var DeathAsteroid : GameObject; //the death asteroid prefab
 public var ProjectileLight : GameObject; //this are distributed evenly along the line (will need to be moved for dynamic moving alien ships
 public var End : GameObject; //where the wall ends. The wall starts here.
-public var speed = 1; //the speed at which to move the death asteroid
+public var speed : float; //the speed at which to move the death asteroid
 
 //private vars
 private var dragControls : DragControlsPC;
@@ -21,7 +21,7 @@ private var NewProjectileDist : float; //the distance at which to add a new proj
 function Start ()
 {
 	End.transform.parent = null;
-	projectileNum = Vector3.Distance(End.transform.position, this.transform.position) * 0.7;
+	projectileNum = Vector3.Distance(End.transform.position, this.transform.position) * 0.4;
 	
 	Center = transform.Find("EmitterMO").transform.position; //get initial center
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
@@ -34,7 +34,7 @@ function Update ()
 	Center = transform.Find("EmitterMO").transform.position;
 	
 	//if the game isn't introing
-	if (!dragControls.halt)
+	if (!dragControls.introing)
 	{
 		UpdateCollider();
 		CheckAddProjectiles();
@@ -44,7 +44,6 @@ function Update ()
 		{
 			Rotate();
 		}
-		
 	}
 }
 
