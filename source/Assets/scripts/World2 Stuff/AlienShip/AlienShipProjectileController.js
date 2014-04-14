@@ -11,28 +11,48 @@ public var positionRand : float;
 private var dragControls : DragControlsPC;
 private var startPos : Vector3; //the position to start the projectiles at
 private var killDist = 1000.0; //the distance at which to push away this projectile
+private var startGen : AlienShipGenerator;
+
+//some cached transforms
+private var thisTransform : Transform; //the cached transform for this
+private var endTransform : Transform; 
+private var startTransform : Transform;
 
 function Start () 
 {
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
 	startPos = start.GetComponent(AlienShipGenerator).Center;
+	
+	//set some cached transforms
+	if (start)
+	{
+		thisTransform = this.transform;
+		endTransform = end.transform;
+		startTransform = start.transform;
+	}
 }
 
 function Update () 
-{	
+{
+	//cache start alienshipgenerator
+	if (start != null)
+	{
+		startGen = start.GetComponent(AlienShipGenerator);
+	}
+	
 	//move this shit
 	if (!dragControls.LevelPaused)
 	{
 		//get the kill distance if it hasn't already been got
 		if (killDist == 1000.0)
 		{
-			killDist = Vector3.Distance(end.transform.position, start.transform.position);
+			killDist = Vector3.Distance(endTransform.position, startTransform.position);
 		}
 	
-		this.transform.position += move * Time.deltaTime * 40;
+		thisTransform.position += move * Time.deltaTime * 40;
 		
 		//check length death
-		if (Vector3.Distance(this.transform.position, start.transform.position) > killDist)
+		if (Vector3.Distance(thisTransform.position, startTransform.position) > killDist)
 		{
 			PushAway();
 		}
@@ -42,12 +62,15 @@ function Update ()
 //if collide with something
 function OnTriggerEnter (collision : Collider) 
 {
-	if (!Camera.main.GetComponent(DragControlsPC).halt && !Camera.main.GetComponent(DragControlsPC).LevelPaused)
+	if (dragControls)
 	{
-		//if collide with a shield the
-		if (collision.name == "Shield")
+		if (!dragControls.halt && !dragControls.LevelPaused)
 		{
-			PushAway();
+			//if collide with a shield the
+			if (collision.name == "Shield")
+			{
+				PushAway();
+			}
 		}
 	}
 }
@@ -58,10 +81,10 @@ function PullToPlay()
 	inPlay = true;
 	
 	//move back to start position
-	startPos = start.GetComponent(AlienShipGenerator).Center;
+	startPos = startGen.Center;
 	transform.position = Vector3(Random.Range(startPos.x - positionRand, startPos.x + positionRand), Random.Range(startPos.y - positionRand, startPos.y + positionRand), Random.Range(startPos.z - positionRand, startPos.z + positionRand));
-	move = (start.transform.position - end.transform.position).normalized * start.GetComponent(AlienShipGenerator).speed * -1; //get new direction
-	transform.rotation = Quaternion.LookRotation((start.transform.position - end.transform.position), start.transform.up); //get new orientation
+	move = (startTransform.position - endTransform.position).normalized * startGen.speed * -1; //get new direction
+	transform.rotation = Quaternion.LookRotation((startTransform.position - endTransform.position), startTransform.up); //get new orientation
 }
 
 //push this projectile away from play
