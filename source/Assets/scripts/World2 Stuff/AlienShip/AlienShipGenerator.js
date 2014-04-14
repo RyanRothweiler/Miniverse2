@@ -42,24 +42,24 @@ function Start ()
 
 function Update () 	
 {
-//	//update center
-//	Center = centerTransform.position;
-//	
-//	//if the game isn't introing
-//	if (!dragControls.introing)
-//	{
-//		//rotate the end object
-//		endTransform.rotation = Quaternion.LookRotation((thisTransform.position - endTransform.position), thisTransform.up); //rotate this to face the end point
-//		endTransform.Rotate(Vector3(90,0,0));
-//		
-//		CheckAddProjectiles();
-//		
-//		//if rotating and the level isn't paused
-//		if (Rotater && !dragControls.LevelPaused)
-//		{
-//			Rotate();
-//		}
-//	}
+	//update center
+	Center = centerTransform.position;
+	
+	//if the game isn't introing
+	if (!dragControls.introing)
+	{
+		//rotate the end object
+		endTransform.rotation = Quaternion.LookRotation((thisTransform.position - endTransform.position), thisTransform.up); //rotate this to face the end point
+		endTransform.Rotate(Vector3(90,0,0));
+		
+		CheckAddProjectiles();
+		
+		//if rotating and the level isn't paused
+		if (Rotater && !dragControls.LevelPaused)
+		{
+			Rotate();
+		}
+	}
 }
 
 //setup everything as if it had been already running for some time

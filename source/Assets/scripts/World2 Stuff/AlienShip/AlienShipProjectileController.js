@@ -36,29 +36,29 @@ function Start ()
 
 function Update () 
 {	
-//	//move this shit
-//	if (!dragControls.LevelPaused)
-//	{
-//		//get the kill distance if it hasn't already been got
-//		if (killDist == 1000.0)
-//		{
-//			killDist = Vector3.Distance(endTransform.position, startTransform.position);
-//		}
-//	
-//		thisTransform.position += move * Time.deltaTime * 40;
-//		
-//		//check length death
-//		if (Vector3.Distance(thisTransform.position, startTransform.position) > killDist)
-//		{
-//			PushAway();
-//		}
-//		
-//		//if this bullet has been pushed and it's generator doesn't have a bullet ready then volunteer
-//		if (thisTransform.position == Vector3(1000,1000,1000) && startGen.NextBullet == null)
-//		{
-//			startGen.NextBullet = this.gameObject;
-//		}
-//	}
+	//move this shit
+	if (!dragControls.LevelPaused)
+	{
+		//get the kill distance if it hasn't already been got
+		if (killDist == 1000.0)
+		{
+			killDist = Vector3.Distance(endTransform.position, startTransform.position);
+		}
+	
+		thisTransform.position += move * Time.deltaTime * 40;
+		
+		//check length death
+		if (Vector3.Distance(thisTransform.position, startTransform.position) > killDist)
+		{
+			PushAway();
+		}
+		
+		//if this bullet has been pushed and it's generator doesn't have a bullet ready then volunteer
+		if (thisTransform.position == Vector3(1000,1000,1000) && startGen.NextBullet == null)
+		{
+			startGen.NextBullet = this.gameObject;
+		}
+	}
 }
 
 //if collide with something
