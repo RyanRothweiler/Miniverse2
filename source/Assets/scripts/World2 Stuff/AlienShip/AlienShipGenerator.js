@@ -23,6 +23,7 @@ private var lastProjectile : GameObject; //the last projectile to be pulled, thu
 //cached stuff
 private var endTransform : Transform;
 private var thisTransform : Transform;
+private var centerTransform : Transform;
 
 function Start ()
 {
@@ -32,6 +33,7 @@ function Start ()
 	//set caches
 	endTransform = End.transform;
 	thisTransform = this.transform;
+	centerTransform = this.transform.Find("EmitterMO").transform;
 	
 	Center = transform.Find("EmitterMO").transform.position; //get initial center
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
@@ -40,21 +42,24 @@ function Start ()
 
 function Update () 	
 {
-	//update center
-	Center = transform.Find("EmitterMO").transform.position;
-	
-	//if the game isn't introing
-	if (!dragControls.introing)
-	{
-		UpdateCollider();
-		CheckAddProjectiles();
-		
-		//if rotating and the level isn't paused
-		if (Rotater && !dragControls.LevelPaused)
-		{
-			Rotate();
-		}
-	}
+//	//update center
+//	Center = centerTransform.position;
+//	
+//	//if the game isn't introing
+//	if (!dragControls.introing)
+//	{
+//		//rotate the end object
+//		endTransform.rotation = Quaternion.LookRotation((thisTransform.position - endTransform.position), thisTransform.up); //rotate this to face the end point
+//		endTransform.Rotate(Vector3(90,0,0));
+//		
+//		CheckAddProjectiles();
+//		
+//		//if rotating and the level isn't paused
+//		if (Rotater && !dragControls.LevelPaused)
+//		{
+//			Rotate();
+//		}
+//	}
 }
 
 //setup everything as if it had been already running for some time
@@ -141,19 +146,11 @@ function PreBake()
 	preBaked = true;
 }
 
-//update the collider with new information based on the end object
-function UpdateCollider()
-{
-	//rotate the end object
-	endTransform.rotation = Quaternion.LookRotation((thisTransform.position - endTransform.position), thisTransform.up); //rotate this to face the end point
-	endTransform.Rotate(Vector3(90,0,0));
-}
-
 //rotate the ship at the speed
 function Rotate()
 {
 	endTransform.parent = thisTransform;
-	transform.Rotate(0,0,RotateSpeed/2);
+	thisTransform.Rotate(0,0,RotateSpeed/2);
 }
 
 //find a projectile from the pool
