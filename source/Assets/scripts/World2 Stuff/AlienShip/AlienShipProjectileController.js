@@ -29,17 +29,13 @@ function Start ()
 		thisTransform = this.transform;
 		endTransform = end.transform;
 		startTransform = start.transform;
+		
+		startGen = start.GetComponent(AlienShipGenerator);
 	}
 }
 
 function Update () 
-{
-	//cache start alienshipgenerator
-	if (start != null)
-	{
-		startGen = start.GetComponent(AlienShipGenerator);
-	}
-	
+{	
 	//move this shit
 	if (!dragControls.LevelPaused)
 	{

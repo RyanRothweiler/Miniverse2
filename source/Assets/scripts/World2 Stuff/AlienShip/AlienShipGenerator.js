@@ -17,6 +17,7 @@ private var direction : Vector3;
 private var positionRand = 0.1;
 private var projectileNum : int;
 private var NewProjectileDist : float; //the distance at which to add a new projectile
+private var lastProjectile : GameObject; //the last projectile to be pulled, thus the closest one aswell
 
 function Start ()
 {
@@ -113,6 +114,19 @@ function PreBake()
 		}
 	}
 	NewProjectileDist = sDist;
+	
+	//find the closest projectile to this and set that one as the lastProjectile
+	sDist = 1000.0;
+	for (var jectile : GameObject in projectiles)
+	{
+		if (projectile.GetComponent(AlienShipProjectileController).start == this.gameObject && Vector3.Distance(projectile.transform.position, Center) < sDist)
+		{
+			sDist = Vector3.Distance(projectile.transform.position, Center);
+			sObj = jectile;
+		}
+	}
+	lastProjectile = sObj;
+	
 
 	//baked yolo swag 420 4 lyfe
 	preBaked = true;
@@ -133,25 +147,30 @@ function Rotate()
 	transform.Rotate(0,0,RotateSpeed/2);
 }
 
+//find a projectile from the pool
 function CheckAddProjectiles()
 {
 	//get all projectiles
 	var projectiles = GameObject.FindGameObjectsWithTag("AlienShipProjectile");
 	
 	//get the closest projectile that uses this as a start
-	var sDist = 1000.0;
-	var sObj : GameObject;
-	for (var projectile : GameObject in projectiles)
-	{
-		if (projectile.GetComponent(AlienShipProjectileController).start == this.gameObject && Vector3.Distance(projectile.transform.position, Center) < sDist)
-		{
-			sDist = Vector3.Distance(projectile.transform.position, Center);
-			sObj = projectile;
-		}
-	}
+//	if (!lastProjectil)
+//	{
+//		var sDist = 1000.0;
+//		var sObj : GameObject;
+//		for (var projectile : GameObject in projectiles)
+//		{
+//			if (projectile.GetComponent(AlienShipProjectileController).start == this.gameObject && Vector3.Distance(projectile.transform.position, Center) < sDist)
+//			{
+//				sDist = Vector3.Distance(projectile.transform.position, Center);
+//				sObj = projectile;
+//			}
+//		}
+//		sObj = lastProjectile;
+//	}
 	
 	//if the closest projectile is farther than NewProjectileDist then either pull one from the pool or make a new one
-	if (sDist > NewProjectileDist)
+	if (Vector3.Distance(lastProjectile.transform.position, Center) > NewProjectileDist)
 	{
 		//if find a projectile not in play then use it
 		var found = false;
@@ -161,6 +180,7 @@ function CheckAddProjectiles()
 			{
 				found = true;
 				projectile.GetComponent(AlienShipProjectileController).PullToPlay();
+				lastProjectile = projectile;
 			}
 		}
 		
@@ -169,12 +189,13 @@ function CheckAddProjectiles()
 		{
 			var obj = GameObject.Instantiate(DeathAsteroid, Vector3(Random.Range(Center.x - positionRand, Center.x + positionRand), Random.Range(Center.y - positionRand, Center.y + positionRand), Random.Range(Center.z - positionRand, Center.z + positionRand)), Quaternion.identity);
 			obj.transform.rotation = Quaternion.LookRotation((this.transform.position - End.transform.position), this.transform.up);
+			lastProjectile = obj;
 			
 			var projectile = obj.GetComponent(AlienShipProjectileController);
 			projectile.move = (this.transform.position - End.transform.position).normalized * speed * -1;
 			projectile.end = this.End;
 			projectile.start = this.gameObject;
-			projectile.positionRand = positionRand;	
+			projectile.positionRand = positionRand;
 		}
 	}
 }
