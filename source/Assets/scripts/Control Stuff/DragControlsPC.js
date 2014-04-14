@@ -271,6 +271,10 @@ function Start ()
 	{
 		world = 1;
 	}
+	else
+	{
+		world = 2;
+	}
 	
 	//main menu intro stuff
 	if (isMainMenu && !rytIntroAlready)
@@ -1075,7 +1079,6 @@ function Update ()
 				}
 				else
 				{
-					Debug.Log(World);
 					transform.DetachChildren();
 					if (world == 1)
 					{
@@ -2747,7 +2750,7 @@ function CameraViewPlanetPushing()
 
 //if the level was lost
 function LevelLose(back : boolean)
-{
+{	
 	//fade out reset button and back button
 	if (Camera.main.transform.Find("BackArrow") && Camera.main.transform.Find("ResetButton"))
 	{
