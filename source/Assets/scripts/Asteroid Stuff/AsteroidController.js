@@ -9,6 +9,7 @@ public var nearestPlanet : GameObject;
 public var selectLine : GameObject; //the proximity indicator
 public var RadiiObj : GameObject; //the radii object. no shit.
 public var Wormhole : GameObject;
+public var OnScreen : boolean;
 
 //private vars
 private var fVector : Vector3;
@@ -59,7 +60,10 @@ function Start ()
 }
 
 function Update () 
-{	
+{
+	//do this first
+	CheckOnScreen();
+	
 	//animation pausing
 	if (!dragControls.LevelPaused)
 	{
@@ -101,7 +105,7 @@ function Update ()
 	}
 	
 	//other stuff
-	if (transform.parent == null)
+	if (transform.parent == null && OnScreen)
 	{		
 		//reset variables
 		nearestDistanceSqr = Mathf.Infinity;
@@ -236,4 +240,18 @@ function FadeInMat(mat : Material)
 		mat.color.a += Time.deltaTime * 10;
 		yield WaitForSeconds(0.01);
 	} while (mat.color.a < 0.75);
+}
+
+//check if this is on screen or not
+function CheckOnScreen()
+{
+	//update on screen
+	if (Camera.main.WorldToViewportPoint(transform.position).x > -0.5 && Camera.main.WorldToViewportPoint(transform.position).x < 1.5 && Camera.main.WorldToViewportPoint(transform.position).y > -0.5 && Camera.main.WorldToViewportPoint(transform.position).y < 1.5)
+	{
+		OnScreen = true;
+	}
+	else
+	{
+		OnScreen = false;
+	}
 }
