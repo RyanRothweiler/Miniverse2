@@ -11,6 +11,7 @@ public var Wormhole : boolean;
 public var nearestPlanet : GameObject;
 public var selectLine : GameObject; //everything must have its own select line
 public var PlanetExplosion : GameObject; //the explosion prefab
+public var OnScreen : boolean;
 
 //world 1 boss level phases. Phase 1 is moving up, phase 2 is moving to the right, and phase 3 is moving down
 public var Phase1 = false;
@@ -49,7 +50,10 @@ function Start ()
 
 // Update is called once per frame 
 function Update () 
-{	
+{
+	//check if this is on screen before doing anything else
+	CheckOnScreen();
+	
 	if (!dragControls.LevelPaused)
 	{
 		//start all animations in children
@@ -77,7 +81,7 @@ function Update ()
 			}
 		}
 		
-		if (transform.parent == null)
+		if (transform.parent == null && OnScreen)
 		{
 			BeginSearch();
 		}
@@ -108,7 +112,9 @@ function Update ()
 	
 	//update controlled
 	if (transform.parent == null)
+	{
 		controlled = false;
+	}
 }
 
 //the search if this object is a planet
@@ -141,7 +147,8 @@ function BeginSearch ()
 	    //normal objects
 		if (obj.transform != this.transform && obj.name != "Asteroid")
 		{
-		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
+//		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
+		  	distanceSqr = Vector3.Distance(objectPos, transform.position);
 		
 		   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead && !GetComponentInChildren(planetLifeIndicator).dead)
 		   	{
@@ -155,7 +162,8 @@ function BeginSearch ()
 		if (obj.transform != this.transform && obj.name == "Asteroid")
 		{
 		 	objectPos = obj.GetComponent(AsteroidController).AsteroidCenter.transform.position;
-		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
+//		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
+		  	distanceSqr = Vector3.Distance(objectPos, transform.position);
 		
 		   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !GetComponentInChildren(planetLifeIndicator).dead)
 		   	{
@@ -258,4 +266,18 @@ function KillPlanet()
 	Alive = false;
 	transform.position = Vector3(1000, 1000, 1000);
 	transform.gameObject.tag = "DEAD";
+}
+
+//check if this is on screen or not
+function CheckOnScreen()
+{
+	//update on screen
+	if (Camera.main.WorldToViewportPoint(transform.position).x > -0.5 && Camera.main.WorldToViewportPoint(transform.position).x < 1.5 && Camera.main.WorldToViewportPoint(transform.position).y > -0.5 && Camera.main.WorldToViewportPoint(transform.position).y < 1.5)
+	{
+		OnScreen = true;
+	}
+	else
+	{
+		OnScreen = false;
+	}
 }
