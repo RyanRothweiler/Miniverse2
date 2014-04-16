@@ -117,27 +117,35 @@ function Update ()
 		   	distanceSqr = 0;
 		   	//if checking against an asteroid
 		   	if (obj.name == "Asteroid")
+		   	{
 		   		objectPos = obj.GetComponent(AsteroidController).AsteroidCenter.transform.position;
+		   	}
 		   	else
+		   	{
 		       	objectPos = obj.transform.position;
+		    }
 		       	
 		    if (obj.transform != this.transform)
 		    {
-		       	distanceSqr = Mathf.Abs((objectPos - AsteroidCenter.transform.position).sqrMagnitude);
-		      	
-		       	//checks distance if obj is not found an 
-		       	if (obj.name != "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead)
-		       	{
-		       		nearestPlanet = obj.gameObject;
-		       		nearestDistanceSqr = distanceSqr;
-		       		found = true;
-		       	}
-		       	if (obj.name == "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist) //checks distance if obj is an asteroid
-		       	{
-		       		nearestPlanet = obj.gameObject;
-		       		nearestDistanceSqr = distanceSqr;
-		       		found = true;
-		       	} 
+//		       	distanceSqr = Mathf.Abs((objectPos - AsteroidCenter.transform.position).sqrMagnitude);
+				distanceSqr = Vector3.Distance(objectPos, AsteroidCenter.transform.position);
+				
+				if (distanceSqr < dragControls.worldDist)		      	
+				{
+			       	//checks distance if obj is not found an 
+			       	if (obj.name != "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead)
+			       	{
+			       		nearestPlanet = obj.gameObject;
+			       		nearestDistanceSqr = distanceSqr;
+			       		found = true;
+			       	}
+			       	if (obj.name == "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist) //checks distance if obj is an asteroid
+			       	{
+			       		nearestPlanet = obj.gameObject;
+			       		nearestDistanceSqr = distanceSqr;
+			       		found = true;
+			       	}
+				}
 		   	}
 		} 
 		
