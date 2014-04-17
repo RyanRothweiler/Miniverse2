@@ -81,7 +81,7 @@ function Update ()
 			}
 		}
 		
-		if (transform.parent == null && OnScreen)
+		if (transform.parent == null)
 		{
 			BeginSearch();
 		}
@@ -130,49 +130,52 @@ function BeginSearch ()
     
 
     // loop through each tagged object, remembering nearest one found
-    for (var obj : GameObject in gameObjects) 
+    if (OnScreen)
     {
-	    distanceSqr = 0;
-	    
-	    //get the object's position. if human ship then get the ships center not the objects center.
-	    if (obj.name == "humanShip")
+	    for (var obj : GameObject in gameObjects) 
 	    {
-	    	objectPos = obj.transform.Find("humanship_3_MO").position;
-	    }
-	    else
-	    {
-	    	objectPos = obj.transform.position;
-	    }
-	        
-	    //normal objects
-		if (obj.transform != this.transform && obj.name != "Asteroid")
-		{
-//		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
-		  	distanceSqr = Vector3.Distance(objectPos, transform.position);
-		
-		   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead && !GetComponentInChildren(planetLifeIndicator).dead)
-		   	{
-		   		nearestPlanet = obj;
-				nearestDistanceSqr = distanceSqr;
-		       	found = true;
-		    }
-		}
+		    distanceSqr = 0;
 		    
-		//asteroids
-		if (obj.transform != this.transform && obj.name == "Asteroid")
-		{
-		 	objectPos = obj.GetComponent(AsteroidController).AsteroidCenter.transform.position;
-//		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
-		  	distanceSqr = Vector3.Distance(objectPos, transform.position);
-		
-		   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !GetComponentInChildren(planetLifeIndicator).dead)
-		   	{
-		  		nearestPlanet = obj.GetComponent(AsteroidController).AsteroidCenter;
-		   		nearestDistanceSqr = distanceSqr;
-		   		found = true;
-		   	}
+		    //get the object's position. if human ship then get the ships center not the objects center.
+		    if (obj.name == "humanShip")
+		    {
+		    	objectPos = obj.transform.Find("humanship_3_MO").position;
+		    }
+		    else
+		    {
+		    	objectPos = obj.transform.position;
+		    }
+		        
+		    //normal objects
+			if (obj.transform != this.transform && obj.name != "Asteroid")
+			{
+	//		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
+			  	distanceSqr = Vector3.Distance(objectPos, transform.position);
+			
+			   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead && !GetComponentInChildren(planetLifeIndicator).dead)
+			   	{
+			   		nearestPlanet = obj;
+					nearestDistanceSqr = distanceSqr;
+			       	found = true;
+			    }
+			}
+			    
+			//asteroids
+			if (obj.transform != this.transform && obj.name == "Asteroid")
+			{
+			 	objectPos = obj.GetComponent(AsteroidController).AsteroidCenter.transform.position;
+	//		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
+			  	distanceSqr = Vector3.Distance(objectPos, transform.position);
+			
+			   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !GetComponentInChildren(planetLifeIndicator).dead)
+			   	{
+			  		nearestPlanet = obj.GetComponent(AsteroidController).AsteroidCenter;
+			   		nearestDistanceSqr = distanceSqr;
+			   		found = true;
+			   	}
+			}
 		}
-	} 
+	}
 	
 	//if found the closest planet then do this
 	if (found)

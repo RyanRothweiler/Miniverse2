@@ -105,7 +105,7 @@ function Update ()
 	}
 	
 	//other stuff
-	if (transform.parent == null && OnScreen)
+	if (transform.parent == null)
 	{		
 		//reset variables
 		nearestDistanceSqr = Mathf.Infinity;
@@ -116,42 +116,45 @@ function Update ()
 	    found = false;	    
 	
 	    // loop through each tagged object, remembering nearest one found
-	    for (var obj : GameObject in gameObjects) 
+	    if (OnScreen)
 	    {
-		   	distanceSqr = 0;
-		   	//if checking against an asteroid
-		   	if (obj.name == "Asteroid")
-		   	{
-		   		objectPos = obj.GetComponent(AsteroidController).AsteroidCenter.transform.position;
-		   	}
-		   	else
-		   	{
-		       	objectPos = obj.transform.position;
-		    }
-		       	
-		    if (obj.transform != this.transform)
+		    for (var obj : GameObject in gameObjects) 
 		    {
-//		       	distanceSqr = Mathf.Abs((objectPos - AsteroidCenter.transform.position).sqrMagnitude);
-				distanceSqr = Vector3.Distance(objectPos, AsteroidCenter.transform.position);
-				
-				if (distanceSqr < dragControls.worldDist)		      	
-				{
-			       	//checks distance if obj is not found an 
-			       	if (obj.name != "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead)
-			       	{
-			       		nearestPlanet = obj.gameObject;
-			       		nearestDistanceSqr = distanceSqr;
-			       		found = true;
-			       	}
-			       	if (obj.name == "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist) //checks distance if obj is an asteroid
-			       	{
-			       		nearestPlanet = obj.gameObject;
-			       		nearestDistanceSqr = distanceSqr;
-			       		found = true;
-			       	}
-				}
-		   	}
-		} 
+			   	distanceSqr = 0;
+			   	//if checking against an asteroid
+			   	if (obj.name == "Asteroid")
+			   	{
+			   		objectPos = obj.GetComponent(AsteroidController).AsteroidCenter.transform.position;
+			   	}
+			   	else
+			   	{
+			       	objectPos = obj.transform.position;
+			    }
+			       	
+			    if (obj.transform != this.transform)
+			    {
+	//		       	distanceSqr = Mathf.Abs((objectPos - AsteroidCenter.transform.position).sqrMagnitude);
+					distanceSqr = Vector3.Distance(objectPos, AsteroidCenter.transform.position);
+					
+					if (distanceSqr < dragControls.worldDist)		      	
+					{
+				       	//checks distance if obj is not found an 
+				       	if (obj.name != "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead)
+				       	{
+				       		nearestPlanet = obj.gameObject;
+				       		nearestDistanceSqr = distanceSqr;
+				       		found = true;
+				       	}
+				       	if (obj.name == "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist) //checks distance if obj is an asteroid
+				       	{
+				       		nearestPlanet = obj.gameObject;
+				       		nearestDistanceSqr = distanceSqr;
+				       		found = true;
+				       	}
+					}
+			   	}
+			}
+		}
 		
 		//if found the closest planet then do this
 		if (found)

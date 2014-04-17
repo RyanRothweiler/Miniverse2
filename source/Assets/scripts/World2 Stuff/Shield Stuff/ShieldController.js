@@ -24,7 +24,7 @@ function Start ()
 function Update () 
 {
 	//if this is selected
-	if(Input.GetMouseButtonDown(0) && dragControls.canMoveToWorld)
+	if((Input.GetMouseButtonDown(0) && dragControls.canMoveToWorld))
 	{
 		if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 		{

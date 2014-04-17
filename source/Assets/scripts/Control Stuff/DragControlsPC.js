@@ -814,6 +814,10 @@ function Update ()
 								selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
 								offSet = selectedWorld.transform.position - Camera.main.ScreenToWorldPoint(Vector3(touch.position.x, touch.position.y,WorldZDepth - Camera.main.transform.position.z));
 							}
+							if (objectInfo.collider.tag == "Shield")
+							{
+								Touch1WorldSelected = true;
+							}
 						}
 					}
 					
@@ -859,19 +863,23 @@ function Update ()
 					Touch1CameraDragging = true;
 					if (CanMoveCameraHorizontal)
 					{
-						if (WorldDraggingInverted) {
+						if (WorldDraggingInverted) 
+						{
 							this.transform.Translate(Vector3(Touch1Delta.x * DragRate, Touch1Delta.y * DragRate, 0));
 						}
-						else {
+						else 
+						{
 							this.transform.Translate(Vector3(Touch1Delta.x * DragRate * -1, Touch1Delta.y * DragRate * -1, 0));
 						}
 					}
 					else
 					{
-						if (WorldDraggingInverted) {
+						if (WorldDraggingInverted) 
+						{
 							this.transform.Translate(0, Touch1Delta.y * DragRate, 0);
 						}
-						else {
+						else 
+						{
 							this.transform.Translate(0, Touch1Delta.y * DragRate * -1, 0);
 						}
 					}

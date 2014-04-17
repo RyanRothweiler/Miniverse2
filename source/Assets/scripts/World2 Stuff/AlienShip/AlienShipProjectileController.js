@@ -62,20 +62,20 @@ function Update ()
 }
 
 //if collide with something
-//function OnTriggerEnter (collision : Collider) 
-//{
-//	if (dragControls)
-//	{
-//		if (!dragControls.halt && !dragControls.LevelPaused)
-//		{
-//			//if collide with a shield the
-//			if (collision.name == "Shield")
-//			{
-//				PushAway();
-//			}
-//		}
-//	}
-//}
+function OnTriggerEnter (collision : Collider) 
+{
+	if (dragControls)
+	{
+		if (!dragControls.halt && !dragControls.LevelPaused)
+		{
+			//if collide with a shield the
+			if (collision.name == "Shield")
+			{
+				PushAway();
+			}
+		}
+	}
+}
 
 //pull this projectile into play
 function PullToPlay()
