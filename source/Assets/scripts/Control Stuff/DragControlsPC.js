@@ -227,6 +227,7 @@ public var tapCount = 0; //the number of taps within the tap time limit. used fo
 private var tapTimeLimit = 0.3; //the time to wait unitl resetting tapCount
 private var lastPos : Vector3;
 public var iosDrag : boolean;
+private var ShieldSelected : boolean;
 
 static var rytIntroAlready : boolean;
 
@@ -809,6 +810,7 @@ function Update ()
 							//if the planet is draggable
 							if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
 							{
+								ShieldSelected = false;
 								Touch1WorldSelected = true;
 								selectedWorld = objectInfo;
 								selectedWorld.collider.GetComponent(PlanetSearcher).Selected = true;
@@ -816,7 +818,8 @@ function Update ()
 							}
 							if (objectInfo.collider.tag == "Shield")
 							{
-								Touch1WorldSelected = true;
+								ShieldSelected = true;
+								Touch1WorldSelected = false;
 							}
 						}
 					}
@@ -858,7 +861,7 @@ function Update ()
 				}
 				
 				//camera dragging
-				if (!LevelPaused && !Touch1WorldSelected && Touch1Move && CanViewDrag)
+				if (!LevelPaused && !Touch1WorldSelected && Touch1Move && CanViewDrag && !ShieldSelected)
 				{
 					Touch1CameraDragging = true;
 					if (CanMoveCameraHorizontal)
@@ -895,6 +898,7 @@ function Update ()
 				Touch1Move = false; 
 				PinchIn = false; 
 				PinchOut = false;
+				ShieldSelected = false;
 				
 				if (Touch1WorldSelected)
 				{
