@@ -149,8 +149,8 @@ function BeginSearch ()
 		    //normal objects
 			if (obj.transform != this.transform && obj.name != "Asteroid")
 			{
-	//		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
-			  	distanceSqr = Vector3.Distance(objectPos, transform.position);
+			  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
+//			  	distanceSqr = Vector3.Distance(objectPos, transform.position);
 			
 			   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead && !GetComponentInChildren(planetLifeIndicator).dead)
 			   	{
@@ -164,8 +164,8 @@ function BeginSearch ()
 			if (obj.transform != this.transform && obj.name == "Asteroid")
 			{
 			 	objectPos = obj.GetComponent(AsteroidController).AsteroidCenter.transform.position;
-	//		  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
-			  	distanceSqr = Vector3.Distance(objectPos, transform.position);
+			  	distanceSqr = Mathf.Abs((objectPos - transform.position).sqrMagnitude);
+//			  	distanceSqr = Vector3.Distance(objectPos, transform.position);
 			
 			   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !GetComponentInChildren(planetLifeIndicator).dead)
 			   	{
