@@ -133,8 +133,7 @@ function Update ()
 			       	
 			    if (obj.transform != this.transform)
 			    {
-	//		       	distanceSqr = Mathf.Abs((objectPos - AsteroidCenter.transform.position).sqrMagnitude);
-					distanceSqr = Vector3.Distance(objectPos, AsteroidCenter.transform.position);
+			       	distanceSqr = Mathf.Abs((objectPos - AsteroidCenter.transform.position).sqrMagnitude);
 					
 					if (distanceSqr < dragControls.worldDist)		      	
 					{
