@@ -20,6 +20,12 @@ function OnTriggerEnter (collision : Collider)
 {
 	if (!dragControls.halt)
 	{
+		//human ship
+		if (collision.name == "humanship_3_MO") 
+		{
+			dragControls.worldSelected = false;
+		}
+		
 		//plant canister
 		if (collision.tag == "Canister")
 		{

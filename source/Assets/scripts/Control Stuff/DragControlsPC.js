@@ -327,7 +327,7 @@ function Start ()
 	{
 		//key fading
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r,KeyMat.GetColor("_Color").g,KeyMat.GetColor("_Color").b, 0));
-		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r,GlowMat.GetColor("_Color").g,GlowMat.GetColor("_Color").b, 0));
+		GlowMat.SetColor("_TintColor", Color(GlowMat.GetColor("_TintColor").r,GlowMat.GetColor("_TintColor").g,GlowMat.GetColor("_TintColor").b, 0));
 		FadeInKeys();
 	}
 
@@ -1258,7 +1258,7 @@ function FadeOutKeys()
 	do
 	{
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a - (Time.deltaTime * 2)));
-		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a - (Time.deltaTime * 2)));
+		GlowMat.SetColor("_TintColor", Color(GlowMat.GetColor("_TintColor").r, GlowMat.GetColor("_TintColor").g, GlowMat.GetColor("_TintColor").b, GlowMat.GetColor("_TintColor").a - (Time.deltaTime * 2)));
 		yield WaitForSeconds(0.01);
 	} while (KeyMat.GetColor("_Color").a > 0);
 }
@@ -1276,7 +1276,10 @@ function FadeInKeys()
 	do
 	{
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime * 2)));
-		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a + (Time.deltaTime * 2)));
+		if (GlowMat.GetColor("_TintColor").a < 0.65)
+		{
+			GlowMat.SetColor("_TintColor", Color(GlowMat.GetColor("_TintColor").r, GlowMat.GetColor("_TintColor").g, GlowMat.GetColor("_TintColor").b, GlowMat.GetColor("_TintColor").a + (Time.deltaTime * 2)));
+		}
 		yield WaitForSeconds(0.01);
 	} while (KeyMat.GetColor("_Color").a < 1);
 }
@@ -2836,83 +2839,83 @@ function LevelWon()
 		FailType.transform.parent = null; //unparent
 		
 		//set level win level select variables
-		if (Application.loadedLevelName == "intro to moving people - The The Impotence")
+		if (Application.loadedLevelName == "1 Important")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level1 = true;
 		}
-		if (Application.loadedLevelName == "intro to sun radii - Pi")
+		if (Application.loadedLevelName == "2 Eyes")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level2 = true;
 		}
-		if (Application.loadedLevelName == "intro to moving the camera - Eyes")
+		if (Application.loadedLevelName == "3 Pi")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level3 = true;
 		}
-		if (Application.loadedLevelName == "very first planet race - Race")
+		if (Application.loadedLevelName == "4 Race")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level4 = true;
 		}
-		if (Application.loadedLevelName == "moving people between sun radii - Pi x Pi")
+		if (Application.loadedLevelName == "5 Pinch")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level5 = true;
 		}
-		if (Application.loadedLevelName == "multiple sun radii people moving - 2PiR(ate)")
+		if (Application.loadedLevelName == "6 Trident")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level6 = true;
 		}
-		if (Application.loadedLevelName == "intro to zoom scrolling - Pinch")
+		if (Application.loadedLevelName == "7 Double Pi")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level7 = true;
 		}
-		if (Application.loadedLevelName == "into to planet life- Decay")
+		if (Application.loadedLevelName == "8 Decay")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level8 = true;
 		}
-		if (Application.loadedLevelName == "teach different planet life speeds - Color of Decay")
+		if (Application.loadedLevelName == "9 Color")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level9 = true;
 		}
-		if (Application.loadedLevelName == "transporter planet is by the ship - Heron")
+		if (Application.loadedLevelName == "10 Heron")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level10 = true;
 		}
-		if (Application.loadedLevelName == "planet decay quick and bottle neck - Red Neck")
+		if (Application.loadedLevelName == "11 Red Neck")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level11 = true;
 		}
-		if (Application.loadedLevelName == "human level with different playet life speeds - Human")
+		if (Application.loadedLevelName == "12 Human")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level12 = true;
 		}
-		if (Application.loadedLevelName == "intro to sun radii shrinking - (2PiR) - t")
+		if (Application.loadedLevelName == "13 Shrink")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level13 = true;
 		}
-		if (Application.loadedLevelName == "introduce checking two paths - Moldorm")
+		if (Application.loadedLevelName == "14 Moldorm")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level14 = true;
 		}
-		if (Application.loadedLevelName == "double sided sun radii shrinking - Tie")
+		if (Application.loadedLevelName == "15 Tie")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level15 = true;
 		}
-		if (Application.loadedLevelName == "introduction to asteroids - Armageddon")
+		if (Application.loadedLevelName == "16 Armageddon")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level16 = true;
 		}
-		if (Application.loadedLevelName == "single spinning asteroid with three trails - Three")
+		if (Application.loadedLevelName == "17 Three")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level17 = true;
 		}
-		if (Application.loadedLevelName == "asteroid field - Soccer")
+		if (Application.loadedLevelName == "18 Soccer")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level18 = true;
 		}
-		if (Application.loadedLevelName == "small asteroid field, quick radii shrinking, planet life - (2PiR) - 10t")
+		if (Application.loadedLevelName == "19 Insect")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level19 = true;
 		}
-		if (Application.loadedLevelName == "first planet race - Demon on Wheels")
+		if (Application.loadedLevelName == "20 Speed")
 		{
 			transform.parent.GetComponent(LevelsCompleted).level20 = true;
 		}

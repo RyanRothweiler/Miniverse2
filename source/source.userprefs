@@ -1,17 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Planet Stuff\PlanetSearcher.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\UI Stuff\NeonFlicker.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="785" Column="45" />
-      <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Planet Stuff\planetLifeIndicator.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\World2 Stuff\PlantCanister.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\World2 Stuff\AlienShip\AlienShipGenerator.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Level Select Stuff\LevelsCompleted.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\World2 Stuff\AlienShip\AlienShipProjectileController.js" Line="64" Column="3" />
-      <File FileName="Assets\scripts\Asteroid Stuff\AsteroidController.js" Line="212" Column="70" />
-      <File FileName="Assets\scripts\Planet Stuff\PlanetSearcher.js" Line="152" Column="42" />
-      <File FileName="Assets\scripts\World2 Stuff\Shield Stuff\ShieldController.js" Line="27" Column="50" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="323" Column="1" />
+      <File FileName="Assets\scripts\Level Select Stuff\LevelsCompleted.js" Line="45" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="24" Column="43" />
+      <File FileName="Assets\scripts\UI Stuff\NeonFlicker.js" Line="50" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
