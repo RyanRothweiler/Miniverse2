@@ -228,7 +228,8 @@ function FlickerOutControl()
 	if (flickerVirgin)
 	{
 		flickerVirgin = false;
-		FlickerOut = true;
+//		FlickerOut = true;
+		KillOut();
 	}
 }
 

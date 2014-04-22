@@ -128,6 +128,7 @@ private var MoveNum : int; //used for moving people
 private var MoveI : int; //used for moging people
 private var MoveN : int; //used for moving people
 private var MoveDummyNum : int; //used for moving people
+private var NextLevelNum : int;
 
 //array
 private var objects : GameObject[];
@@ -1196,22 +1197,38 @@ function Update ()
 		//moving to a level
 		if (toLevel)
 		{
-			//play rocket in sound
-			if (SFXCont)
+			if (fromLSelect)
 			{
-				SFXCont.ToLevel();
+				//play rocket in sound
+				if (SFXCont)
+				{
+					SFXCont.ToLevel();
+				}
+				Camera.main.GetComponent(LevelNumberTypeEffect).SendMessage("TypeAway");
+				if (Camera.main.GetComponent(LevelNumberTypeEffect).NextLevelReady)
+				{
+	//				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
+					isPlayOne = true;
+					ZoomIn();
+					
+					if (transform.position.z >= WorldZDepth + 100)
+					{					
+						transform.DetachChildren();
+						Application.LoadLevel(NextLevelNum);
+						inGame = true;
+						fromLSelect = false;
+					}
+				}
 			}
-			Camera.main.GetComponent(LevelNumberTypeEffect).SendMessage("TypeAway");
-			if (Camera.main.GetComponent(LevelNumberTypeEffect).NextLevelReady)
+			else
 			{
-//				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
 				isPlayOne = true;
 				ZoomIn();
 				
 				if (transform.position.z >= WorldZDepth + 100)
 				{					
 					transform.DetachChildren();
-					Application.LoadLevel(Level);
+					Application.LoadLevel(NextLevelNum);
 					inGame = true;
 					fromLSelect = false;
 				}
@@ -2322,7 +2339,7 @@ function LevelSelect()
 						
 						//initialize information for next go around
 						previousLevel = 20;
-						Level = objectInfo.collider.name;
+						NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("Num").GetComponent(TextMesh).text);
 						PrevLevelLoc = LevelOffsetController.transform.position;
 						LevelOffset = Vector3.zero;
 						nextLevel = true;
@@ -2343,7 +2360,7 @@ function LevelSelect()
 					
 					//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
 					previousLevel = int.Parse(objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text);
-					Level = objectInfo.collider.name;
+					NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("Num").GetComponent(TextMesh).text);
 					PrevLevelLoc = LevelOffsetController.transform.position;
 					LevelOffset = Vector3.zero;
 					nextLevel = true;
@@ -2555,7 +2572,7 @@ function LevelSelect()
 								
 								//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
 								previousLevel = 21;
-								Level = objectInfo.collider.name;
+								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("Num").GetComponent(TextMesh).text);
 								nextLevel = true;
 								toLevel = true;
 								isLevelSelect = false;
@@ -2579,7 +2596,7 @@ function LevelSelect()
 							
 							//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
 							previousLevel = int.Parse(objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text);
-							Level = objectInfo.collider.name;
+							NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("Num").GetComponent(TextMesh).text);;
 							nextLevel = true;
 							toLevel = true;
 							isLevelSelect = false;
@@ -2821,10 +2838,19 @@ function LevelWon()
 		}
 				
 		//wait a bit
-		if (world == 1)
+		if (world == 1 && Application.loadedLevel < 5)
 		{
 			to1LevelSelect = true;
 		}
+		else if (Application.loadedLevel >= 5)
+		{
+//			inGame = true;
+			fromLSelect = false;
+//			nextLevel = true;
+			toLevel = true;
+			NextLevelNum = Application.loadedLevel+1;
+		}
+
 		if (world == 2)
 		{
 			to2LevelSelect = true;

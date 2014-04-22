@@ -55,3 +55,16 @@ function OnTriggerEnter (collision : Collider)
 		}
 	}
 }
+
+function OnTriggerStay (collision : Collider)
+{
+	if (!dragControls.halt)
+	{
+		//human ship
+		if (collision.name == "humanship_3_MO") 
+		{
+			yield WaitForSeconds(1);
+//			dragControls.worldSelected = false;
+		}
+	}
+}

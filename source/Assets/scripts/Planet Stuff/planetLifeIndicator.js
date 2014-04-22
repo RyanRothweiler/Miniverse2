@@ -24,11 +24,12 @@ function Start ()
 	//GetComponentInChildren(Renderer).material.renderQueue = 8000;
 	
 	//set material color based on degradation speed
-	if (degradationSpeed >= 35) //red
+	if (degradationSpeed >= 28) //red
 	{
 		GetComponentInChildren(Renderer).material.SetColor("_MainColor",Color(255,0,0));
 	}
-	if (degradationSpeed >= 7 && degradationSpeed < 35) //yellow
+	if (degradationSpeed >= 7 && degradationSpeed < 28
+	) //yellow
 	{
 		GetComponentInChildren(Renderer).material.SetColor("_MainColor",Color(255,255,0));
 	}
