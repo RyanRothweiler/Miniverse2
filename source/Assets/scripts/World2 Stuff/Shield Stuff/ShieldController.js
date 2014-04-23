@@ -10,7 +10,7 @@ public var Asteroid : boolean; //if this shield is attached to an asteroid
 private var dragControls : DragControlsPC;
 private var objectInfo : RaycastHit;
 private var screenMoveBuffer = Vector2(0.35,0.35); //the inset of the edge to start moving the screen
-private var speed = 6;
+private var speed = 4;
 private var moveDistx = 0.0;
 private var moveDisty = 0.0;
 private var SunChain : MathCircleChain; //the chain of suns that this shield can be on
