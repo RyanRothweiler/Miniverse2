@@ -184,6 +184,7 @@ function MeshAdd ()
 			wireframer.CustomLines.Clear();
 		
 			var endCount = 0; //holds the number of times moving around the circle has found an end point
+			//I don't know what this endCount stuff is supposed to do. It caused some bugs though so I disabled it. idk what that will cause.
 			
 			//go through the points on the circle
 			for (var a = 0.0; a < 6.5; a += CircleResolution)
@@ -219,8 +220,8 @@ function MeshAdd ()
 						}
 						else //if the second point actaully is an internal point then the next custom line should be connecting to the closest intersect point
 						{
-							if ((endCount == 0) || (endCount == 2))
-							{
+//							if ((endCount == 0) || (endCount == 2))
+//							{
 								endCount++;
 								wireframer.CustomLines.Add(currPoint); //add the current point
 								
@@ -233,7 +234,7 @@ function MeshAdd ()
 								{
 									wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount + 1])[0]); //add intersect point
 								}
-							}
+//							}
 						}
 					}
 					else //else the first point is an internal point
@@ -241,13 +242,13 @@ function MeshAdd ()
 						//if the second point is not an internal point
 						if (!(circle.Contains(nxtPoint) && chain.members[memberCount - 1].Contains(nxtPoint)) && !(circle.Contains(nxtPoint) && chain.members[memberCount + 1].Contains(nxtPoint)))
 						{
-							if ((endCount == 1) || (endCount == 3))
-							{
+//							if ((endCount == 1) || (endCount == 3))
+//							{
 								endCount++;
 								wireframer.CustomLines.Add(nxtPoint); //add the current point
 								
 								//find which circle is closer
-								if (Vector3.Distance(nxtPoint, chain.members[memberCount - 1].center) < Vector3.Distance(currPoint, chain.members[memberCount + 1].center))
+								if (Vector3.Distance(nxtPoint, chain.members[memberCount - 1].center) < Vector3.Distance(nxtPoint, chain.members[memberCount + 1].center))
 								{
 									wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount - 1])[1]); //add intersect point
 								}
@@ -255,7 +256,7 @@ function MeshAdd ()
 								{
 									wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount + 1])[1]); //add intersect point
 								}
-							}
+//							}
 						}
 					}
 				}
@@ -323,7 +324,7 @@ function MeshAdd ()
 							//and the second point is not
 							if (!(circle.Contains(nxtPoint) && chain.members[memberCount - 1].Contains(nxtPoint)))
 							{
-								wireframer.CustomLines.Add(currPoint); //add the current point
+								wireframer.CustomLines.Add(nxtPoint); //add the current point
 								wireframer.CustomLines.Add(circle.FindIntersectPoints(chain.members[memberCount - 1])[1]); //add intersect point
 							}
 						}

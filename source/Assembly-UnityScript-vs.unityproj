@@ -114,6 +114,7 @@
      <Compile Include="Assets\scripts\Tutorial Stuff\PinchInTutorial.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\PinchOutTutorial.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\PinchTutorial.js" />
+     <Compile Include="Assets\scripts\Tutorial Stuff\SlideTutorial.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\TouchTutorial.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\WorldTouchTutorial.js" />
      <Compile Include="Assets\scripts\UI Stuff\BackArrow.js" />
