@@ -24,6 +24,7 @@ function OnTriggerEnter (collision : Collider)
 		if (collision.name == "humanship_3_MO") 
 		{
 			dragControls.worldSelected = false;
+			dragControls.Touch1WorldSelected = false;
 		}
 		
 		//plant canister
