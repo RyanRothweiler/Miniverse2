@@ -93,17 +93,17 @@ function Update ()
 
 function TypeControllerIn()
 {
-	yield WaitForSeconds(0.5);
-	do
-	{
-		if (!Running)
-		{
-			TypeStart(numbers[numNext], numNext+1, names[numNext], times[numNext]);
-			Running = true;
-			numNext++;
-		}
-		yield;
-	}while(numNext != 20);
+//	yield WaitForSeconds(0.5);
+//	do
+//	{
+//		if (!Running)
+//		{
+//			TypeStart(numbers[numNext], numNext+1, names[numNext], times[numNext]);
+//			Running = true;
+//			numNext++;
+//		}
+//		yield;
+//	}while(numNext != 20);
 }
 
 function TypeControllerAway()
@@ -219,22 +219,22 @@ function LevelLookingAt() //find which level the camera is looking at
 
 function Check()
 {
-	if (hit.collider.transform.Find("Num").GetComponent(TextMesh).text != "BOSS LEVEL")
-	{
-		numNext = int.Parse(hit.collider.transform.Find("Num").GetComponent(TextMesh).text);
-		if (numNext > 4)
-		{
-			numNext -= 3;
-		}
-		else
-		{
-			numNext = 0;
-		}
-		awayStart = numNext;
-	}
-	else
-	{
-		numNext = 18;
-		awayStart = 18;
-	}
+//	if (hit.collider.transform.Find("scene").GetComponent(TextMesh).text != "BOSS LEVEL")
+//	{
+//		numNext = int.Parse(hit.collider.transform.Find("scene").GetComponent(TextMesh).text);
+//		if (numNext > 4)
+//		{
+//			numNext -= 3;
+//		}
+//		else
+//		{
+//			numNext = 0;
+//		}
+//		awayStart = numNext;
+//	}
+//	else
+//	{
+//		numNext = 18;
+//		awayStart = 18;
+//	}
 }

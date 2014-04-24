@@ -2339,7 +2339,7 @@ function LevelSelect()
 						
 						//initialize information for next go around
 						previousLevel = 20;
-						NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("Num").GetComponent(TextMesh).text);
+						NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 						PrevLevelLoc = LevelOffsetController.transform.position;
 						LevelOffset = Vector3.zero;
 						nextLevel = true;
@@ -2359,8 +2359,8 @@ function LevelSelect()
 					FadeOutKeys(); //fade out keys
 					
 					//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-					previousLevel = int.Parse(objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text);
-					NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("Num").GetComponent(TextMesh).text);
+					previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
+					NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 					PrevLevelLoc = LevelOffsetController.transform.position;
 					LevelOffset = Vector3.zero;
 					nextLevel = true;
@@ -2572,7 +2572,7 @@ function LevelSelect()
 								
 								//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
 								previousLevel = 21;
-								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("Num").GetComponent(TextMesh).text);
+								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 								nextLevel = true;
 								toLevel = true;
 								isLevelSelect = false;
@@ -2595,8 +2595,8 @@ function LevelSelect()
 							leveloffsetZ = LevelOffset.z;
 							
 							//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-							previousLevel = int.Parse(objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text);
-							NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("Num").GetComponent(TextMesh).text);;
+							previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
+							NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);;
 							nextLevel = true;
 							toLevel = true;
 							isLevelSelect = false;
