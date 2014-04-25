@@ -445,14 +445,14 @@ function Start ()
 	}
 	else
 	{
-//		print("IOS");
-//		DragRate = 0.02;
-//		PlatformIOS = true;
-//		PlatformPC = false;
-		print("PC");
-		PlatformPC = true;
-		PlatformIOS = false;
-		WorldDraggingInverted = true;
+		print("IOS");
+		DragRate = 0.02;
+		PlatformIOS = true;
+		PlatformPC = false;
+//		print("PC");
+//		PlatformPC = true;
+//		PlatformIOS = false;
+//		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
@@ -2585,6 +2585,10 @@ function LevelSelect()
 									Touch1Tap = false;
 									Touch1StartPos = Vector2(0,0);
 									Touch1EndPos = Vector2(1000,1000);
+								}
+								else
+								{
+									Debug.Log("locked");
 								}
 							}
 							else //else do your regular stuff
