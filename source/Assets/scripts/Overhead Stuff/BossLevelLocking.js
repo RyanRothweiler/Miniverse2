@@ -19,8 +19,5 @@ function Update ()
 	if (!keyLock.Locked)
 	{
 		Locked = false;
-		
-		//turn off lock texture
-		transform.GetChild(0).GetChild(0).renderer.enabled = false;
 	}
 }

@@ -169,6 +169,7 @@ private var FirstClick = false; //used to detect double clicking
 private var stopHidingFileType = false; //used to stop hiding the fail type! what did you think it did?
 private var LevelTimerEnded = false;
 public var OverTolerance = false; 
+public var LSelectHalt = false; //stop all level select shenanigans
 
 //Strings
 static var Level : String;
@@ -189,7 +190,7 @@ private var dummyVector3 : Vector3;
 private var dummyVector2 : Vector2;
 //private var PrevLevelNum : GameObject; //when moving back to the level select screen, this holds the level num of the level which the player came from
 private static var PrevLevelLoc : Vector3; //the previous level tag's location
-private var LevelOffset = Vector3(-2,0,0); 
+public var LevelOffset = Vector3(-2,0,0); 
 private var shipLoc : Vector3; //the location of the ship
 private var Timer : LevelTimer; //the script which controls the level times
 private var dummyObj : GameObject; //a dummy game object
@@ -482,7 +483,7 @@ function Update ()
 	Transitioning = false;
 	
 	//just menu stuff. this code is shit
-	if(isLevelSelect && !ZoomVirgin)
+	if(isLevelSelect && !ZoomVirgin && !LSelectHalt)
 	{
 		LevelSelect();
 		LevelOffsetController.transform.position = PrevLevelLoc + LevelOffset;
@@ -2256,89 +2257,111 @@ function LevelSelect()
 {
 	halt = true;
 	
-	if (PlatformPC)
+	if (!LSelectHalt)
 	{
-	
-		//for horizontal scrolling
-		LevelOffset.x += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 1000;
-		
-		//selecting level select objects
-		if(Input.GetMouseButtonDown(0))
-		{			
-			var ray = Camera.main.ScreenPointToRay(Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
-			if(Physics.Raycast(ray, objectInfo, 40))
-			{
-				//key rotating
-				if (objectInfo.collider.tag == "key" && FirstClick)
+		if (PlatformPC)
+		{
+			//for horizontal scrolling
+			LevelOffset.x += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 1000;
+			
+			//selecting level select objects
+			if(Input.GetMouseButtonDown(0))
+			{			
+				var ray = Camera.main.ScreenPointToRay(Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
+				if(Physics.Raycast(ray, objectInfo, 40))
 				{
-					RotateKey(objectInfo.collider.gameObject);
-				}
-				//if clicked a level tag
-				if (objectInfo.collider.tag == "LevelTag")
-				{			
-					if (objectInfo.collider.name == "boss level - 900,000")
+					//key rotating
+					if (objectInfo.collider.tag == "key" && FirstClick)
 					{
-						if (!camera.main.GetComponent(KeyLockingController).Locked)
+						RotateKey(objectInfo.collider.gameObject);
+					}
+					//if clicked a level tag
+					if (objectInfo.collider.tag == "LevelTag")
+					{			
+						if (objectInfo.collider.name == "boss level - 900,000")
+						{
+							if (!camera.main.GetComponent(KeyLockingController).Locked)
+							{
+								tagPressed = true;
+								DepressLevelTag(objectInfo, true);
+							}
+							else
+							{
+								print("locked");
+							}
+						}
+						else
 						{
 							tagPressed = true;
 							DepressLevelTag(objectInfo, true);
 						}
-						else
-						{
-							print("locked");
-						}
 					}
-					else
+					
+					if (objectInfo.collider.name == "BackArrow")
 					{
 						tagPressed = true;
-						DepressLevelTag(objectInfo, true);
+						DepressLevelTag(objectInfo, false);
 					}
 				}
 				
-				if (objectInfo.collider.name == "BackArrow")
+				//check double clicking
+				if (!FirstClick)
 				{
-					tagPressed = true;
-					DepressLevelTag(objectInfo, false);
+					FirstClick = true;
+					ResetFirstClick(); //start the click timer
 				}
 			}
 			
-			//check double clicking
-			if (!FirstClick)
+			//when letting go of the mouse then do stuff
+			if (Input.GetMouseButtonUp(0) && tagPressed)
 			{
-				FirstClick = true;
-				ResetFirstClick(); //start the click timer
-			}
-		}
-		
-		//when letting go of the mouse then do stuff
-		if (Input.GetMouseButtonUp(0) && tagPressed)
-		{
-			StopAllCoroutines();
-			if (tagPressed)
-			{
-				UnpressLevelTag(objectInfo, true);
-			}
-			//reset tag pressed
-			tagPressed = false; 
-			 
-			//back arrow
-			if (objectInfo.collider.name == "BackArrow")
-			{
-				nextLevel = true;
-				toMainMenu = true;
-			} 
-			
-			if (objectInfo.collider.tag == "LevelTag")
-			{
-				//check boss level
-				if (objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text == "BOSS LEVEL")
+				StopAllCoroutines();
+				if (tagPressed)
 				{
-					if (!this.GetComponent(KeyLockingController).Locked)
+					UnpressLevelTag(objectInfo, true);
+				}
+				//reset tag pressed
+				tagPressed = false; 
+				 
+				//back arrow
+				if (objectInfo.collider.name == "BackArrow")
+				{
+					nextLevel = true;
+					toMainMenu = true;
+				} 
+				
+				if (objectInfo.collider.tag == "LevelTag")
+				{
+					//check boss level
+					if (objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text == "BOSS LEVEL")
+					{
+						if (!this.GetComponent(KeyLockingController).Locked)
+						{
+							FadeOutKeys(); //fade out keys
+							
+							//initialize information for next go around
+							previousLevel = 20;
+							NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
+							PrevLevelLoc = LevelOffsetController.transform.position;
+							LevelOffset = Vector3.zero;
+							nextLevel = true;
+							toLevel = true;
+							isLevelSelect = false;
+							//isMenu = false;
+							inGame = true;
+							fromLSelect = true;
+						}
+						else
+						{
+							Debug.Log("locked");
+						}
+					}
+					else //if not boss level then load like a normal level
 					{
 						FadeOutKeys(); //fade out keys
 						
-						//initialize information for next go around
-						previousLevel = 20;
+						//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
+						previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
 						NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 						PrevLevelLoc = LevelOffsetController.transform.position;
 						LevelOffset = Vector3.zero;
@@ -2349,230 +2372,233 @@ function LevelSelect()
 						inGame = true;
 						fromLSelect = true;
 					}
-					else
-					{
-						Debug.Log("locked");
-					}
 				}
-				else //if not boss level then load like a normal level
-				{
-					FadeOutKeys(); //fade out keys
-					
-					//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-					previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
-					NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
-					PrevLevelLoc = LevelOffsetController.transform.position;
-					LevelOffset = Vector3.zero;
-					nextLevel = true;
-					toLevel = true;
-					isLevelSelect = false;
-					//isMenu = false;
-					inGame = true;
-					fromLSelect = true;
-				}
-			}
-		}		
-	}
-	
-	if (PlatformIOS)
-	{
-		//reset
-		Touching1 = false;
+			}		
+		}
 		
-		//get touches
-		for (var touch : Touch in Input.touches)
+		if (PlatformIOS)
 		{
-			Touching1 = true;
-			Touch1EndPos = touch.position;
+			//reset
+			Touching1 = false;
 			
-			//check the first touch
-			if (touch.fingerId == 0)
-			{				
-				//get start pos
-				if (Touch1Start)
+			//get touches
+			for (var touch : Touch in Input.touches)
+			{
+				Touching1 = true;
+				Touch1EndPos = touch.position;
+				
+				//check the first touch
+				if (touch.fingerId == 0)
 				{				
-					Movement1Delta = Vector2.zero;
-					Touch1StartPos = touch.position;
-					Touch1Start = false;
-					Touch1Move = false;
-					
-					//check for tag depression
-					if(Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
-					{
-						if (objectInfo.collider.tag == "key")
+					//get start pos
+					if (Touch1Start)
+					{				
+						Movement1Delta = Vector2.zero;
+						Touch1StartPos = touch.position;
+						Touch1Start = false;
+						Touch1Move = false;
+						
+						//check for tag depression
+						if(Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 						{
-							//check double tapping to rotate key
-							Debug.Log(tapCount);
-							tapCount++;
-							TapResetWait();
-							if (tapCount >= 2)
+							if (objectInfo.collider.tag == "key")
 							{
-								Debug.Log("rotating");
-								RotateKey(objectInfo.collider.gameObject);
-							}
-						}
-						else
-						{
-							if (objectInfo.collider.name == "boss level - 900,000")
-							{
-								if (!Camera.main.GetComponent(KeyLockingController).Locked)
+								//check double tapping to rotate key
+								Debug.Log(tapCount);
+								tapCount++;
+								TapResetWait();
+								if (tapCount >= 2)
 								{
-									FadeKick = false;
-									iosTagDepress = true;
-									DepressLevelTag(objectInfo, true); 
-									depressedTag = objectInfo;
-								}
-								else
-								{
-									iosTagDepress = false;
-									Debug.Log("locked");
+									Debug.Log("rotating");
+									RotateKey(objectInfo.collider.gameObject);
 								}
 							}
 							else
 							{
-								FadeKick = false;
-								DepressLevelTag(objectInfo, true);
-								depressedTag = objectInfo;
-								iosTagDepress = true;
+								if (objectInfo.collider.name == "boss level - 900,000")
+								{
+									if (!Camera.main.GetComponent(KeyLockingController).Locked)
+									{
+										FadeKick = false;
+										iosTagDepress = true;
+										DepressLevelTag(objectInfo, true); 
+										depressedTag = objectInfo;
+									}
+									else
+									{
+										iosTagDepress = false;
+										Debug.Log("locked");
+									}
+								}
+								else
+								{
+									FadeKick = false;
+									DepressLevelTag(objectInfo, true);
+									depressedTag = objectInfo;
+									iosTagDepress = true;
+								}
 							}
 						}
-					}
-					
-				}
-				//check if a tap, if not then a drag
-				if ((Touch1StartPos.x + TouchTapBounds.x > Touch1EndPos.x) && (Touch1StartPos.x - TouchTapBounds.x < Touch1EndPos.x) && (Touch1StartPos.y + TouchTapBounds.y > Touch1EndPos.y) && (Touch1StartPos.y - TouchTapBounds.y < Touch1EndPos.y))
-				{
-					Touch1Tap = true;
-				}
-				else if (Touch1StartPos.y < 250) //if a move and on the bottom half of the screen
-				{
-					//unpress level tag
-					if (iosTagDepress)
-					{
-						iosTagDepress = false;
-						UnpressLevelTag(depressedTag, true);
-					}
-							
-					Touch1Move = true;
-					Touch1Tap = false;
-					 
-					MovementControllerOldPos = LevelOffset;
-					//limit movement 
-					if (LevelOffset.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate < 1) //left side 
-					{ 
-						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
-					}
-					else 
-					{
-						//LevelOffset.x = 0; 
-						return; //then kick out
-					}
-					if (LevelOffset.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -157.5) //right side
-					{ 
-						LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
-					}
-					else 
-					{
-						//LevelOffset.x = -147; 
-						return; //kick out
-					}
 						
-					Movement1Delta = MovementControllerOldPos - LevelOffset;
-				}			
-			}
-		}
-		
-		//if not touching
-		if (!Touching1)
-		{
-			//reset
-			Touch1Start = true;
-			
-			//unpress level tag
-			if (iosTagDepress)
-			{				
-				UnpressLevelTag(depressedTag, true);
-				
-				//check back arrow before anything else
-				if (objectInfo.collider.name == "BackArrow")
-				{
-					nextLevel = true;
-					toMainMenu = true;
-					return;
-				}
-				
-				iosTagDepress = false;
-				FadeKick = true;
-			}
-			
-			//check flicking
-			if (Touch1Move)
-			{				
-				//limit movement
-				if (LevelOffset.x - Movement1Delta.x > -157.5) //right side
-				{ 
-					LevelOffset.x -= (Movement1Delta.x);
-				}
-				else
-				{
-					//end the flick
-					LevelOffset.x = -156;
-					
-					Touch1StartPos = Vector2(0,0);
-					Touch1EndPos = Vector2(1000,1000);		
-					Movement1Delta.x = 0;
-					Touch1Move = false;
-				}
-				if (LevelOffset.x - Movement1Delta.x < 1) //left side 
-				{
-					LevelOffset.x -= (Movement1Delta.x); 
-				}
-				else
-				{
-					//end the flick
-					LevelOffset.x = 0;
-					
-					Touch1StartPos = Vector2(0,0);
-					Touch1EndPos = Vector2(1000,1000);		
-					Movement1Delta.x = 0;
-					Touch1Move = false;
-				}
-				
-				//degrade movement delta
-				Movement1Delta.x = Movement1Delta.x * 0.9;
-				
-				//end the flick
-				if ( (Movement1Delta.x > 0 && Movement1Delta.x <= 0.01) || Movement1Delta.x < 0 && Movement1Delta.x >= -0.01)
-				{
-					Touch1StartPos = Vector2(0,0);
-					Touch1EndPos = Vector2(1000,1000);		
-					Movement1Delta.x = 0;
-					Touch1Move = false;
-				}
-			}
-			
-			//check a tap			
-			if (Touch1Tap && (Touch1StartPos.x + TouchTapBounds.x > Touch1EndPos.x) && (Touch1StartPos.x - TouchTapBounds.x < Touch1EndPos.x) && (Touch1StartPos.y + TouchTapBounds.y > Touch1EndPos.y) && (Touch1StartPos.y - TouchTapBounds.y < Touch1EndPos.y) )
-			{
-				if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
-				{
-					if (objectInfo.collider.tag != "key")
+					}
+					//check if a tap, if not then a drag
+					if ((Touch1StartPos.x + TouchTapBounds.x > Touch1EndPos.x) && (Touch1StartPos.x - TouchTapBounds.x < Touch1EndPos.x) && (Touch1StartPos.y + TouchTapBounds.y > Touch1EndPos.y) && (Touch1StartPos.y - TouchTapBounds.y < Touch1EndPos.y))
 					{
-						//if the boss level then check if it's locked
-						if (objectInfo.collider.name == "boss level - 900,000")
+						Touch1Tap = true;
+					}
+					else if (Touch1StartPos.y < 250) //if a move and on the bottom half of the screen
+					{
+						//unpress level tag
+						if (iosTagDepress)
 						{
-							if (!Camera.main.GetComponent(KeyLockingController).Locked)
+							iosTagDepress = false;
+							UnpressLevelTag(depressedTag, true);
+						}
+								
+						Touch1Move = true;
+						Touch1Tap = false;
+						 
+						MovementControllerOldPos = LevelOffset;
+						//limit movement 
+						if (LevelOffset.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate < 1) //left side 
+						{ 
+							LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
+						}
+						else 
+						{
+							//LevelOffset.x = 0; 
+							return; //then kick out
+						}
+						if (LevelOffset.x + (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate > -157.5) //right side
+						{ 
+							LevelOffset.x += (touch.deltaPosition.x * Time.deltaTime) * LevelSelectDragRate;
+						}
+						else 
+						{
+							//LevelOffset.x = -147; 
+							return; //kick out
+						}
+							
+						Movement1Delta = MovementControllerOldPos - LevelOffset;
+					}			
+				}
+			}
+			
+			//if not touching
+			if (!Touching1)
+			{
+				//reset
+				Touch1Start = true;
+				
+				//unpress level tag
+				if (iosTagDepress)
+				{				
+					UnpressLevelTag(depressedTag, true);
+					
+					//check back arrow before anything else
+					if (objectInfo.collider.name == "BackArrow")
+					{
+						nextLevel = true;
+						toMainMenu = true;
+						return;
+					}
+					
+					iosTagDepress = false;
+					FadeKick = true;
+				}
+				
+				//check flicking
+				if (Touch1Move)
+				{				
+					//limit movement
+					if (LevelOffset.x - Movement1Delta.x > -157.5) //right side
+					{ 
+						LevelOffset.x -= (Movement1Delta.x);
+					}
+					else
+					{
+						//end the flick
+						LevelOffset.x = -156;
+						
+						Touch1StartPos = Vector2(0,0);
+						Touch1EndPos = Vector2(1000,1000);		
+						Movement1Delta.x = 0;
+						Touch1Move = false;
+					}
+					if (LevelOffset.x - Movement1Delta.x < 1) //left side 
+					{
+						LevelOffset.x -= (Movement1Delta.x); 
+					}
+					else
+					{
+						//end the flick
+						LevelOffset.x = 0;
+						
+						Touch1StartPos = Vector2(0,0);
+						Touch1EndPos = Vector2(1000,1000);		
+						Movement1Delta.x = 0;
+						Touch1Move = false;
+					}
+					
+					//degrade movement delta
+					Movement1Delta.x = Movement1Delta.x * 0.9;
+					
+					//end the flick
+					if ( (Movement1Delta.x > 0 && Movement1Delta.x <= 0.01) || Movement1Delta.x < 0 && Movement1Delta.x >= -0.01)
+					{
+						Touch1StartPos = Vector2(0,0);
+						Touch1EndPos = Vector2(1000,1000);		
+						Movement1Delta.x = 0;
+						Touch1Move = false;
+					}
+				}
+				
+				//check a tap			
+				if (Touch1Tap && (Touch1StartPos.x + TouchTapBounds.x > Touch1EndPos.x) && (Touch1StartPos.x - TouchTapBounds.x < Touch1EndPos.x) && (Touch1StartPos.y + TouchTapBounds.y > Touch1EndPos.y) && (Touch1StartPos.y - TouchTapBounds.y < Touch1EndPos.y) )
+				{
+					if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+					{
+						if (objectInfo.collider.tag != "key")
+						{
+							//if the boss level then check if it's locked
+							if (objectInfo.collider.name == "boss level - 900,000")
+							{
+								if (!Camera.main.GetComponent(KeyLockingController).Locked)
+								{
+									FadeOutKeys(); //fade out keys
+								
+									//save level offset
+									leveloffsetX = LevelOffset.x;
+									leveloffsetY = LevelOffset.y;
+									leveloffsetZ = LevelOffset.z;
+									
+									//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
+									previousLevel = 21;
+									NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
+									nextLevel = true;
+									toLevel = true;
+									isLevelSelect = false;
+									//isMenu = false;
+									inGame = true;
+									fromLSelect = true;
+									
+									Touch1Tap = false;
+									Touch1StartPos = Vector2(0,0);
+									Touch1EndPos = Vector2(1000,1000);
+								}
+							}
+							else //else do your regular stuff
 							{
 								FadeOutKeys(); //fade out keys
-							
+								
 								//save level offset
 								leveloffsetX = LevelOffset.x;
 								leveloffsetY = LevelOffset.y;
 								leveloffsetZ = LevelOffset.z;
 								
 								//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-								previousLevel = 21;
-								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
+								previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
+								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);;
 								nextLevel = true;
 								toLevel = true;
 								isLevelSelect = false;
@@ -2580,50 +2606,27 @@ function LevelSelect()
 								inGame = true;
 								fromLSelect = true;
 								
+								//Goes back to main menu	
+								if(objectInfo.collider.name == "mainmenu")
+								{
+									transform.DetachChildren();
+									Application.LoadLevel("mainmenu");
+									isLevelSelect = false;
+									//isMenu = true;
+								}
+								
 								Touch1Tap = false;
 								Touch1StartPos = Vector2(0,0);
 								Touch1EndPos = Vector2(1000,1000);
 							}
 						}
-						else //else do your regular stuff
-						{
-							FadeOutKeys(); //fade out keys
-							
-							//save level offset
-							leveloffsetX = LevelOffset.x;
-							leveloffsetY = LevelOffset.y;
-							leveloffsetZ = LevelOffset.z;
-							
-							//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-							previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
-							NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);;
-							nextLevel = true;
-							toLevel = true;
-							isLevelSelect = false;
-							//isMenu = false;
-							inGame = true;
-							fromLSelect = true;
-							
-							//Goes back to main menu	
-							if(objectInfo.collider.name == "mainmenu")
-							{
-								transform.DetachChildren();
-								Application.LoadLevel("mainmenu");
-								isLevelSelect = false;
-								//isMenu = true;
-							}
-							
-							Touch1Tap = false;
-							Touch1StartPos = Vector2(0,0);
-							Touch1EndPos = Vector2(1000,1000);
-						}
 					}
-				}
-				else
-				{
-					Touch1StartPos = Vector2(0,0);
-					Touch1EndPos = Vector2(1000,1000);
-					Touch1Tap = false;
+					else
+					{
+						Touch1StartPos = Vector2(0,0);
+						Touch1EndPos = Vector2(1000,1000);
+						Touch1Tap = false;
+					}
 				}
 			}
 		}
