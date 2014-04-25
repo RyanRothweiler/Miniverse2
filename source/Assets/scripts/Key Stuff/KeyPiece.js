@@ -62,6 +62,7 @@ private var oldPos : Vector3;
 private var SnapDistance = 0.1; //the range for which to snap
 public var done = false;
 private var done2 = false;
+private var parentDone = false;
 private var vertsChecked = false;
 private var dumTris = new List.<int>(); //list of vertices to remove from the circle
 private var parentSwapped = false;
@@ -72,8 +73,6 @@ function Start ()
 {
 	//get drag controls script
 	DragControls = Camera.main.GetComponent(DragControlsPC);
-	
-	CheckMatePositions();
 	
 	//initialize mated
 	if (Mate1 == null)
@@ -199,6 +198,7 @@ function Update ()
 		{
 			DragControls.KeySelectOff = false;
 			done = false;
+			parentDone = false;
 		}
 		
 		if (Selected && !Rotating && !DragControls.KeyRotating)//moving
@@ -235,7 +235,7 @@ function Update ()
 			canCheckMouse = true;
 			Selected = false;
 			parentSwapped = false;
-			done = false;
+			parentDone = false;
 		}
 		
 		if (!DragControls.Touching1)
@@ -337,10 +337,9 @@ function SoundVolWait()
 //goes through all mates and parents them to parent
 function Parent(newParent : GameObject, numFrom : int) : IEnumerator
 {
-	if (!done)
+	if (!parentDone)
 	{
-		Debug.Log("parenting "+this.name);
-		done = true;
+		parentDone = true;
 		
 		if (numFrom != 1 && Mate1 != null && Mated1)
 		{
@@ -368,17 +367,20 @@ function Parent(newParent : GameObject, numFrom : int) : IEnumerator
 			Mate5.GetComponent(KeyPiece).Parent(newParent, 5);
 		}
 	}
-	done = false;
+//	parentDone = false;
 }
 
 //snaps this key and all it's matached keys also
 function Snap(numFrom : int) : IEnumerator
 {
+	yield;
+	
 	//clear parent
 	this.transform.parent = KeyHolder.transform;
 	
 	//parent all mates which are mated to this
 	Parent(this.gameObject, 0);
+	parentDone = false;
 	
 	//play click sound
 	auso.Play();
@@ -393,121 +395,34 @@ function Snap(numFrom : int) : IEnumerator
 		{					
 			Mated1 = true;
 			Mate1.GetComponent(KeyPiece).Mated1 = true;
-			transform.position = Mate1.transform.position + Mate1Offset;//snap self
-			
-//			if (Mate2 != null && Mate2.GetComponent(KeyPiece).Mated2)//snap mate 2
-//			{
-//				Mate2.GetComponent(KeyPiece).Snap(2);
-//			}
-//			else if (Mate3 != null && Mate3.GetComponent(KeyPiece).Mated3)//snap mate 3
-//			{
-//				Mate3.GetComponent(KeyPiece).Snap(3);
-//			}
-//			else if (Mate4 != null && Mate4.GetComponent(KeyPiece).Mated4)//snap mate 4
-//			{
-//				Mate4.GetComponent(KeyPiece).Snap(4);
-//			}
-//			else if (Mate5 != null && Mate5.GetComponent(KeyPiece).Mated5)//snap mate 5
-//			{
-//				Mate5.GetComponent(KeyPiece).Snap(5);
-//			}	
+			transform.position = Mate1.transform.position + Mate1Offset;//snap self	
 		}
 		if (numFrom == 2) //mate point 2
 		{						
 			Mated2 = true;
 			Mate2.GetComponent(KeyPiece).Mated2 = true;
 			transform.position = Mate2.transform.position + Mate2Offset;//snap self
-			
-//			if (Mate1 != null && Mate1.GetComponent(KeyPiece).Mated1)//snap mate 1			
-//			{
-//				Mate1.GetComponent(KeyPiece).Snap(1);
-//			}
-//			else if (Mate3 != null && Mate3.GetComponent(KeyPiece).Mated3)//snap mate 3
-//			{
-//				Mate3.GetComponent(KeyPiece).Snap(3);
-//			}
-//			else if (Mate4 != null && Mate4.GetComponent(KeyPiece).Mated4)//snap mate 3
-//			{
-//				Mate4.GetComponent(KeyPiece).Snap(4);
-//			}
-//			else if (Mate5 != null && Mate5.GetComponent(KeyPiece).Mated5)//snap mate 5
-//			{
-//				Mate5.GetComponent(KeyPiece).Snap(5);
-//			}
 		}
 		if (numFrom == 3) //mate point 3
 		{			
 			Mated3 = true;
 			Mate3.GetComponent(KeyPiece).Mated3 = true;
 			transform.position = Mate3.transform.position + Mate3Offset;//snap self
-			
-//			if (Mate1 != null && Mate1.GetComponent(KeyPiece).Mated1)//snap mate 1			
-//			{
-//				Mate1.GetComponent(KeyPiece).Snap(1);
-//			}
-//			else if (Mate2 != null && Mate2.GetComponent(KeyPiece).Mated2)//snap mate 2
-//			{
-//				Mate2.GetComponent(KeyPiece).Snap(2);
-//			}
-//			else if (Mate4 != null && Mate4.GetComponent(KeyPiece).Mated4)//snap mate 3
-//			{
-//				Mate4.GetComponent(KeyPiece).Snap(4);
-//			}
-//			else if (Mate5 != null && Mate5.GetComponent(KeyPiece).Mated5)//snap mate 5
-//			{
-//				Mate5.GetComponent(KeyPiece).Snap(5);
-//			}
 		}
 		if (numFrom == 4) //mate point 4
 		{			
 			Mated4 = true;
 			Mate4.GetComponent(KeyPiece).Mated4 = true;
 			transform.position = Mate4.transform.position + Mate4Offset;//snap self
-			
-//			if (Mate1 != null && Mate1.GetComponent(KeyPiece).Mated1)//snap mate 1
-//			{
-//				Mate1.GetComponent(KeyPiece).Snap(1);
-//			}
-//			else if (Mate2 != null && Mate2.GetComponent(KeyPiece).Mated2)//snap mate 2
-//			{
-//				Mate2.GetComponent(KeyPiece).Snap(2);
-//			}
-//			else if (Mate3 != null && Mate3.GetComponent(KeyPiece).Mated3)//snap mate 3
-//			{
-//				Mate3.GetComponent(KeyPiece).Snap(3);
-//			}
-//			else if (Mate5 != null && Mate5.GetComponent(KeyPiece).Mated5)//snap mate 5
-//			{
-//				Mate5.GetComponent(KeyPiece).Snap(5);
-//			}
 		}
 		if (numFrom == 5) //mate point 5
 		{
 			Mated5 = true;
 			Mate5.GetComponent(KeyPiece).Mated5 = true;
 			transform.position = Mate5.transform.position + Mate5Offset;//snap self
-			
-//			if (Mate1 != null && Mate1.GetComponent(KeyPiece).Mated1)//snap mate 1
-//			{
-//				Mate1.GetComponent(KeyPiece).Snap(1);
-//			}
-//			else if (Mate2 != null && Mate2.GetComponent(KeyPiece).Mated2)//snap mate 2
-//			{
-//				Mate2.GetComponent(KeyPiece).Snap(2);
-//			}
-//			else if (Mate3 != null && Mate3.GetComponent(KeyPiece).Mated3)//snap mate 3
-//			{
-//				Mate3.GetComponent(KeyPiece).Snap(3);
-//			}
-//			else if (Mate4 != null && Mate4.GetComponent(KeyPiece).Mated4)//snap mate 4
-//			{
-//				Mate4.GetComponent(KeyPiece).Snap(4);
-//			}
 		}
 	}
 	done = false;
-	
-	Debug.Log("done");
 }
 
 //updates the snap positions based on the current orientation
@@ -561,43 +476,4 @@ function UpdateSnaps(numFrom : int, intro : boolean) : IEnumerator
 	}
 //	yield WaitForSeconds(0.1);
 //	done2 = false;
-}
-
-function CheckMatePositions()
-{
-//	do
-//	{
-//		yield; //let things pass
-//		
-////		if (transform.parent.name != "KeyHolder")
-////		{
-//			//keep pieces in the correct position relative to their mates
-//			if (Mate1 != null && Mated1 && transform.position != Mate1.transform.position + Mate1Offset)
-//			{
-//				Debug.Log("moving "+this.name);
-//				transform.position = Mate1.transform.position + Mate1Offset;
-//			}
-//			if (Mate2 != null && Mated2 && transform.position != Mate2.transform.position + Mate2Offset)
-//			{
-//			Debug.Log("moving "+this.name);
-//				transform.position = Mate2.transform.position + Mate2Offset;
-//			}
-//			if (Mate3 != null && Mated3 && transform.position != Mate3.transform.position + Mate3Offset)
-//			{
-//			Debug.Log("moving "+this.name);
-//				transform.position = Mate3.transform.position + Mate3Offset;
-//			}
-//			if (Mate4 != null && Mated4 && transform.position != Mate4.transform.position + Mate4Offset)
-//			{
-//			Debug.Log("moving "+this.name);
-//				transform.position = Mate4.transform.position + Mate4Offset;
-//			}
-//			if (Mate5 != null && Mated5 && transform.position != Mate5.transform.position + Mate5Offset)
-//			{
-//			Debug.Log("moving "+this.name);
-//				transform.position = Mate5.transform.position + Mate5Offset;
-//			}
-////		}
-//	}
-//	while (true);
 }
