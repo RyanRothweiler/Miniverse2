@@ -1,11 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Level Select Stuff\LevelNumberTypeEffect.js">
-    <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2334" Column="48" />
-      <File FileName="Assets\scripts\Level Select Stuff\LevelNumberTypeEffect.js" Line="222" Column="3" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

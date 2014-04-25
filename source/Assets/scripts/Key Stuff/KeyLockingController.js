@@ -21,14 +21,13 @@ function Start ()
 
 function Update () 
 {
-	Locked = true;
+	Locked = false;
 	//check
 	for (var key : GameObject in keys)
 	{
 		if (!key.GetComponent(KeyPiece).Completed)
 		{
-			Locked = false;
+			Locked = true;
 		}
-		
 	}
 }

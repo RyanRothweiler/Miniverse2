@@ -328,7 +328,7 @@ function Start ()
 	{
 		//key fading
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r,KeyMat.GetColor("_Color").g,KeyMat.GetColor("_Color").b, 0));
-		GlowMat.SetColor("_TintColor", Color(GlowMat.GetColor("_TintColor").r,GlowMat.GetColor("_TintColor").g,GlowMat.GetColor("_TintColor").b, 0));
+		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r,GlowMat.GetColor("_Color").g,GlowMat.GetColor("_Color").b, 0));
 		FadeInKeys();
 	}
 
@@ -1275,7 +1275,7 @@ function FadeOutKeys()
 	do
 	{
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a - (Time.deltaTime * 2)));
-		GlowMat.SetColor("_TintColor", Color(GlowMat.GetColor("_TintColor").r, GlowMat.GetColor("_TintColor").g, GlowMat.GetColor("_TintColor").b, GlowMat.GetColor("_TintColor").a - (Time.deltaTime * 2)));
+		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a - (Time.deltaTime * 2)));
 		yield WaitForSeconds(0.01);
 	} while (KeyMat.GetColor("_Color").a > 0);
 }
@@ -1293,10 +1293,10 @@ function FadeInKeys()
 	do
 	{
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime * 2)));
-		if (GlowMat.GetColor("_TintColor").a < 0.65)
-		{
-			GlowMat.SetColor("_TintColor", Color(GlowMat.GetColor("_TintColor").r, GlowMat.GetColor("_TintColor").g, GlowMat.GetColor("_TintColor").b, GlowMat.GetColor("_TintColor").a + (Time.deltaTime * 2)));
-		}
+//		if (GlowMat.GetColor("_Color").a < )
+//		{
+			GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a + (Time.deltaTime * 2)));
+//		}
 		yield WaitForSeconds(0.01);
 	} while (KeyMat.GetColor("_Color").a < 1);
 }
