@@ -22,14 +22,12 @@ function Update ()
 {
 	if (!done && !showing && levelTag.active)
 	{
-		Debug.Log("showing");
 		showing = true;
 		Show();
 	}
 	
 	if (!done && showing && offsetController.transform.position.x < -9)
 	{
-		Debug.Log("hiding");
 		done = true;
 		Hide();
 	}
