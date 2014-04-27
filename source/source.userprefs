@@ -1,8 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/Key Stuff/KeyLockingController.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Human Stuff\HumanShip.js">
     <Files>
-      <File FileName="Assets/scripts/Key Stuff/KeyLockingController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyLockingController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\Math Circle Stuff\MathWireframeRender.js" Line="19" Column="3" />
+      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\ShrinkCode.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Human Stuff\HumanShip.js" Line="42" Column="15" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

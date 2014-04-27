@@ -15,8 +15,8 @@ function Start ()
 //render that shit
 function OnRenderObject() 
 {
-	if (use)
-	{
+	if (this.name == "SunChainCircle" && !transform.parent.GetComponent(ShrinkCode).dead && use)
+	{		
 		//set the pass
 	    GetComponent(MeshRenderer).material.SetPass(0); 
 	  	
@@ -33,4 +33,22 @@ function OnRenderObject()
 	    GL.End(); 
 	    GL.PopMatrix();
 	}
+	else if (this.name == "LiveSunRadiiHolder(Clone)" && use)
+	{
+		//set the pass
+	    GetComponent(MeshRenderer).material.SetPass(0); 
+	  	
+	    GL.PushMatrix(); 
+	    GL.MultMatrix(transform.localToWorldMatrix); 
+	    GL.Begin(GL.LINES);
+	    
+		//create lines from CustomLines
+		for (i = 0; i < CustomLines.Count; i++)
+		{
+			GL.Vertex(CustomLines[i]);
+		}
+	  
+	    GL.End(); 
+	    GL.PopMatrix();
+	}	
 }

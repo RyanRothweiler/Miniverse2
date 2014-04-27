@@ -38,6 +38,8 @@ function Start ()
 		//hide flames
 		FlameEffect.GetComponent(ParticleSystem).enableEmission = false;
 		introDone = true;
+		
+		FadeOutLight(); //turn off the lights
 	}
 	
 	//setup particle effects
