@@ -445,14 +445,14 @@ function Start ()
 	}
 	else
 	{
-		print("IOS");
-		DragRate = 0.02;
-		PlatformIOS = true;
-		PlatformPC = false;
-//		print("PC");
-//		PlatformPC = true;
-//		PlatformIOS = false;
-//		WorldDraggingInverted = true;
+//		print("IOS");
+//		DragRate = 0.02;
+//		PlatformIOS = true;
+//		PlatformPC = false;
+		print("PC");
+		PlatformPC = true;
+		PlatformIOS = false;
+		WorldDraggingInverted = true;
 	}
 	
 	//ios initializations
