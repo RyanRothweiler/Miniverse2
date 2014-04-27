@@ -39,6 +39,12 @@ function Update ()
 		}
 	}
 	
+	//make sure all the keys are there
+	if (keys.Length != 20)
+	{
+		Locked = true;
+	}
+	
 	if (!unlocked && !Locked)
 	{
 		unlocked = true;
