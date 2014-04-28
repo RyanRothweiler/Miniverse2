@@ -32,7 +32,7 @@ function Update ()
 		Hide();
 	}
 	
-	if (!done && showing && this.name == "puzzleTutorial" && offsetController.transform.position.x < -13)
+	if (!done && showing && this.name == "puzzleTutorial" && offsetController.transform.position.x < -15)
 	{
 		done = true;
 		Hide();

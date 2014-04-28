@@ -341,6 +341,7 @@ function Start ()
 		
 		//now do background stuff
 		NebulaBackground.transform.parent = null;
+		NebulaBackground.transform.position.x = 40;
 		NebulaBackground.transform.position.z = 50;
 	}
 	else //else move the camer to the correct z position based on the variable
@@ -2851,11 +2852,18 @@ function LevelWon()
 		}
 		else if (Application.loadedLevel >= 5)
 		{
-//			inGame = true;
-			fromLSelect = false;
-//			nextLevel = true;
-			toLevel = true;
-			NextLevelNum = Application.loadedLevel+1;
+			if (!(Application.loadedLevel > 19))
+			{
+	//			inGame = true;
+				fromLSelect = false;
+	//			nextLevel = true;
+				toLevel = true;
+				NextLevelNum = Application.loadedLevel+1;
+			}
+			else
+			{
+				to1LevelSelect = true;
+			}
 		}
 
 		if (world == 2)
