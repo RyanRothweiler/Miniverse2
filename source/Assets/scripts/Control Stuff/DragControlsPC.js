@@ -341,8 +341,8 @@ function Start ()
 		
 		//now do background stuff
 		NebulaBackground.transform.parent = null;
-		NebulaBackground.transform.position.x = 40;
-		NebulaBackground.transform.position.z = 50;
+//		NebulaBackground.transform.position.x = 40;
+//		NebulaBackground.transform.position.z = 50;
 	}
 	else //else move the camer to the correct z position based on the variable
 	{
