@@ -34,7 +34,6 @@ function Update ()
 	{
 		if (!key.GetComponent(KeyPiece).Completed)
 		{
-			Debug.Log("locked "+key.name);
 			Locked = true;
 		}
 	}

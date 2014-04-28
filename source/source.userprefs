@@ -1,11 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Human Stuff\HumanShip.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyLockingController.js">
     <Files>
-      <File FileName="Assets\scripts\Key Stuff\KeyLockingController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\Math Circle Stuff\MathWireframeRender.js" Line="19" Column="3" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="344" Column="48" />
+      <File FileName="Assets\scripts\Key Stuff\KeyLockingController.js" Line="36" Column="4" />
+      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\Math Circle Stuff\MathWireframeRender.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\UI Stuff\Sun Stuff\ShrinkCode.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\Human Stuff\HumanShip.js" Line="42" Column="15" />
+      <File FileName="Assets\scripts\Tutorial Stuff\SlideTutorial.js" Line="35" Column="102" />
+      <File FileName="Assets\scripts\Background Stuff\NebulaParentController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Background Stuff\NebulaBackground.js" Line="14" Column="35" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

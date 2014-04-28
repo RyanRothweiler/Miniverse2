@@ -11,7 +11,7 @@ function Start ()
 	//get drag controls script
 	DragControls = Camera.main.GetComponent(DragControlsPC);
 	
-	AnimSpeed = Random.Range(0.9, 1.2);
+	AnimSpeed = Random.Range(0.3, 0.5);
 	
 	//set animation frame and speed
 	animation["Default Take"].speed = AnimSpeed;
