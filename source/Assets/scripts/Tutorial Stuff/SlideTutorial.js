@@ -26,7 +26,13 @@ function Update ()
 		Show();
 	}
 	
-	if (!done && showing && offsetController.transform.position.x < -9)
+	if (!done && showing && this.name == "slideTutorial" && offsetController.transform.position.x < -9)
+	{
+		done = true;
+		Hide();
+	}
+	
+	if (!done && showing && this.name == "puzzleTutorial" && offsetController.transform.position.x < -13)
 	{
 		done = true;
 		Hide();
