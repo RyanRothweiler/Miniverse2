@@ -10,6 +10,8 @@ private var endSet = false;
 
 function Start () 
 {
+	transform.position.x -= 20;
+	
 	//set offset
 	offset = Camera.main.transform.position - transform.position;
 	offset.x -= 20;
