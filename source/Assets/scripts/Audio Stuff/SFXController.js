@@ -15,6 +15,16 @@ function Start ()
 {
 	DontDestroyOnLoad(gameObject); //keep this on all scenes
 	DragControls = Camera.main.GetComponent(DragControlsPC);
+	
+	//if find another object that is the same as this, then destroy that motherfucker, there can only be one
+	var objs = GameObject.FindGameObjectsWithTag("PersistentSFXController");
+	for (var i = 0; i < objs.Length; i++)
+	{
+		if (objs[i] != this.gameObject)
+		{
+			GameObject.Destroy(objs[i]);
+		}
+	}
 }
 
 function Update () 
