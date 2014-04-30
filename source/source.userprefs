@@ -1,16 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyPositions.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyShowController.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1262" Column="1" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPositions.js" Line="26" Column="3" />
-      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="14" Column="1" />
-      <File FileName="Assets\scripts\Level Select Stuff\KeyHolderController.js" Line="13" Column="24" />
-      <File FileName="Assets\scripts\Background Stuff\NebulaParentController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Audio Stuff\SFXController.js" Line="19" Column="1" />
-      <File FileName="Assets\scripts\Audio Stuff\BackgroundAudioController.js" Line="21" Column="2" />
-      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\Math Circle Stuff\MathCircleChain.js" Line="10" Column="2" />
-      <File FileName="Assets\scripts\UI Stuff\Sun Stuff\Math Circle Stuff\MathSunRadiiCombine.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPositions.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="23" Column="14" />
+      <File FileName="Assets\scripts\Level Select Stuff\KeyHolderController.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
