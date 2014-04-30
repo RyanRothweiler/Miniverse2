@@ -51,27 +51,32 @@ function Update ()
 	
 	if (!Camera.main.GetComponent(DragControlsPC).introing)
 	{
-		//position
-		if (Camera.main.GetComponent(DragControlsPC).nextLevel)
+		//check if anything has changed in location
+		
+		if (piece.Selected)
 		{
-			PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x);
+			Debug.Log("setting");
+			//position
+			if (Camera.main.GetComponent(DragControlsPC).nextLevel)
+			{
+				PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x);
+				PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
+				PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
+			}
+			else
+			{
+				PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x - 20);
+				PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
+				PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
+			}
+						
+			//rotation
+			PlayerPrefs.SetFloat(KeyNum+"rx", Key.transform.rotation.eulerAngles.x);
+			PlayerPrefs.SetFloat(KeyNum+"ry", Key.transform.rotation.eulerAngles.y);
+			PlayerPrefs.SetFloat(KeyNum+"rz", Key.transform.rotation.eulerAngles.z);
+			
+			//orientation
+			PlayerPrefs.SetInt(KeyNum+"o", piece.Orientation);
 		}
-		else
-		{
-			PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x - 20);
-		}
-		PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
-		PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
-		
-		//rotation
-		PlayerPrefs.SetFloat(KeyNum+"rx", Key.transform.rotation.eulerAngles.x);
-		PlayerPrefs.SetFloat(KeyNum+"ry", Key.transform.rotation.eulerAngles.y);
-		PlayerPrefs.SetFloat(KeyNum+"rz", Key.transform.rotation.eulerAngles.z);
-		
-		//orientation
-		PlayerPrefs.SetInt(KeyNum+"o", piece.Orientation);
-		
-		//parent
-		PlayerPrefs.SetString(KeyNum+"parent", Key.transform.parent.name);
 	}
 }
