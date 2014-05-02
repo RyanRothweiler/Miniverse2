@@ -55,7 +55,6 @@ function Update ()
 		
 		if (piece.Selected)
 		{
-			Debug.Log("setting");
 			//position
 			if (Camera.main.GetComponent(DragControlsPC).nextLevel)
 			{

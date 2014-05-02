@@ -1,14 +1,17 @@
 #pragma strict
 
 //public vars
+public var empty : GameObject;
 public var DeathSphere : GameObject;
 public var KeyHolder : GameObject;
 public var SnapSound : AudioClip;
 public var Completed = false;
+public var TopEmpty : GameObject;
 
 public var Orientation = 1; //1 - N, 2 - E, 3 - S, 4 - W. 1 is always the correction orientation, meaning the key won't snap unless in the 1 orientation
 public var Rotating = false; //if the key is in the process of rotating or not 
 public var Selected = false;
+public var offSet : Vector3;
 
 //holds the object being mated to
 public var Mate1 : GameObject;
@@ -55,24 +58,21 @@ public var Mate5SB : GameObject;
 //private vars
 private var auso : AudioSource;
 private var DragControls : DragControlsPC;
-private var objectInfo : RaycastHit;
-private var FirstGrab = true;
-private var offSet : Vector3;
-private var oldPos : Vector3;
-private var SnapDistance = 0.1; //the range for which to snap
+private var objectInfo : RaycastHit;;
+private var SnapDistance = 0.15; //the range for which to snap
 public var done = false;
 private var done2 = false;
-private var parentDone = false;
-private var vertsChecked = false;
-private var dumTris = new List.<int>(); //list of vertices to remove from the circle
 private var parentSwapped = false;
 private var canCheckMouse = true;
-static var started = false;
+static var started = false; 
+private var topIsSet = false;
 
 function Start () 
 {
 	//get drag controls script
 	DragControls = Camera.main.GetComponent(DragControlsPC);
+	
+	TopEmpty = this.gameObject;
 	
 	//initialize mated
 	if (Mate1 == null)
@@ -122,6 +122,8 @@ function Update ()
 {
 //	done = false;
 	done2 = false;
+	
+	SetTopEmpty(this.gameObject);
 	
 	//check completed
 	Completed = true;
@@ -174,14 +176,20 @@ function Update ()
 	if (DragControls.PlatformPC)
 	{
 		//key dragging
-		if (canCheckMouse && Input.GetMouseButtonDown(0) && !Rotating && !DragControls.KeyRotating)//selecting
+		if (canCheckMouse && Input.GetMouseButtonDown(0) && !Rotating && !DragControls.KeyRotating && !DragControls.KeySelectOff)//selecting
 		{
 			canCheckMouse = false;
 			if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, DragControls.WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 			{
 				if (objectInfo.collider.name == this.name)
 				{
-					offSet = transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z));
+					if (!topIsSet)
+					{
+						topIsSet = true;
+						SetTopEmpty(this.gameObject);
+					}
+			
+					offSet = TopEmpty.transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z));
 					Selected = true;
 				}
 			}
@@ -191,40 +199,44 @@ function Update ()
 		{
 			canCheckMouse = true;
 			Selected = false;
-			parentSwapped = false;
+			parentSwapped = false; 
+			topIsSet = false;
 		}
 		
 		if (Input.GetMouseButtonUp(0))
 		{
 			DragControls.KeySelectOff = false;
 			done = false;
-			parentDone = false;
+			topIsSet = false;
 		}
 		
-		if (Selected && !Rotating && !DragControls.KeyRotating)//moving
+		if (Selected && !Rotating && !DragControls.KeyRotating && !DragControls.KeySelectOff)//moving
 		{
-			transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z)) + offSet;
-			
-			//reparent all the mates
-			if (!parentSwapped)
+			if (!topIsSet)
 			{
-				parentSwapped = true;
-				transform.parent = KeyHolder.transform;
-				Parent(this.gameObject, 10);
+				topIsSet = true;
+				SetTopEmpty(this.gameObject);
 			}
+			TopEmpty.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z)) + offSet;
 		}
 	}
 	if (DragControls.PlatformIOS)
 	{
 		//key dragging
-		if (canCheckMouse && DragControls.Touching1 && !Rotating && !DragControls.KeyRotating)//selecting
+		if (canCheckMouse && DragControls.Touching1 && !Rotating && !DragControls.KeyRotating && !DragControls.KeySelectOff)//selecting
 		{
 			canCheckMouse = false;
 			if (Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(DragControls.Touch1EndPos.x,DragControls.Touch1EndPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 			{
 				if (objectInfo.collider.name == this.name)
 				{
-					offSet = transform.position - Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z));
+					if (!topIsSet)
+					{
+						topIsSet = true;
+						SetTopEmpty(this.gameObject);
+					}
+			
+					offSet = TopEmpty.transform.position - Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z));
 					Selected = true;
 				}
 			}
@@ -235,25 +247,18 @@ function Update ()
 			canCheckMouse = true;
 			Selected = false;
 			parentSwapped = false;
-			parentDone = false;
+			topIsSet = false;
 		}
 		
 		if (!DragControls.Touching1)
 		{
-			DragControls.KeySelectOff = false;
+			DragControls.KeySelectOff = false; 
+			topIsSet = false;
 		}
 		
-		if (Selected && !Rotating && !DragControls.KeyRotating)//moving
+		if (Selected && !Rotating && !DragControls.KeyRotating && !DragControls.KeySelectOff)//moving
 		{
-			transform.position = Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z)) + offSet;
-			
-			//reparent all the mates
-			if (!parentSwapped)
-			{
-				parentSwapped = true;
-				transform.parent = KeyHolder.transform;
-				Parent(this.gameObject, 10);
-			}
+			TopEmpty.transform.position = Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z)) + offSet;
 		}
 	}
 	
@@ -334,95 +339,96 @@ function SoundVolWait()
 	auso.volume = 0.5;
 }
 
-//goes through all mates and parents them to parent
-function Parent(newParent : GameObject, numFrom : int) : IEnumerator
+function SetTopEmpty(next : GameObject)
 {
-	if (!parentDone)
+	if (next.transform.parent && next.transform.parent.name != "KeyHolder")
 	{
-		parentDone = true;
-		
-		if (numFrom != 1 && Mate1 != null && Mated1)
-		{
-			Mate1.transform.parent = newParent.transform;
-			Mate1.GetComponent(KeyPiece).Parent(newParent, 1);
-		}
-		if (numFrom != 2 && Mate2 != null && Mated2)
-		{
-			Mate2.transform.parent = newParent.transform;
-			Mate2.GetComponent(KeyPiece).Parent(newParent, 2);
-		}
-		if (numFrom != 3 && Mate3 != null && Mated3)
-		{
-			Mate3.transform.parent = newParent.transform;
-			Mate3.GetComponent(KeyPiece).Parent(newParent, 3);
-		}
-		if (numFrom != 4 && Mate4 != null && Mated4)
-		{
-			Mate4.transform.parent = newParent.transform;
-			Mate4.GetComponent(KeyPiece).Parent(newParent, 4);
-		}
-		if (numFrom != 5 && Mate5 != null && Mated5)
-		{
-			Mate5.transform.parent = newParent.transform;
-			Mate5.GetComponent(KeyPiece).Parent(newParent, 5);
-		}
+		SetTopEmpty(next.transform.parent.gameObject);
 	}
-//	parentDone = false;
+	else
+	{
+		TopEmpty = next;
+	}
 }
 
 //snaps this key and all it's matached keys also
 function Snap(numFrom : int) : IEnumerator
-{
-	yield;
+{ 
+	//clear selected in all mates
+	DragControls.KeySelectOff = true;
 	
-	//clear parent
-	this.transform.parent = KeyHolder.transform;
-	
-	//parent all mates which are mated to this
-	Parent(this.gameObject, 0);
-	parentDone = false;
+	var newTop = GameObject.Instantiate(empty, Vector3.zero, Quaternion.identity); //create new top
+	newTop.transform.parent = KeyHolder.transform; //parent newtop to keyholder
+	TopEmpty.transform.parent = newTop.transform; //parent the current top to the new top
 	
 	//play click sound
 	auso.Play();
-	
-	//clear selected in all mates
-	DragControls.KeySelectOff = true;
 
 	if (!done)
 	{		
 		done = true;
 		if (numFrom == 1) //mate point 1
-		{					
+		{
+			//make sure the mate has the correct top empty
+			Mate1.GetComponent(KeyPiece).SetTopEmpty(Mate1);	
+					
 			Mated1 = true;
 			Mate1.GetComponent(KeyPiece).Mated1 = true;
-			transform.position = Mate1.transform.position + Mate1Offset;//snap self	
+			TopEmpty.transform.position += Mate1.GetComponent(KeyPiece).MatePoint1.transform.position - MatePoint1.transform.position;//snap self
+			Mate1.GetComponent(KeyPiece).TopEmpty.transform.parent = newTop.transform;
+			Mate1.GetComponent(KeyPiece).TopEmpty = newTop;
 		}
 		if (numFrom == 2) //mate point 2
-		{						
+		{
+			//make sure the mate has the correct top empty
+			Mate2.GetComponent(KeyPiece).SetTopEmpty(Mate2);	
+							
 			Mated2 = true;
 			Mate2.GetComponent(KeyPiece).Mated2 = true;
-			transform.position = Mate2.transform.position + Mate2Offset;//snap self
+			TopEmpty.transform.position += Mate2.GetComponent(KeyPiece).MatePoint2.transform.position - MatePoint2.transform.position;//snap self
+			Mate2.GetComponent(KeyPiece).TopEmpty.transform.parent = newTop.transform;
+			Mate2.GetComponent(KeyPiece).TopEmpty = newTop;
 		}
 		if (numFrom == 3) //mate point 3
-		{			
+		{
+			//make sure the mate has the correct top empty
+			Mate3.GetComponent(KeyPiece).SetTopEmpty(Mate3);	
+					
 			Mated3 = true;
 			Mate3.GetComponent(KeyPiece).Mated3 = true;
-			transform.position = Mate3.transform.position + Mate3Offset;//snap self
+			TopEmpty.transform.position += Mate3.GetComponent(KeyPiece).MatePoint3.transform.position - MatePoint3.transform.position;//snap self
+			Mate3.GetComponent(KeyPiece).TopEmpty.transform.parent = newTop.transform;
+			Mate3.GetComponent(KeyPiece).TopEmpty = newTop;
 		}
 		if (numFrom == 4) //mate point 4
-		{			
+		{
+			//make sure the mate has the correct top empty
+			Mate4.GetComponent(KeyPiece).SetTopEmpty(Mate4);	
+			
 			Mated4 = true;
 			Mate4.GetComponent(KeyPiece).Mated4 = true;
-			transform.position = Mate4.transform.position + Mate4Offset;//snap self
+			TopEmpty.transform.position += Mate4.GetComponent(KeyPiece).MatePoint4.transform.position - MatePoint4.transform.position;//snap self
+			Mate4.GetComponent(KeyPiece).TopEmpty.transform.parent = newTop.transform;
+			Mate4.GetComponent(KeyPiece).TopEmpty = newTop;
 		}
 		if (numFrom == 5) //mate point 5
 		{
+			//make sure the mate has the correct top empty
+			Mate5.GetComponent(KeyPiece).SetTopEmpty(Mate5);	
+			
 			Mated5 = true;
 			Mate5.GetComponent(KeyPiece).Mated5 = true;
-			transform.position = Mate5.transform.position + Mate5Offset;//snap self
+			TopEmpty.transform.position += Mate5.GetComponent(KeyPiece).MatePoint5.transform.position - MatePoint5.transform.position;//snap self
+			Mate5.GetComponent(KeyPiece).TopEmpty.transform.parent = newTop.transform;
+			Mate5.GetComponent(KeyPiece).TopEmpty = newTop;
 		}
 	}
-	done = false;
+	
+	//set new top
+	TopEmpty = newTop;
+	
+	//clear done for next snap
+	done = false;	
 }
 
 //updates the snap positions based on the current orientation
@@ -474,6 +480,4 @@ function UpdateSnaps(numFrom : int, intro : boolean) : IEnumerator
 			}
 		}
 	}
-//	yield WaitForSeconds(0.1);
-//	done2 = false;
 }

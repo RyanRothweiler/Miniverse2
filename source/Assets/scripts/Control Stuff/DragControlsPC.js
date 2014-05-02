@@ -2643,12 +2643,12 @@ function RotateKey(obj : GameObject)
 	//if this piece is not already rotating then rotate it
 	if (!KeyRotating)
 	{
+		//get the top most empty object to rotate
+		obj.GetComponent(KeyPiece).SetTopEmpty(obj);
+		var rotObj = obj.GetComponent(KeyPiece).TopEmpty;
+		
 		KeyRotating = true;
 		obj.GetComponent(KeyPiece).Rotating = true;
-		
-		//make sure the rotating key is the parent
-		obj.GetComponent(KeyPiece).transform.parent = LevelOffsetController.transform.Find("KeyHolder").transform;
-		obj.GetComponent(KeyPiece).Parent(obj, 10);
 		
 		//rotate the object first
 		obj.GetComponent(KeyPiece).UpdateSnaps(10, false); //rotate the snaps 90 degrees
@@ -2662,15 +2662,27 @@ function RotateKey(obj : GameObject)
 			obj.GetComponent(KeyPiece).Orientation++;
 		}
 		//rotate transform
-		var targetRotation = Quaternion.LookRotation(obj.transform.forward, obj.transform.right * -1);
-		for (var i = 0; i < 15; i++)
+		if (rotObj.tag == "key")
 		{
-			yield;
-			obj.transform.rotation = Quaternion.Slerp(obj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
+			var targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * -1);
+			for (var i = 0; i < 15; i++)
+			{
+				yield;
+				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
+			}
+		}
+		else
+		{
+			targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * 1);
+			for (i = 0; i < 25; i++)
+			{
+				yield;
+				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
+			}
 		}
 		
 		//rotate the final small amount to get an exact rotation. so if the piece is rotated many times it doesn't slowly get off rotation a little every rotation, which compounds to a lot.		
-		obj.transform.Rotate(0, 0, Quaternion.Angle(targetRotation, obj.transform.rotation));
+		rotObj.transform.Rotate(0, 0, Quaternion.Angle(targetRotation, rotObj.transform.rotation));
 		
 		yield WaitForSeconds(0.1);
 		KeyRotating = false;
