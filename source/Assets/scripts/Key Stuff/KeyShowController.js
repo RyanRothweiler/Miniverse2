@@ -4,7 +4,6 @@ public var Key : GameObject;
 public var KeyNum : String;
 
 //private vars
-private var InfoHolder : KeyPositions;
 private var piece : KeyPiece;
 private var setTrue = false;
 

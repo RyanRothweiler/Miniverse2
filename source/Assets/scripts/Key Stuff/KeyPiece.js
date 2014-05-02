@@ -357,7 +357,7 @@ function Snap(numFrom : int) : IEnumerator
 	//clear selected in all mates
 	DragControls.KeySelectOff = true;
 	
-	var newTop = GameObject.Instantiate(empty, Vector3.zero, Quaternion.identity); //create new top
+	var newTop = GameObject.Instantiate(empty, this.transform.position, Quaternion.identity); //create new top
 	newTop.transform.parent = KeyHolder.transform; //parent newtop to keyholder
 	TopEmpty.transform.parent = newTop.transform; //parent the current top to the new top
 	

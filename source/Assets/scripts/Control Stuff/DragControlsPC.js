@@ -2661,6 +2661,7 @@ function RotateKey(obj : GameObject)
 		{
 			obj.GetComponent(KeyPiece).Orientation++;
 		}
+		
 		//rotate transform
 		if (rotObj.tag == "key")
 		{
@@ -2674,7 +2675,7 @@ function RotateKey(obj : GameObject)
 		else
 		{
 			targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * 1);
-			for (i = 0; i < 25; i++)
+			for (i = 0; i < 30; i++)
 			{
 				yield;
 				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
@@ -2892,86 +2893,7 @@ function LevelWon()
 		FailType.transform.parent = null; //unparent
 		
 		//set level win level select variables
-		if (Application.loadedLevelName == "1 Important")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level1 = true;
-		}
-		if (Application.loadedLevelName == "2 Eyes")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level2 = true;
-		}
-		if (Application.loadedLevelName == "3 Pi")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level3 = true;
-		}
-		if (Application.loadedLevelName == "4 Race")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level4 = true;
-		}
-		if (Application.loadedLevelName == "5 Pinch")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level5 = true;
-		}
-		if (Application.loadedLevelName == "6 Trident")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level6 = true;
-		}
-		if (Application.loadedLevelName == "7 Double Pi")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level7 = true;
-		}
-		if (Application.loadedLevelName == "8 Decay")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level8 = true;
-		}
-		if (Application.loadedLevelName == "9 Color")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level9 = true;
-		}
-		if (Application.loadedLevelName == "10 Heron")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level10 = true;
-		}
-		if (Application.loadedLevelName == "11 Red Neck")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level11 = true;
-		}
-		if (Application.loadedLevelName == "12 Human")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level12 = true;
-		}
-		if (Application.loadedLevelName == "13 Shrink")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level13 = true;
-		}
-		if (Application.loadedLevelName == "14 Moldorm")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level14 = true;
-		}
-		if (Application.loadedLevelName == "15 Tie")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level15 = true;
-		}
-		if (Application.loadedLevelName == "16 Armageddon")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level16 = true;
-		}
-		if (Application.loadedLevelName == "17 Three")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level17 = true;
-		}
-		if (Application.loadedLevelName == "18 Soccer")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level18 = true;
-		}
-		if (Application.loadedLevelName == "19 Insect")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level19 = true;
-		}
-		if (Application.loadedLevelName == "20 Speed")
-		{
-			transform.parent.GetComponent(LevelsCompleted).level20 = true;
-		}
+		PlayerPrefs.SetInt("LevelCompleted "+Application.loadedLevel.ToString(), 1);
 	}
 }
  

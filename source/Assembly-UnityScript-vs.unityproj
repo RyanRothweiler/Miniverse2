@@ -76,7 +76,6 @@
      <Compile Include="Assets\scripts\Human Stuff\HumanShip.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyLockingController.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyPiece.js" />
-     <Compile Include="Assets\scripts\Key Stuff\KeyPositions.js" />
      <Compile Include="Assets\scripts\Key Stuff\KeyShowController.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\BackgroundDebrisParenting.js" />
      <Compile Include="Assets\scripts\Level Select Stuff\KeyHolderController.js" />
