@@ -16,9 +16,9 @@ function Start ()
 	if (PlayerPrefs.HasKey(KeyNum+"px"))
 	{		
 		//location
-		Key.transform.position.x = PlayerPrefs.GetFloat(KeyNum+"px");
-		Key.transform.position.y = PlayerPrefs.GetFloat(KeyNum+"py");
-		Key.transform.position.z = PlayerPrefs.GetFloat(KeyNum+"pz");
+		Key.transform.TransformPoint(Key.transform.position).x = PlayerPrefs.GetFloat(KeyNum+"px");
+		Key.transform.TransformPoint(Key.transform.position).y = PlayerPrefs.GetFloat(KeyNum+"py");
+		Key.transform.TransformPoint(Key.transform.position).z = PlayerPrefs.GetFloat(KeyNum+"pz");
 		
 		//rotation
 		Key.transform.rotation.eulerAngles.x = PlayerPrefs.GetFloat(KeyNum+"rx");
@@ -75,6 +75,8 @@ function Update ()
 			
 			//orientation
 			PlayerPrefs.SetInt(KeyNum+"o", piece.Orientation);
+			
+			PlayerPrefs.Save();
 		}
 	}
 }

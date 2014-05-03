@@ -4,6 +4,7 @@
 public var Locked : boolean;
 public var FinalPuzzlePlane : GameObject;
 public var LockPlane : GameObject;
+public var pieceMat : Material;
 
 //private var
 private var dragControls : DragControlsPC;
@@ -58,7 +59,13 @@ function BossUnlockAnim()
 	dragControls.LSelectHalt = true;
 	
 	//smooth move the level tags while fading out each puzzle piece and fading in the completed puzzle
-	dragControls.FadeOutKeys(); //start fading out the puzzle pieces
+	do //start fading out the puzzle pieces
+	{
+		pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, pieceMat.GetColor("_Color").a - (Time.deltaTime * 2)));
+		yield WaitForSeconds(0.01);
+	} while (pieceMat.GetColor("_Color").a > 0);
+	
+	
 	var velocity : float;
 	do
 	{
@@ -69,15 +76,19 @@ function BossUnlockAnim()
 		
 		//fade in the final puzzle plane
 		var KeyMat = FinalPuzzlePlane.renderer.material;
-		var GlowMat = FinalPuzzlePlane.transform.Find("Glow").renderer.material;
 		if (KeyMat.GetColor("_Color").a < 1)
 		{
 			KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime * 2)));
-			GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a + (Time.deltaTime * 2)));
 		}
 		
 	} while (dragControls.LevelOffsetController.transform.position.x > -155.6);
 	dragControls.LevelOffset.x = -155.6;
+	
+	do //fade in the final puzzle plane
+	{
+		pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, pieceMat.GetColor("_Color").a + (Time.deltaTime * 2)));
+		yield WaitForSeconds(0.01);
+	} while (pieceMat.GetColor("_Color").a < 0);
 	
 	//wait a bit
 	yield WaitForSeconds(0.3);

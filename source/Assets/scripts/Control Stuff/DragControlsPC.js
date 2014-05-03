@@ -65,6 +65,7 @@ public var MovingPeople = false; //if people are being moved or not
 public var KeyRotating = false; //if any key is in the process of rotating
 public var KeySelectOff = false;
 public var introing = true; //if the level is intro zooming
+public var KeySelected = false;
 
 public var Phase1 = false;
 public var Phase2 = false;
@@ -1277,7 +1278,6 @@ function FadeOutKeys()
 	do
 	{
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a - (Time.deltaTime * 2)));
-//		GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a - (Time.deltaTime * 2)));
 		yield WaitForSeconds(0.01);
 	} while (KeyMat.GetColor("_Color").a > 0);
 }
@@ -1295,10 +1295,6 @@ function FadeInKeys()
 	do
 	{
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime * 2)));
-//		if (GlowMat.GetColor("_Color").a < )
-//		{
-//			GlowMat.SetColor("_Color", Color(GlowMat.GetColor("_Color").r, GlowMat.GetColor("_Color").g, GlowMat.GetColor("_Color").b, GlowMat.GetColor("_Color").a + (Time.deltaTime * 2)));
-//		}
 		yield WaitForSeconds(0.01);
 	} while (KeyMat.GetColor("_Color").a < 1);
 }
@@ -2263,7 +2259,10 @@ function LevelSelect()
 		if (PlatformPC)
 		{
 			//for horizontal scrolling
-			LevelOffset.x += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 1000;
+			if (!KeySelected)
+			{
+				LevelOffset.x += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 1000;
+			}
 			
 			//selecting level select objects
 			if(Input.GetMouseButtonDown(0))
@@ -2445,7 +2444,10 @@ function LevelSelect()
 					//check if a tap, if not then a drag
 					if ((Touch1StartPos.x + TouchTapBounds.x > Touch1EndPos.x) && (Touch1StartPos.x - TouchTapBounds.x < Touch1EndPos.x) && (Touch1StartPos.y + TouchTapBounds.y > Touch1EndPos.y) && (Touch1StartPos.y - TouchTapBounds.y < Touch1EndPos.y))
 					{
-						Touch1Tap = true;
+						if (!KeySelected)
+						{
+							Touch1Tap = true;
+						}
 					}
 					else if (Touch1StartPos.y < 250) //if a move and on the bottom half of the screen
 					{

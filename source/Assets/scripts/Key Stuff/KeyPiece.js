@@ -34,26 +34,6 @@ public var Mated3 = false;
 public var Mated4 = false;
 public var Mated5 = false;
 
-//the difference between the two objects, tells the piece where it should be in relation to the other piece
-public var Mate1Offset : Vector3;
-public var Mate2Offset : Vector3;
-public var Mate3Offset : Vector3;
-public var Mate4Offset : Vector3;
-public var Mate5Offset : Vector3;
-
-//holds the sphere of vertices which to remove when that number has been mated
-public var Mate1S : GameObject; //the first sphere to check 
-public var Mate1SB : GameObject; //the second sphre to check
-public var Mate2S : GameObject;
-public var Mate2SB : GameObject;
-public var Mate3S : GameObject;
-public var Mate3SB : GameObject;
-public var Mate4S : GameObject;
-public var Mate4SB : GameObject;
-public var Mate5S : GameObject;
-public var Mate5SB : GameObject;
-
-
 
 //private vars
 private var auso : AudioSource;
@@ -94,15 +74,6 @@ function Start ()
 	if (Mate5 == null)
 	{
 		Mated5 = true;
-	}
-	
-	//update the snaplocations based on the orientation
-	for (var i = 0; i < Orientation - 1; i++)
-	{
-		Mate1Offset = Quaternion.Euler(0,0,-90) * Mate1Offset;
-		Mate2Offset = Quaternion.Euler(0,0,-90) * Mate2Offset;
-		Mate3Offset = Quaternion.Euler(0,0,-90) * Mate3Offset;
-		Mate4Offset = Quaternion.Euler(0,0,-90) * Mate4Offset; 
 	}
 	
 	//see if this objects has an audio source, if not make one
@@ -149,7 +120,7 @@ function Update ()
 	}
 	
 	//piece one intro tutorial
-	if (this.name == "Piece1")
+	if (this.name == "Piece1" && DragControls.world == 1)
 	{
 		//if the saved data key exists then don't show the 
 		if (!PlayerPrefs.HasKey("PuzzleTut"))
@@ -191,6 +162,7 @@ function Update ()
 			
 					offSet = TopEmpty.transform.position - Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y,DragControls.WorldZDepth - Camera.main.transform.position.z));
 					Selected = true;
+					DragControls.KeySelected = true;
 				}
 			}
 		}
@@ -201,6 +173,7 @@ function Update ()
 			Selected = false;
 			parentSwapped = false; 
 			topIsSet = false;
+			DragControls.KeySelected = false;
 		}
 		
 		if (Input.GetMouseButtonUp(0))
@@ -238,6 +211,7 @@ function Update ()
 			
 					offSet = TopEmpty.transform.position - Camera.main.ScreenToWorldPoint(Vector3(DragControls.Touch1EndPos.x, DragControls.Touch1EndPos.y, DragControls.WorldZDepth - Camera.main.transform.position.z));
 					Selected = true;
+					DragControls.KeySelected = true;
 				}
 			}
 		}
@@ -248,6 +222,7 @@ function Update ()
 			Selected = false;
 			parentSwapped = false;
 			topIsSet = false;
+			DragControls.KeySelected = false;
 		}
 		
 		if (!DragControls.Touching1)
@@ -437,11 +412,6 @@ function UpdateSnaps(numFrom : int, intro : boolean) : IEnumerator
 	if (!done2)
 	{		
 		done2 = true;
-
-		Mate1Offset = Quaternion.Euler(0,0,-90) * Mate1Offset;
-		Mate2Offset = Quaternion.Euler(0,0,-90) * Mate2Offset;
-		Mate3Offset = Quaternion.Euler(0,0,-90) * Mate3Offset;
-		Mate4Offset = Quaternion.Euler(0,0,-90) * Mate4Offset; 
 		
 		if (numFrom != 10)
 		{
