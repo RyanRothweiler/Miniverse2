@@ -2449,7 +2449,7 @@ function LevelSelect()
 							Touch1Tap = true;
 						}
 					}
-					else if (Touch1StartPos.y < 250) //if a move and on the bottom half of the screen
+					else //if (Touch1StartPos.y < 250) //if a move and on the bottom half of the screen
 					{
 						//unpress level tag
 						if (iosTagDepress)
