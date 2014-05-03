@@ -2441,7 +2441,7 @@ function LevelSelect()
 						}
 						
 					}
-					//check if a tap, if not then a drag
+					//check if a tap
 					if ((Touch1StartPos.x + TouchTapBounds.x > Touch1EndPos.x) && (Touch1StartPos.x - TouchTapBounds.x < Touch1EndPos.x) && (Touch1StartPos.y + TouchTapBounds.y > Touch1EndPos.y) && (Touch1StartPos.y - TouchTapBounds.y < Touch1EndPos.y))
 					{
 						if (!KeySelected)
@@ -2449,7 +2449,7 @@ function LevelSelect()
 							Touch1Tap = true;
 						}
 					}
-					else //if (Touch1StartPos.y < 250) //if a move and on the bottom half of the screen
+					else if (!KeySelected) //else draggin' if no key is selected
 					{
 						//unpress level tag
 						if (iosTagDepress)
