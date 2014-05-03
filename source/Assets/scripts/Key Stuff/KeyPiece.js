@@ -7,6 +7,7 @@ public var KeyHolder : GameObject;
 public var SnapSound : AudioClip;
 public var Completed = false;
 public var TopEmpty : GameObject;
+public var key1TutUse = true;
 
 public var Orientation = 1; //1 - N, 2 - E, 3 - S, 4 - W. 1 is always the correction orientation, meaning the key won't snap unless in the 1 orientation
 public var Rotating = false; //if the key is in the process of rotating or not 
@@ -120,7 +121,7 @@ function Update ()
 	}
 	
 	//piece one intro tutorial
-	if (this.name == "Piece1" && DragControls.world == 1)
+	if (this.name == "Piece1" && key1TutUse)
 	{
 		//if the saved data key exists then don't show the 
 		if (!PlayerPrefs.HasKey("PuzzleTut"))

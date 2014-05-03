@@ -1073,7 +1073,7 @@ function Update ()
 		isPlayOne = true;
 		ZoomIn();
 		
-		if (transform.position.z >= WorldZDepth + 10)
+		if (transform.position.z >= WorldZDepth + 20)
 		{
 			StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
 			if (selectedWorld.collider != null && selectedWorld.collider.name == "BackArrow")
@@ -2668,7 +2668,7 @@ function RotateKey(obj : GameObject)
 		if (rotObj.tag == "key")
 		{
 			var targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * -1);
-			for (var i = 0; i < 15; i++)
+			for (var i = 0; i < 20; i++)
 			{
 				yield;
 				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 

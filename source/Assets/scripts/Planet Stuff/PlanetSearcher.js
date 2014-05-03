@@ -256,6 +256,7 @@ function OnTriggerEnter(info : Collider)
 	//red asteroid death
 	if (info.gameObject.name == "RedAsteroid" && transform.parent == null && !Invincible)
 	{
+		this.GetComponent(AudioSource).Play();
 		Alive = false;
 		GameObject.Instantiate(PlanetExplosion, transform.position, Quaternion(0,0,0,0));
 		transform.position = Vector3(1000, 1000, 1000);

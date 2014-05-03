@@ -11,28 +11,32 @@ function Start ()
 {
 	//initialize
 	piece = Key.GetComponent(KeyPiece);
-			
-	//if there is data available then load that.
+	if (!PlayerPrefs.HasKey(KeyNum+"o"))
+	{
+		PlayerPrefs.SetInt(KeyNum+"o", piece.Orientation);
+	}
+	
+	//if there is location data available then load that.
 	if (PlayerPrefs.HasKey(KeyNum+"px"))
 	{		
 		//location
-		Key.transform.TransformPoint(Key.transform.position).x = PlayerPrefs.GetFloat(KeyNum+"px");
-		Key.transform.TransformPoint(Key.transform.position).y = PlayerPrefs.GetFloat(KeyNum+"py");
-		Key.transform.TransformPoint(Key.transform.position).z = PlayerPrefs.GetFloat(KeyNum+"pz");
-		
-		//rotation
-		Key.transform.rotation.eulerAngles.x = PlayerPrefs.GetFloat(KeyNum+"rx");
-		Key.transform.rotation.eulerAngles.y = PlayerPrefs.GetFloat(KeyNum+"ry");
-		Key.transform.rotation.eulerAngles.z = PlayerPrefs.GetFloat(KeyNum+"rz");
-		
+		Key.transform.position.x = PlayerPrefs.GetFloat(KeyNum+"px");
+		Key.transform.position.y = PlayerPrefs.GetFloat(KeyNum+"py");
+		Key.transform.position.z = PlayerPrefs.GetFloat(KeyNum+"pz");
+	}
+	
+	//if there is orientation data available then load that.
+	if (PlayerPrefs.HasKey(KeyNum+"o"))
+	{
 		//orientation
-		if (PlayerPrefs.HasKey(KeyNum+"o"))
+		piece.Orientation = PlayerPrefs.GetInt(KeyNum+"o");
+		
+		//base rotation on the orientation
+		var targetRotation = Quaternion.LookRotation(Key.transform.forward, Key.transform.right * -1);
+		for (var i = 1; i < piece.Orientation; i++)
 		{
-			piece.Orientation = PlayerPrefs.GetInt(KeyNum+"o");
-		}
-		else
-		{
-			piece.Orientation = 1;
+			targetRotation = Quaternion.LookRotation(Key.transform.forward, Key.transform.right * -1);
+			Key.transform.Rotate(0, 0, Quaternion.Angle(targetRotation, Key.transform.rotation));
 		}
 	}
 	
@@ -41,7 +45,8 @@ function Start ()
 }
 
 function Update () 
-{	
+{
+	//wake up key
 	if (!setTrue)
 	{
 		setTrue = true;
@@ -50,33 +55,24 @@ function Update ()
 	
 	if (!Camera.main.GetComponent(DragControlsPC).introing)
 	{
-		//check if anything has changed in location
-		
-		if (piece.Selected)
+		//position
+		if (Camera.main.GetComponent(DragControlsPC).nextLevel)
 		{
-			//position
-			if (Camera.main.GetComponent(DragControlsPC).nextLevel)
-			{
-				PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x);
-				PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
-				PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
-			}
-			else
-			{
-				PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x - 20);
-				PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
-				PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
-			}
-						
-			//rotation
-			PlayerPrefs.SetFloat(KeyNum+"rx", Key.transform.rotation.eulerAngles.x);
-			PlayerPrefs.SetFloat(KeyNum+"ry", Key.transform.rotation.eulerAngles.y);
-			PlayerPrefs.SetFloat(KeyNum+"rz", Key.transform.rotation.eulerAngles.z);
-			
-			//orientation
-			PlayerPrefs.SetInt(KeyNum+"o", piece.Orientation);
-			
-			PlayerPrefs.Save();
+			PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x);
+			PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
+			PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
 		}
+		else
+		{
+			PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x - 20);
+			PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
+			PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
+		}
+		
+		//orientation
+		PlayerPrefs.SetInt(KeyNum+"o", piece.Orientation);
+		
+		//save everything
+		PlayerPrefs.Save();
 	}
 }
