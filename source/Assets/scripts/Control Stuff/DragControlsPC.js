@@ -610,7 +610,7 @@ function Update ()
 			{
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
 				{
-					if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
+					if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher) && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable) //if the planet is draggable
 					{
 						worldSelected = true;
 						selectedWorld = objectInfo;
@@ -671,7 +671,10 @@ function Update ()
 				{
 					if (!isLevelSelect && selectedWorld.collider != null && (selectedWorld.collider.name != "BackArrow" && selectedWorld.collider.name != "Shield"))
 					{
-						selectedWorld.collider.GetComponent(PlanetSearcher).Selected = false;
+						if (selectedWorld.collider.GetComponent(PlanetSearcher))
+						{
+							selectedWorld.collider.GetComponent(PlanetSearcher).Selected = false;
+						}
 					}
 					worldSelected = false;//reset
 				}

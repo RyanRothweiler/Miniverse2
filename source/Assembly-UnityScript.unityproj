@@ -140,6 +140,7 @@
      <Compile Include="Assets\scripts\UI Stuff\Sun Stuff\Mesh Circle Stuff\WireframeRender.js" />
      <Compile Include="Assets\scripts\UI Stuff\Sun Stuff\ShrinkCode.js" />
      <Compile Include="Assets\scripts\UI Stuff\Sun Stuff\SunRadii.js" />
+     <Compile Include="Assets\scripts\UI Stuff\Sun Stuff\VisualizeKill.js" />
      <Compile Include="Assets\scripts\UI Stuff\TextTypeEffect.js" />
      <Compile Include="Assets\scripts\UI Stuff\WarningController.js" />
      <Compile Include="Assets\scripts\UI Stuff\ZoomStarStreaks.js" />
@@ -155,6 +156,7 @@
      <Compile Include="Assets\scripts\World2 Stuff\ShieldController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\Dot_SCR.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\ShipDrag.js" />
      <None Include="Assets\shaders\RampRim.shader" />
      <None Include="Assets\shaders\CustFontShader.shader" />
      <None Include="Assets\shaders\RampRimSpecBump.shader" />
