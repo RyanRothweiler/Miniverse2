@@ -74,6 +74,8 @@ public var Phase3 = false;
 public var PlatformIOS = false;
 public var PlatformPC = false;
 
+public var World2Boss = false;
+
 public var canMoveToWorld = true; //if can zoom to world
 public var canMoveToPlay = false; //if can zoom to play
 public var MovingToWorldView : boolean; //if currently  in the moving process
@@ -180,7 +182,7 @@ private var str : String;
 private var depressedTag : RaycastHit;
 private var selectedPlanet : Transform;
 private var mousePos : Vector3;
-private var offSet : Vector3;
+public var offSet : Vector3;
 private var worldScreenPoint : Vector3;
 private var shrinkCode : ShrinkCode;
 private var flyingPeople : FlyingPeople;
@@ -416,9 +418,10 @@ function Start ()
 		{
 			objects[i].transform.parent = SceneScaleController.transform;
 		}
-		//red asteroids
-//		if (objects[i].name == "RedAsteroid")
-//			objects[i].transform.parent = SceneScaleController.transform;
+		if (objects[i].tag == "AlienBoss")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
 	}
 
 	peopleGoal = personObjects.length;
@@ -529,7 +532,7 @@ function Update ()
 		{
 			//camera zooming
 			//zooming out
-			if (Input.GetMouseButtonDown(0) && FirstClick)
+			if (Input.GetMouseButtonDown(0) && FirstClick && !World2Boss)
 			{
 				if(CanScrollZoom && !LevelPaused)
 				{
@@ -664,7 +667,7 @@ function Update ()
 			//if release mouse
 			if (Input.GetMouseButtonUp(0) && !AutoMoving && !LevelPaused)
 			{
-				if(!TouchAutoMove)
+				if(!TouchAutoMove && !World2Boss)
 				{
 					if (!isLevelSelect && selectedWorld.collider != null && (selectedWorld.collider.name != "BackArrow" && selectedWorld.collider.name != "Shield"))
 					{
@@ -738,7 +741,7 @@ function Update ()
 						//check double tapping. do this while touch1startpos still holds the last touch position
 						tapCount++;
 						TapResetWait();
-						if (tapCount >= 2 && DoubleTapZoom && (touch.position.x > Touch1StartPos.x - 20 && touch.position.x < Touch1StartPos.x + 20) && (touch.position.y > Touch1StartPos.y - 20 && touch.position.y < Touch1StartPos.y + 20)) //if double tapped then zoom into that position
+						if (!World2Boss && tapCount >= 2 && DoubleTapZoom && (touch.position.x > Touch1StartPos.x - 20 && touch.position.x < Touch1StartPos.x + 20) && (touch.position.y > Touch1StartPos.y - 20 && touch.position.y < Touch1StartPos.y + 20)) //if double tapped then zoom into that position
 						{
 							tapCount = 0;
 							if (LevelPaused) 
@@ -937,7 +940,7 @@ function Update ()
 		}		
 					
 		//check for sun proximity 
-		if (!TouchAutoMove)
+		if (!TouchAutoMove && !World2Boss)
 		{
 			for (i = 0; i < worldObjects.length; i++)
 			{

@@ -35,7 +35,7 @@ function OnTriggerEnter (collision : Collider)
 		}
 		
 		//alien ship
-		if (collision.tag == "AlienShipProjectile" && !killed)
+		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile") && !killed)
 		{
 			killed = true;
 			//clean up scene and delete planet
