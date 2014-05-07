@@ -3,10 +3,12 @@
 //public vars
 
 //private vars
+private var killed = false;
+private var dragControls : DragControlsPC;
 
 function Start () 
 {
-
+	dragControls = Camera.main.GetComponent(DragControlsPC);
 }
 
 function Update () 
@@ -28,4 +30,23 @@ function KillTo(target : GameObject)
 	
 	//then really kill it forever
 	transform.position = Vector3(1000,1000,1000);
+}
+
+function OnTriggerEnter (collision : Collider) 
+{
+	if (!dragControls.halt)
+	{
+		//alien ship
+		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile") && !killed)
+		{
+			killed = true;
+			//clean up scene and delete planet
+			if (dragControls.selectedWorld == this.gameObject)
+			{
+				dragControls.worldSelected = false; //world not selected
+			}
+			GameObject.Instantiate(dragControls.PlanetExplosion, transform.position, Quaternion(0,0,0,0)); //create explosion
+			this.transform.position = Vector3(1000,1000,1000);
+		}
+	}
 }

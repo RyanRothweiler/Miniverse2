@@ -10,16 +10,13 @@ public var dotSpeed : float; //the speed at which to move the dots 0.2
 public var moveSpeed : float; //3.4
 
 //private var
+private var killed = false;
 private var dragControls : DragControlsPC;
 private var projectileNum = 0;
 private var objectInfo : RaycastHit;
 public var oldDist = 1000.0;
 private var offset : Vector3;
 private var oVirgin = true;
-
-private var screenMoveBuffer = Vector2(0.35,0.35); //the inset of the edge to start moving the screen
-private var moveDistx = 0.0;
-private var moveDisty = 0.0;
 
 function Start () 
 {
@@ -29,13 +26,18 @@ function Start ()
 		DotEnd.transform.parent = null;
 		
 		//add sphere collider
-		gameObject.AddComponent("SphereCollider");
-		this.GetComponent(SphereCollider).radius = 3;
-		this.GetComponent(SphereCollider).center.y += 3;
+		gameObject.AddComponent("CapsuleCollider");
+		this.GetComponent(CapsuleCollider).radius = 0.979;
+		this.GetComponent(CapsuleCollider).height = 4.6;
+		this.GetComponent(CapsuleCollider).center.y += 3;
 		
 		//place dots
 		projectileNum = Vector3.Distance(DotStart.transform.position, DotEnd.transform.position) * 1;
 		PlaceDots();
+	}
+	else
+	{
+		GameObject.Destroy(DotEnd);
 	}
 }
 
@@ -61,7 +63,7 @@ function Update ()
 	}
 	
 	//if selected
-	if (Selected)
+	if (Selected && !killed)
 	{
 		ShipMovement(); //move the shield
 	}
@@ -85,95 +87,6 @@ function ShipMovement()
 	}
 }
 
-//move the screen when this gets close to the edges
-function ScreenMovement()
-{
-//	var moveCap = 3;
-//	
-//	var hittingx = 0;
-//	var hittingy = 0;
-//	
-//	//get the objects position in screen space, dug
-//	var screenPoint = Camera.main.WorldToViewportPoint(transform.position);
-//	
-//	//shield on left of screen
-//	if (screenPoint.x < screenMoveBuffer.x)
-//	{
-//		hittingx = -1;
-//	}
-//	//shield on right of screen
-//	if (screenPoint.x > (1 - screenMoveBuffer.x))
-//	{
-//		hittingx = 1;
-//	}
-//	//shield on bottom of screen
-//	if (screenPoint.y < screenMoveBuffer.y)
-//	{
-//		hittingy = -1;
-//	}
-//	//shield on top of screen
-//	if (screenPoint.y > (1 - screenMoveBuffer.y))
-//	{
-//		hittingy = 1;
-//	}
-//	
-//	//x
-//	//if not hitting then slow down the move distance
-//	if (hittingx == 0)
-//	{
-//		if (Mathf.Abs(moveDistx) < 0.01)
-//		{
-//			moveDistx = 0;
-//		}
-//		else
-//		{
-//			moveDistx = Mathf.Lerp(moveDistx, 0, Time.deltaTime * 10);
-//		}
-//	}
-//	else //if hitting then increase the move distance
-//	{
-//		if (Mathf.Abs(moveDistx) < moveCap)
-//		{
-//			moveDistx += 1 * hittingx;
-//		}
-//		else
-//		{
-//			moveDistx = moveCap * hittingx;
-//		}
-//	}
-//	
-//	//y
-//	//if not hitting then slow down the move distance
-//	if (hittingy == 0)
-//	{
-//		if (Mathf.Abs(moveDisty) < 0.01)
-//		{
-//			moveDisty = 0;
-//		}
-//		else
-//		{
-//			moveDisty = Mathf.Lerp(moveDisty, 0, Time.deltaTime * 10);
-//		}
-//	}
-//	else //if hitting then increase the move distance
-//	{
-//		if (Mathf.Abs(moveDisty) < moveCap)
-//		{
-//			moveDisty += 1 * hittingy;
-//		}
-//		else
-//		{
-//			moveDisty = moveCap * hittingy;
-//		}
-//	}
-//	
-//	if (Selected)
-//	{
-//		Camera.main.transform.position.x = Mathf.Lerp(Camera.main.transform.position.x, (Camera.main.transform.position.x + moveDistx), Time.deltaTime * speed);
-//		Camera.main.transform.position.y = Mathf.Lerp(Camera.main.transform.position.y, (Camera.main.transform.position.y + moveDisty), Time.deltaTime * speed);
-//	}
-}
-
 function PlaceDots()
 {
 	for (var i = 0; i < projectileNum; i++)
@@ -192,5 +105,26 @@ function PlaceDots()
 		obj.transform.position = (i * ((DotEnd.transform.position - DotStart.transform.position) / projectileNum)) + DotStart.transform.position;
 		//randomize the position a bit
 		obj.transform.position.z = 15;
+	}
+}
+
+function OnTriggerEnter (collision : Collider) 
+{
+	if (!dragControls.halt)
+	{
+		//alien ship
+		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile") && !killed)
+		{
+			killed = true;
+			//clean up scene and delete planet
+			if (dragControls.selectedWorld == this.gameObject)
+			{
+				dragControls.worldSelected = false; //world not selected
+			}
+			GameObject.Instantiate(dragControls.PlanetExplosion, transform.position, Quaternion(0,0,0,0)); //create explosion
+			this.transform.position = Vector3(1000,1000,1000);
+			
+			dragControls.LevelLose(false);
+		}
 	}
 }
