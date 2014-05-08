@@ -42,16 +42,7 @@ function Init()
 
 function Update () 
 {
-//	//animation pausing
-//	if (!dragControls.LevelPaused)
-//	{
-//		print("pausing");
-//		anim["Default Take"].speed = 1;
-//	}
-//	else
-//	{
-//		anim["Default Take"].speed = 0;
-//	}
+
 }
 
 function TeleportOut(pitch : float)

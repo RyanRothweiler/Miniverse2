@@ -34,6 +34,17 @@ function OnTriggerEnter (collision : Collider)
 			collision.gameObject.GetComponent(PlantCanister).KillTo(this.gameObject);
 		}
 		
+		//isolated person
+		if (collision.tag == "IsolatedPerson")
+		{
+			//teleports out the isolated person
+			collision.gameObject.GetComponent(IsolatedPerson).FadeTo(this.gameObject);
+			//finds how many people are on the planet the person is moving to
+			var peopleNum = this.gameObject.transform.GetComponentsInChildren(HumanPerson).Length;
+			//moves the person
+			dragControls.ReparentChild(collision.gameObject.transform.Find("HumanPerson").gameObject, (-25 * 0) + (-25 * peopleNum), false, 1, false);
+		}
+		
 		//alien ship
 		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile") && !killed)
 		{

@@ -1,17 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\World2 Stuff\PlantCanister.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
     <Files>
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="720" Column="1" />
+      <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="28" Column="4" />
       <File FileName="Assets\scripts\World2 Stuff\PlantCanister.js" Line="49" Column="54" />
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\World2 Stuff\Boss Stuff\World2BossHumanPlanet.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\World3 Stuff\ShipDrag.js" Line="23" Column="1" />
-      <File FileName="Assets\scripts\World2 Stuff\ShieldController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Control Stuff\PlanetJoystick.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Planet Stuff\PlanetSearcher.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\World2 Stuff\AlienShip\AlienShipProjectileController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Human Stuff\HumanPerson.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\World3 Stuff\IsolatedPerson.js" Line="23" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

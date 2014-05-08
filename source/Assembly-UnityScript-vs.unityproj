@@ -156,6 +156,7 @@
      <Compile Include="Assets\scripts\World2 Stuff\ShieldController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\Dot_SCR.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\IsolatedPerson.js" />
      <Compile Include="Assets\scripts\World3 Stuff\ShipDrag.js" />
      <None Include="Assets\shaders\RampRim.shader" />
      <None Include="Assets\shaders\CustFontShader.shader" />

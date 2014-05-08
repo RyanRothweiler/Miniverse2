@@ -422,6 +422,10 @@ function Start ()
 		{
 			objects[i].transform.parent = SceneScaleController.transform;
 		}
+		if (objects[i].tag == "IsolatedPerson")
+		{
+			objects[i].transform.parent = SceneScaleController.transform;
+		}
 	}
 
 	peopleGoal = personObjects.length;
