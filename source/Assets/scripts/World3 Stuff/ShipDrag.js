@@ -30,6 +30,7 @@ function Start ()
 		this.GetComponent(CapsuleCollider).radius = 0.979;
 		this.GetComponent(CapsuleCollider).height = 4.6;
 		this.GetComponent(CapsuleCollider).center.y += 3;
+		this.GetComponent(CapsuleCollider).isTrigger = true;
 		
 		//place dots
 		projectileNum = Vector3.Distance(DotStart.transform.position, DotEnd.transform.position) * 1;
@@ -109,9 +110,9 @@ function PlaceDots()
 }
 
 function OnTriggerEnter (collision : Collider) 
-{
+{	
 	if (!dragControls.halt)
-	{
+	{			
 		//alien ship
 		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile") && !killed)
 		{
@@ -125,6 +126,19 @@ function OnTriggerEnter (collision : Collider)
 			this.transform.position = Vector3(1000,1000,1000);
 			
 			dragControls.LevelLose(false);
+		}
+		
+		//isolated person
+		if (collision.tag == "IsolatedPerson")
+		{
+			//turns off collider
+			collision.gameObject.GetComponent(BoxCollider).enabled = false;
+			//teleports out the isolated person
+			collision.gameObject.GetComponent(IsolatedPerson).FadeTo(this.gameObject);
+			//internalize the saved people, really dwell on it
+			dragControls.peopleSaved++;
+			//moves the person
+			dragControls.ReparentChild(collision.gameObject.transform.Find("HumanPerson").gameObject, 0, true, 1, false);
 		}
 	}
 }

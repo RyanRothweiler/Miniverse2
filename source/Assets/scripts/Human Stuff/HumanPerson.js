@@ -16,6 +16,7 @@ function Start ()
 {
 	Init();
 	
+	
 	//see if this objects has an audio source, if not make one
 	if (!GetComponent(AudioSource))
 	{
@@ -42,7 +43,15 @@ function Init()
 
 function Update () 
 {
-
+	//animation pausing
+	if (!dragControls.LevelPaused)
+	{
+		anim["Default Take"].speed = 1;
+	}
+	else
+	{
+		anim["Default Take"].speed = 0;
+	}
 }
 
 function TeleportOut(pitch : float)
