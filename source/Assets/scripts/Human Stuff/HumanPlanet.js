@@ -46,7 +46,7 @@ function OnTriggerEnter (collision : Collider)
 		}
 		
 		//alien ship
-		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile") && !killed)
+		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile" || collision.tag == "Mine") && !killed)
 		{
 			killed = true;
 			//clean up scene and delete planet
@@ -63,6 +63,12 @@ function OnTriggerEnter (collision : Collider)
 			{
 				dragControls.LevelLose(false);
 //				dragControls.LevelLost = true;
+			}
+			
+			//blow up the mine to if that is what's colliding
+			if (collision.tag == "Mine")
+			{
+				collision.gameObject.GetComponent(Mine).Kill();
 			}
 		}
 	}

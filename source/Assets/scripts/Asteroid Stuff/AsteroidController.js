@@ -18,7 +18,7 @@ private var gameObjects = new Array();
 private var nearestDistanceSqr : float; 
 private var distanceSqr : float;
 private var found : boolean;
-private var radiiVirgin : boolean;;
+private var radiiVirgin : boolean;
 private var indicatorFirstShow = true;
 private var indicatorFirstHide = true;
 private var oldRot : Vector3;

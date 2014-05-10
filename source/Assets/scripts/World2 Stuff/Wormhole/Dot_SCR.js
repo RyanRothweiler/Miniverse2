@@ -16,8 +16,8 @@ private var FadedOut = true;
 function Start () 
 {
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
-	mat = this.transform.Find("dot_MO").renderer.material;
-	maxa = mat.color.a;
+//	mat = this.transform.Find("dot_MO").renderer.material;
+//	maxa = mat.color.a;
 }
 
 function Update () 

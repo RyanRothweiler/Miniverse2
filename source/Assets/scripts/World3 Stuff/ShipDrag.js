@@ -114,7 +114,7 @@ function OnTriggerEnter (collision : Collider)
 	if (!dragControls.halt)
 	{			
 		//alien ship
-		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile") && !killed)
+		if ((collision.tag == "AlienShipProjectile" || collision.tag == "BossProjectile" || collision.tag == "Mine") && !killed)
 		{
 			killed = true;
 			//clean up scene and delete planet
@@ -126,6 +126,12 @@ function OnTriggerEnter (collision : Collider)
 			this.transform.position = Vector3(1000,1000,1000);
 			
 			dragControls.LevelLose(false);
+			
+			//blow up the mine to if that is what's colliding
+			if (collision.tag == "Mine")
+			{
+				collision.gameObject.GetComponent(Mine).Kill();
+			}
 		}
 		
 		//isolated person

@@ -1,14 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Human Stuff\HumanPerson.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\World3 Stuff\Mine.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1394" Column="16" />
-      <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="27" Column="45" />
-      <File FileName="Assets\scripts\World2 Stuff\PlantCanister.js" Line="14" Column="20" />
-      <File FileName="Assets\scripts\Human Stuff\HumanPerson.js" Line="19" Column="2" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="53" Column="12" />
+      <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\World2 Stuff\PlantCanister.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Human Stuff\HumanPerson.js" Line="1" Column="1" />
       <File FileName="Assets\scripts\World3 Stuff\IsolatedPerson.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\World3 Stuff\ShipDrag.js" Line="135" Column="58" />
-      <File FileName="Assets\scripts\Human Stuff\HumanShip.js" Line="58" Column="1" />
+      <File FileName="Assets\scripts\World3 Stuff\ShipDrag.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\World3 Stuff\Mine.js" Line="128" Column="15" />
+      <File FileName="Assets\scripts\Asteroid Stuff\AsteroidController.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\World2 Stuff\Wormhole\Dot_SCR.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
