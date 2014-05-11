@@ -8,6 +8,10 @@ public var SlideStart : GameObject;
 public var Dot : GameObject;
 public var initialWait : float;
 public var dotSpeed : float;
+
+public var Follow : boolean;
+public var FollowSpeed : float;
+public var FollowLight : GameObject;
 public var KeyMat : Material;
 
 //private vars
@@ -20,18 +24,25 @@ private var projectileNum : int;
 private var fadeVirgin = true;
 private var endMat : Material;
 private var killed = false;
+private var EyeMat : Material;
+private var eyeLight : Light;
+private var originalEyeColor : Color;
+private var BlinkSpeed : float;
 
 function Start () 
 {
+	EyeMat = transform.Find("Mine_MO/Eye").renderer.material;
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
 	SlideEnd.transform.parent = null;
 	SlideStart.transform.parent = null;
 	endMat = SlideEnd.transform.Find("Plane").renderer.material;
+	eyeLight = FollowLight.GetComponent(Light);
 	
 	KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, 1));
 	
+	//if sliding
 	if (Slide)
-	{
+	{		
 		projectileNum = Vector3.Distance(SlideStart.transform.position, SlideEnd.transform.position) * 1;
 		PlaceDots();
 	}
@@ -39,6 +50,20 @@ function Start ()
 	{
 		GameObject.Destroy(SlideEnd);
 	}
+	
+	//if following
+	if (Follow)
+	{
+		BlinkSpeed = 7;
+		eyeLight.intensity = 1;
+		originalEyeColor = EyeMat.GetColor("_ColorTint");
+		Blink();
+	}
+	else
+	{
+		GameObject.Destroy(FollowLight);
+		EyeMat.SetColor("_ColorTint", Color.black);
+	}	
 }
 
 function Update () 
@@ -63,6 +88,24 @@ function Update ()
 	{
 		fadeVirgin = true;
 		FadeInDots();
+	}
+	
+	//if following
+	if (Follow && !dragControls.halt && !dragControls.LevelPaused)
+	{
+		//if holding a planet
+		if (dragControls.worldSelected || dragControls.Touching1)
+		{
+			//then slowly move towards it
+			this.transform.position = Vector3.Lerp(this.transform.position, dragControls.selectedWorld.transform.position, Time.deltaTime * FollowSpeed);
+			
+			//update blink speed
+			BlinkSpeed = Mathf.Abs(Vector3.Distance(this.transform.position, dragControls.selectedWorld.transform.position) - 20);
+		}
+		else
+		{
+			BlinkSpeed = 7;
+		}
 	}
 }
 
@@ -92,6 +135,51 @@ function PlaceDots()
 		//randomize the position a bit
 		obj.transform.position.z = 15;
 	}
+}
+
+function Blink()
+{
+	do
+	{
+		var newCol : Color;
+		yield;
+		
+		//move to on
+		do
+		{
+			yield;
+			
+			//move eye color
+			newCol.r = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").r, originalEyeColor.r, Time.deltaTime * BlinkSpeed * 1.2);
+			newCol.g = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").g, originalEyeColor.g, Time.deltaTime * BlinkSpeed * 1.2);
+			newCol.b = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").b, originalEyeColor.b, Time.deltaTime * BlinkSpeed * 1.2);
+			EyeMat.SetColor("_ColorTint", newCol);
+		
+			
+			//move light intensity
+			eyeLight.intensity = Mathf.SmoothStep(eyeLight.intensity, 1, Time.deltaTime * BlinkSpeed * 1.2);
+		} while (eyeLight.intensity < 0.95);
+		
+//		yield WaitForSeconds((BlinkSpeed + 20) / 10);
+		
+		//move to off
+		do
+		{
+			yield;
+			
+			//move eye color
+			newCol.r = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").r, 0.0, Time.deltaTime * BlinkSpeed * 1.2);
+			newCol.g = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").g, 0.0, Time.deltaTime * BlinkSpeed * 1.2);
+			newCol.b = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").b, 0.0, Time.deltaTime * BlinkSpeed * 1.2);
+			EyeMat.SetColor("_ColorTint", newCol);
+			
+			//move light intensity
+			eyeLight.intensity = Mathf.SmoothStep(eyeLight.intensity, 0, Time.deltaTime * BlinkSpeed * 1.2);
+		} while (eyeLight.intensity > 0.05);
+		
+//		yield WaitForSeconds((BlinkSpeed + 20) / 10);
+//		
+	} while (true);
 }
 
 function doSlide()
