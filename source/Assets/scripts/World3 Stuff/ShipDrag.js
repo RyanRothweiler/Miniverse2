@@ -8,13 +8,14 @@ public var Dot : GameObject;
 public var Selected = false;
 public var dotSpeed : float; //the speed at which to move the dots 0.2
 public var moveSpeed : float; //3.4
+public var CollOnly = false;
 
 //private var
 private var killed = false;
 private var dragControls : DragControlsPC;
 private var projectileNum = 0;
 private var objectInfo : RaycastHit;
-public var oldDist = 1000.0;
+private var oldDist = 1000.0;
 private var offset : Vector3;
 private var oVirgin = true;
 
@@ -39,6 +40,17 @@ function Start ()
 	else
 	{
 		GameObject.Destroy(DotEnd);
+	}
+	
+	
+	if (CollOnly)
+	{
+		//add sphere collider
+		gameObject.AddComponent("CapsuleCollider");
+		this.GetComponent(CapsuleCollider).radius = 0.979;
+		this.GetComponent(CapsuleCollider).height = 4.6;
+		this.GetComponent(CapsuleCollider).center.y += 3;
+		this.GetComponent(CapsuleCollider).isTrigger = true;
 	}
 }
 

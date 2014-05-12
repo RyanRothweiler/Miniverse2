@@ -43,6 +43,8 @@ function OnTriggerEnter (collision : Collider)
 			var peopleNum = this.gameObject.transform.GetComponentsInChildren(HumanPerson).Length;
 			//moves the person
 			dragControls.ReparentChild(collision.gameObject.transform.Find("HumanPerson").gameObject, (-25 * 0) + (-25 * peopleNum), false, 1, false);
+//			//remove the parent collider object
+//			GameObject.Destroy(collision.gameObject);
 		}
 		
 		//alien ship

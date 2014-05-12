@@ -1,6 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\World3 Stuff\ShipDrag.js">
+    <Files>
+      <File FileName="Assets\scripts\Human Stuff\HumanPlanet.js" Line="46" Column="3" />
+      <File FileName="Assets\scripts\World3 Stuff\IsolatedPerson.js" Line="35" Column="52" />
+      <File FileName="Assets\scripts\World3 Stuff\ShipDrag.js" Line="18" Column="8" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
