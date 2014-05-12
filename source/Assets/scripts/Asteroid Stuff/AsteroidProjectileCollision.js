@@ -23,7 +23,7 @@ function OnTriggerEnter (collision : Collider)
 	if (!dragControls.halt)
 	{
 		//alien ship
-		if (collision.tag == "AlienShipProjectile" && !killed)
+		if ((collision.tag == "AlienShipProjectile" || collision.tag == "Mine") && !killed)
 		{
 			killed = true;
 			//clean up scene and delete planet
@@ -43,6 +43,12 @@ function OnTriggerEnter (collision : Collider)
 			}
 			
 			this.transform.parent.parent.parent.position = Vector3(1000,1000,1000);
+			
+			//if a mine
+			if (collision.tag == "Mine")
+			{			
+				collision.gameObject.GetComponent(Mine).Kill();
+			}
 		}
 	}
 }

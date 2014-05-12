@@ -1,11 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\World3 Stuff\Mine.js">
-    <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="834" Column="22" />
-      <File FileName="Assets\scripts\World3 Stuff\Mine.js" Line="152" Column="20" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

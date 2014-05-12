@@ -97,7 +97,7 @@ function Update ()
 		if (dragControls.worldSelected || dragControls.Touching1)
 		{
 			//then slowly move towards it
-			this.transform.position = Vector3.Lerp(this.transform.position, dragControls.selectedWorld.transform.position, Time.deltaTime * FollowSpeed);
+			this.transform.position = Vector3.MoveTowards(transform.position, dragControls.selectedWorld.transform.position, Time.deltaTime * FollowSpeed * 5);
 			
 			//update blink speed
 			BlinkSpeed = Mathf.Abs(Vector3.Distance(this.transform.position, dragControls.selectedWorld.transform.position) - 20);
@@ -150,17 +150,17 @@ function Blink()
 			yield;
 			
 			//move eye color
-			newCol.r = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").r, originalEyeColor.r, Time.deltaTime * BlinkSpeed * 1.2);
-			newCol.g = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").g, originalEyeColor.g, Time.deltaTime * BlinkSpeed * 1.2);
-			newCol.b = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").b, originalEyeColor.b, Time.deltaTime * BlinkSpeed * 1.2);
+			newCol.r = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").r, originalEyeColor.r, Time.deltaTime * BlinkSpeed * 1.5);
+			newCol.g = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").g, originalEyeColor.g, Time.deltaTime * BlinkSpeed * 1.5);
+			newCol.b = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").b, originalEyeColor.b, Time.deltaTime * BlinkSpeed * 1.5);
 			EyeMat.SetColor("_ColorTint", newCol);
 		
 			
 			//move light intensity
-			eyeLight.intensity = Mathf.SmoothStep(eyeLight.intensity, 1, Time.deltaTime * BlinkSpeed * 1.2);
+			eyeLight.intensity = Mathf.SmoothStep(eyeLight.intensity, 1, Time.deltaTime * BlinkSpeed * 1.5);
 		} while (eyeLight.intensity < 0.95);
 		
-//		yield WaitForSeconds((BlinkSpeed + 20) / 10);
+		yield WaitForSeconds(0.2 - (BlinkSpeed * 0.01));
 		
 		//move to off
 		do
@@ -168,16 +168,16 @@ function Blink()
 			yield;
 			
 			//move eye color
-			newCol.r = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").r, 0.0, Time.deltaTime * BlinkSpeed * 1.2);
-			newCol.g = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").g, 0.0, Time.deltaTime * BlinkSpeed * 1.2);
-			newCol.b = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").b, 0.0, Time.deltaTime * BlinkSpeed * 1.2);
+			newCol.r = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").r, 0.0, Time.deltaTime * BlinkSpeed * 1.5);
+			newCol.g = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").g, 0.0, Time.deltaTime * BlinkSpeed * 1.5);
+			newCol.b = Mathf.SmoothStep(EyeMat.GetColor("_ColorTint").b, 0.0, Time.deltaTime * BlinkSpeed * 1.5);
 			EyeMat.SetColor("_ColorTint", newCol);
 			
 			//move light intensity
-			eyeLight.intensity = Mathf.SmoothStep(eyeLight.intensity, 0, Time.deltaTime * BlinkSpeed * 1.2);
+			eyeLight.intensity = Mathf.SmoothStep(eyeLight.intensity, 0, Time.deltaTime * BlinkSpeed * 1.5);
 		} while (eyeLight.intensity > 0.05);
 		
-//		yield WaitForSeconds((BlinkSpeed + 20) / 10);
+		yield WaitForSeconds(0.2 - (BlinkSpeed * 0.01));
 //		
 	} while (true);
 }

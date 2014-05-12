@@ -231,3 +231,14 @@ function CanMoveTo(toSun : GameObject) : boolean
 		return false;
 	}
 }
+
+function OnTriggerEnter (collision : Collider) 
+{
+	if (!dragControls.halt)
+	{		
+		if (collision.tag == "Mine")
+		{			
+			collision.gameObject.GetComponent(Mine).Kill();
+		}
+	}
+}
