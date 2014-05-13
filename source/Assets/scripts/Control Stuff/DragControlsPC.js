@@ -42,6 +42,7 @@ private var AutoGoing = false; //if moving auto'
 
 public var is1LevelSelect : boolean; //if is world 1 level select
 public var is2LevelSelect : boolean;
+public var is3LevelSelect : boolean;
 public var isLevelSelect : boolean; //if is either in the world 1 or world 2 level select
 public var isWorldSelect : boolean;
 public var isMainMenu : boolean; //if this level is the main menu
@@ -164,7 +165,8 @@ private var FadeKick = false; //if kick out of the level tag fading
 private var toSettings = false; //moving to the setting scene
 private var toContact = false; //moving to the contact scene
 public var to1LevelSelect = false; //move to the level select scene
-public var to2LevelSelect = false; //move to the level select scene
+public var to2LevelSelect = false; //move to the level select scene\
+public var to3LevelSelect = false; //move to the level select scene
 public var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
 private var toWorldSelect = false;
@@ -269,19 +271,25 @@ function Start ()
 	#endif
 
 	
-	if (is1LevelSelect || is2LevelSelect)
+	if (is1LevelSelect || is2LevelSelect || is3LevelSelect)
 	{
 		isLevelSelect = true;
 	}
 	
+//	Debug.Log(Application.loadedLevel);
 	if (Application.loadedLevel < 22)
 	{
 		world = 1;
 	}
-	else
+	if (Application.loadedLevel > 23 && Application.loadedLevel < 46)
 	{
 		world = 2;
 	}
+	if (Application.loadedLevel > 47 && Application.loadedLevel < 68)
+	{
+		world = 3;
+	}
+//	Debug.Log(world);
 	
 	//main menu intro stuff
 	if (isMainMenu && !rytIntroAlready)
@@ -1097,7 +1105,7 @@ function Update ()
 					transform.DetachChildren();
 					Application.LoadLevel("MainMenu_SCE");
 				}
-				else if (Application.loadedLevelName == "w1_levelselect" || Application.loadedLevelName == "w2_levelselect")
+				else if (Application.loadedLevelName == "w1_levelselect" || Application.loadedLevelName == "w2_levelselect" || Application.loadedLevelName == "w3_levelselect")
 				{
 					transform.DetachChildren();
 					if (!Beta)
@@ -1119,6 +1127,10 @@ function Update ()
 					if (world == 2)
 					{
 						Application.LoadLevel("w2_levelselect");
+					}
+					if (world == 3)
+					{
+						Application.LoadLevel("w3_levelselect");
 					}
 					
 				}
@@ -1149,6 +1161,7 @@ function Update ()
 		{
 			to1LevelSelect = false;
 			to2LevelSelect = false;
+			to3LevelSelect = false;
 			isPlayOne = true;
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 10)
@@ -1163,6 +1176,7 @@ function Update ()
 		{
 			to1LevelSelect = false;
 			to2LevelSelect = false;
+			to3LevelSelect = false;
 			isPlayOne = true;
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 100)
@@ -1195,6 +1209,18 @@ function Update ()
 				transform.DetachChildren();
 				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
 				Application.LoadLevel("w2_levelselect"); 
+			}
+		}
+		
+		if (to3LevelSelect)
+		{			
+			isPlayOne = true;
+			ZoomIn();
+			if (transform.position.z >= WorldZDepth + 100)
+			{
+				transform.DetachChildren();
+				StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
+				Application.LoadLevel("w3_levelselect"); 
 			}
 		}
 		
@@ -1672,16 +1698,7 @@ function WorldSelect()
 				}
 				
 				//w1
-				if (objectInfo.collider.name == "w1")
-				{
-					tagPressed = true;
-					worldSelected = true;
-					selectedWorld = objectInfo;
-					DepressLevelTag(objectInfo, false);
-				}
-				
-				//w1
-				if (objectInfo.collider.name == "w2")
+				if (objectInfo.collider.name == "w1" || objectInfo.collider.name == "w2" || objectInfo.collider.name == "w3")
 				{
 					tagPressed = true;
 					worldSelected = true;
@@ -1727,6 +1744,16 @@ function WorldSelect()
 				//move back to main menu
 				nextLevel = true;
 				to2LevelSelect = true;
+			}
+			
+			if (worldSelected && selectedWorld.collider.name == "w3")
+			{
+				//reset tag pressed
+				tagPressed = false;
+				
+				//move back to main menu
+				nextLevel = true;
+				to3LevelSelect = true;
 			}
 			worldSelected = false;
 		}
@@ -1778,7 +1805,7 @@ function WorldSelect()
 							to1LevelSelect = true;
 						}
 						
-						//to world 1 level select
+						//to world 2 level select
 						if (objectInfo.collider.name == "w2")
 						{
 							//reset tag pressed
@@ -1787,6 +1814,17 @@ function WorldSelect()
 							//move back to main menu
 							nextLevel = true;
 							to2LevelSelect = true;
+						}
+						
+						//to world 3 level select
+						if (objectInfo.collider.name == "w3")
+						{
+							//reset tag pressed
+							tagPressed = false;
+							
+							//move back to main menu
+							nextLevel = true;
+							to3LevelSelect = true;
 						}
 					}					
 				}
@@ -2124,6 +2162,7 @@ function MainMenu()
 					toWorldSelect = true;
 					is1LevelSelect = false;
 					is2LevelSelect = false;
+					is3LevelSelect = false;
 					inGame = true;
 				}
 				else
@@ -2132,6 +2171,7 @@ function MainMenu()
 					to1LevelSelect = true;
 					is1LevelSelect = false;
 					is2LevelSelect = false;
+					is3LevelSelect = false;
 					inGame = true;
 				}
 				
@@ -2144,6 +2184,7 @@ function MainMenu()
 				toSettings = true;
 				is1LevelSelect = false;
 				is2LevelSelect = false;
+				is3LevelSelect = false;
 				inGame = false;
 			}
 			
@@ -2154,6 +2195,7 @@ function MainMenu()
 				toContact = true;
 				is1LevelSelect = false;
 				is2LevelSelect = false;
+				is3LevelSelect = false;
 				inGame = false;
 			}
 		}		
@@ -2211,6 +2253,7 @@ function MainMenu()
 						toWorldSelect = true;
 						is1LevelSelect = false;
 						is2LevelSelect = false;
+						is3LevelSelect = false;
 						nextLevel = true;
 						isLevelSelect = false;
 						inGame = true;
@@ -2221,6 +2264,7 @@ function MainMenu()
 						toWorldSelect = false;
 						is1LevelSelect = false;
 						is2LevelSelect = false;
+						is3LevelSelect = false;
 						nextLevel = true;
 						isLevelSelect = false;
 						inGame = true;
@@ -2234,6 +2278,7 @@ function MainMenu()
 					nextLevel = true;
 					is1LevelSelect = false;
 					is2LevelSelect = false;
+					is3LevelSelect = false;
 					inGame = true;
 				}
 				
@@ -2244,6 +2289,7 @@ function MainMenu()
 					nextLevel = true;					
 					is1LevelSelect = false;
 					is2LevelSelect = false;
+					is3LevelSelect = false;
 					inGame = true;
 				}
 				
@@ -2898,6 +2944,10 @@ function LevelWon()
 		if (world == 2)
 		{
 			to2LevelSelect = true;
+		}
+		if (world == 3)
+		{
+			to3LevelSelect = true;
 		}
 		yield WaitForSeconds(3.5);
 		

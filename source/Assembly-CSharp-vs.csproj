@@ -55,7 +55,6 @@
      <None Include="Assets\shaders\shader.shader" />
      <None Include="Assets\shaders\CustSelfIlluminSpec.shader" />
      <None Include="Assets\shaders\RampRimSpec.shader" />
-     <None Include="Assets\lProgress.xml" />
      <None Include="Assets\shaders\RampRim_Teleport.shader" />
      <None Include="Assets\shaders\UnlitAlphaWithFade.shader" />
      <None Include="Assets\editor\Flurry\SDK\Flurry-LICENSE.txt" />
