@@ -1,6 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyPiece.js">
+    <Files>
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2955" Column="4" />
+      <File FileName="Assets\scripts\Control Stuff\PlanetJoystick.js" Line="66" Column="4" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="246" Column="34" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
