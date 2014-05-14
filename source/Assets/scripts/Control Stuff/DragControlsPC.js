@@ -890,12 +890,6 @@ function Update ()
 					{
 						selectedWorld.transform.position = Vector3.Lerp(selectedWorld.transform.position, newPlanetPos, Time.deltaTime * 20);
 					}
-					
-//					//if the planet is alive then move the planet
-//					if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
-//					{
-//						selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Touch1EndPos.x,Touch1EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
-//					}
 				}
 				
 				//camera dragging
@@ -1770,7 +1764,7 @@ function WorldSelect()
 				to1LevelSelect = true;
 			}
 			
-			if (worldSelected && selectedWorld.collider.name == "w2" && !objectInfo.collider.transform.Find("LockPlane").GetComponent(W2WorldLocking).Locked)
+			if (worldSelected && selectedWorld.collider.name == "w2")
 			{
 				//reset tag pressed
 				tagPressed = false;
@@ -1780,7 +1774,7 @@ function WorldSelect()
 				to2LevelSelect = true;
 			}
 			
-			if (worldSelected && selectedWorld.collider.name == "w3" && !objectInfo.collider.transform.Find("LockPlane").GetComponent(W3WorldLocking).Locked)
+			if (worldSelected && selectedWorld.collider.name == "w3")
 			{
 				//reset tag pressed
 				tagPressed = false;
@@ -1840,7 +1834,7 @@ function WorldSelect()
 						}
 						
 						//to world 2 level select
-						if (objectInfo.collider.name == "w2")
+						if (objectInfo.collider.name == "w2" && !objectInfo.collider.transform.Find("LockPlane").GetComponent(W2WorldLocking).Locked)
 						{
 							//reset tag pressed
 							tagPressed = false;
@@ -1851,7 +1845,7 @@ function WorldSelect()
 						}
 						
 						//to world 3 level select
-						if (objectInfo.collider.name == "w3")
+						if (objectInfo.collider.name == "w3" && !objectInfo.collider.transform.Find("LockPlane").GetComponent(W3WorldLocking).Locked)
 						{
 							//reset tag pressed
 							tagPressed = false;
@@ -2765,7 +2759,7 @@ function RotateKey(obj : GameObject)
 		if (rotObj.tag == "key")
 		{
 			var targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * -1);
-			for (var i = 0; i < 20; i++)
+			for (var i = 0; i < 35; i++)
 			{
 				yield;
 				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
@@ -2774,7 +2768,7 @@ function RotateKey(obj : GameObject)
 		else
 		{
 			targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * 1);
-			for (i = 0; i < 30; i++)
+			for (i = 0; i < 35; i++)
 			{
 				yield;
 				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
@@ -2956,27 +2950,27 @@ function LevelWon()
 		{
 			SFXCont.LevelWin();
 		}
-				
-		//wait a bit
-		if (world == 1 && Application.loadedLevel < 5)
-		{
-			to1LevelSelect = true;
-		}
-		else if (Application.loadedLevel >= 5)
-		{
-			if (!(Application.loadedLevel > 19))
-			{
-	//			inGame = true;
+		
+		//THIS HAS BEEN COMMENTED OUT FOR THE PLAYER TESTING
+			
+		//wait a bit 
+//		if (world == 1 && Application.loadedLevel < 5)
+//		{
+//			to1LevelSelect = true;
+//		}
+//		else if (Application.loadedLevel >= 5)
+//		{
+//			if (!(Application.loadedLevel > 19))
+//			{
 				fromLSelect = false;
-	//			nextLevel = true;
 				toLevel = true;
 				NextLevelNum = Application.loadedLevel+1;
-			}
-			else
-			{
-				to1LevelSelect = true;
-			}
-		}
+//			}
+//			else
+//			{
+//				to1LevelSelect = true;
+//			}
+//		}
 
 		if (world == 2)
 		{
