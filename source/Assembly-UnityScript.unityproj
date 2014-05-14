@@ -119,6 +119,8 @@
      <Compile Include="Assets\scripts\UI Stuff\BackArrow.js" />
      <Compile Include="Assets\scripts\UI Stuff\LevelTimerDisplay.js" />
      <Compile Include="Assets\scripts\UI Stuff\LevelWinText.js" />
+     <Compile Include="Assets\scripts\UI Stuff\Locking Stuff\W2WorldLocking.js" />
+     <Compile Include="Assets\scripts\UI Stuff\Locking Stuff\W3WorldLocking.js" />
      <Compile Include="Assets\scripts\UI Stuff\MiniverseMenuLogo.js" />
      <Compile Include="Assets\scripts\UI Stuff\NeonFlicker.js" />
      <Compile Include="Assets\scripts\UI Stuff\PauseText.js" />

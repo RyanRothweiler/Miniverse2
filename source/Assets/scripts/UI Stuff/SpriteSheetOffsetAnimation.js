@@ -59,7 +59,7 @@ function Update ()
 }
 
 function IncrementFrame()
-{
+{	
 	if (CurrentFrame + 1 > FrameNum)
 	{
 		//loop back

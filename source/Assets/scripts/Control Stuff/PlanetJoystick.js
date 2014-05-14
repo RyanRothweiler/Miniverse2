@@ -4,6 +4,7 @@
 public var Use : boolean;
 public var speed : float;
 public var PlanetDragRate = 0.2; //the rate which the planet lags behind the finger. This should always be between 0 and 1 
+public var ShipBuffer = 3; //the distance from the ship which to stop the planet movement
 
 //private vars
 private var dragControls : DragControlsPC;
@@ -45,10 +46,14 @@ function Update ()
 				//do things each loop
 				direction = (home - Input.mousePosition) * BufferSpeed * -1 * 0.0005;
 				
-				//move stuff
-				transform.position += direction;
-				dragControls.selectedWorld.collider.transform.position = Camera.main.ScreenToWorldPoint(Vector3(((Input.mousePosition.x - home.x) * PlanetDragRate) + home.x, ((Input.mousePosition.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
-				dragControls.FailType.transform.parent = Camera.main.transform;
+				//move stuff, but make sure not to let the planet too close to the ship
+				var newPlanetPos = Camera.main.ScreenToWorldPoint(Vector3(((Input.mousePosition.x - home.x) * PlanetDragRate) + home.x, ((Input.mousePosition.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
+				if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > ShipBuffer)
+				{
+					transform.position += direction;
+					dragControls.selectedWorld.collider.transform.position = newPlanetPos;
+					dragControls.FailType.transform.parent = Camera.main.transform;
+				}
 			}
 			else
 			{
@@ -73,10 +78,20 @@ function Update ()
 				//do things each loop
 				direction = (home - dragControls.Touch1EndPos) * BufferSpeed * -1 * 0.0005;
 				
-				//move stuff
-				transform.position += direction;
-				dragControls.selectedWorld.collider.transform.position = Camera.main.ScreenToWorldPoint(Vector3(((dragControls.Touch1EndPos.x - home.x) * PlanetDragRate) + home.x, ((dragControls.Touch1EndPos.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
-				dragControls.FailType.transform.parent = Camera.main.transform;
+				
+				//move stuff, but make sure not to let the planet too close to the ship
+				newPlanetPos = Camera.main.ScreenToWorldPoint(Vector3(((dragControls.Touch1EndPos.x - home.x) * PlanetDragRate) + home.x, ((dragControls.Touch1EndPos.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
+				if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > ShipBuffer)
+				{
+					transform.position += direction;
+					dragControls.selectedWorld.collider.transform.position = newPlanetPos;
+					dragControls.FailType.transform.parent = Camera.main.transform;
+				}
+//				
+//				//move stuff
+//				transform.position += direction;
+//				dragControls.selectedWorld.collider.transform.position = Camera.main.ScreenToWorldPoint(Vector3(((dragControls.Touch1EndPos.x - home.x) * PlanetDragRate) + home.x, ((dragControls.Touch1EndPos.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
+//				dragControls.FailType.transform.parent = Camera.main.transform;
 			}
 			else
 			{

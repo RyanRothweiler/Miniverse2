@@ -647,7 +647,12 @@ function Update ()
 				//if the planet is alive then move the planet
 				if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
 				{
-					selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+					//make sure that it doesn't get too close to the ship
+					var newPlanetPos = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+					if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > 3)
+					{
+						selectedWorld.transform.position = Vector3.Lerp(selectedWorld.transform.position, Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet, Time.deltaTime * 20);
+					}
 				}
 			}
 			//if view dragging
@@ -878,12 +883,19 @@ function Update ()
 					{
 						AutoMoveCheckPhases();
 					}
-				
-					//if the planet is alive then move the planet
-					if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
+					
+					//make sure that it doesn't get too close to the ship
+					newPlanetPos = Camera.main.ScreenToWorldPoint(Vector3(Touch1EndPos.x,Touch1EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+					if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > 3)
 					{
-						selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Touch1EndPos.x,Touch1EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+						selectedWorld.transform.position = Vector3.Lerp(selectedWorld.transform.position, newPlanetPos, Time.deltaTime * 20);
 					}
+					
+//					//if the planet is alive then move the planet
+//					if (selectedWorld.transform.gameObject.GetComponent(PlanetSearcher).Alive)
+//					{
+//						selectedWorld.transform.position = Camera.main.ScreenToWorldPoint(Vector3(Touch1EndPos.x,Touch1EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
+//					}
 				}
 				
 				//camera dragging
@@ -1700,10 +1712,32 @@ function WorldSelect()
 				//w1
 				if (objectInfo.collider.name == "w1" || objectInfo.collider.name == "w2" || objectInfo.collider.name == "w3")
 				{
-					tagPressed = true;
-					worldSelected = true;
-					selectedWorld = objectInfo;
-					DepressLevelTag(objectInfo, false);
+					if (objectInfo.collider.transform.Find("LockPlane"))
+					{
+						//if selected world2 and it isn't locked
+						if (objectInfo.collider.name == "w2" && !objectInfo.collider.transform.Find("LockPlane").GetComponent(W2WorldLocking).Locked)
+						{
+							tagPressed = true;
+							worldSelected = true;
+							selectedWorld = objectInfo;
+							DepressLevelTag(objectInfo, false);
+						}
+						//if selected world3 and it isn't locked
+						if (objectInfo.collider.name == "w3" && !objectInfo.collider.transform.Find("LockPlane").GetComponent(W3WorldLocking).Locked)
+						{
+							tagPressed = true;
+							worldSelected = true;
+							selectedWorld = objectInfo;
+							DepressLevelTag(objectInfo, false);
+						}
+					}
+					else
+					{
+						tagPressed = true;
+						worldSelected = true;
+						selectedWorld = objectInfo;
+						DepressLevelTag(objectInfo, false);
+					}
 				}
 			}			
 		}
@@ -1736,7 +1770,7 @@ function WorldSelect()
 				to1LevelSelect = true;
 			}
 			
-			if (worldSelected && selectedWorld.collider.name == "w2")
+			if (worldSelected && selectedWorld.collider.name == "w2" && !objectInfo.collider.transform.Find("LockPlane").GetComponent(W2WorldLocking).Locked)
 			{
 				//reset tag pressed
 				tagPressed = false;
@@ -1746,7 +1780,7 @@ function WorldSelect()
 				to2LevelSelect = true;
 			}
 			
-			if (worldSelected && selectedWorld.collider.name == "w3")
+			if (worldSelected && selectedWorld.collider.name == "w3" && !objectInfo.collider.transform.Find("LockPlane").GetComponent(W3WorldLocking).Locked)
 			{
 				//reset tag pressed
 				tagPressed = false;
@@ -1994,6 +2028,9 @@ function SettingsMenu()
 //code for contact menu functionality
 function ContactMenu()
 {
+	//DELET ALL SAVED DATA. PLEASE FOR THE LOVE OF GOD REMOVE THIS CODE BEFORE CERTIFICATION
+	PlayerPrefs.DeleteAll();
+	
 	halt = true;
 	
 	if (PlatformPC)
