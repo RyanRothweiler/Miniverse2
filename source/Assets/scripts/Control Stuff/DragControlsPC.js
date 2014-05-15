@@ -2759,7 +2759,7 @@ function RotateKey(obj : GameObject)
 		if (rotObj.tag == "key")
 		{
 			var targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * -1);
-			for (var i = 0; i < 35; i++)
+			for (var i = 0; i < 30; i++)
 			{
 				yield;
 				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
@@ -2768,7 +2768,7 @@ function RotateKey(obj : GameObject)
 		else
 		{
 			targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * 1);
-			for (i = 0; i < 35; i++)
+			for (i = 0; i < 30; i++)
 			{
 				yield;
 				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
@@ -2954,23 +2954,23 @@ function LevelWon()
 		//THIS HAS BEEN COMMENTED OUT FOR THE PLAYER TESTING
 			
 		//wait a bit 
-//		if (world == 1 && Application.loadedLevel < 5)
-//		{
-//			to1LevelSelect = true;
-//		}
-//		else if (Application.loadedLevel >= 5)
-//		{
-//			if (!(Application.loadedLevel > 19))
-//			{
+		if (world == 1 && Application.loadedLevel < 5)
+		{
+			to1LevelSelect = true;
+		}
+		else if (Application.loadedLevel >= 5)
+		{
+			if (!(Application.loadedLevel > 19))
+			{
 				fromLSelect = false;
 				toLevel = true;
 				NextLevelNum = Application.loadedLevel+1;
-//			}
-//			else
-//			{
-//				to1LevelSelect = true;
-//			}
-//		}
+			}
+			else
+			{
+				to1LevelSelect = true;
+			}
+		}
 
 		if (world == 2)
 		{
