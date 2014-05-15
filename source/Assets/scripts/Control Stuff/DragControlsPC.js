@@ -141,6 +141,7 @@ public var sunObjects : GameObject[];
 private var dummyChildList : Component[];
 private var personObjects : GameObject[];
 private var shieldObjects : GameObject[];
+private var keySavers : GameObject[];
 
 //booleans
 private var peopleDragging : boolean;
@@ -274,6 +275,9 @@ function Start ()
 	if (is1LevelSelect || is2LevelSelect || is3LevelSelect)
 	{
 		isLevelSelect = true;
+		
+		//get key savers
+		keySavers = GameObject.FindGameObjectsWithTag("KeySaver");
 	}
 	
 //	Debug.Log(Application.loadedLevel);
@@ -1162,6 +1166,15 @@ function Update ()
 	//if the level has been beat
 	if (nextLevel)
 	{
+		if (is1LevelSelect || is2LevelSelect || is3LevelSelect)
+		{
+			//save key locations
+			for (i = 0; i < keySavers.length; i++)
+			{
+				keySavers[i].GetComponent(KeyShowController).SaveKey();	
+			}
+		}
+				
 		//moving to the settings scene
 		if (toSettings)
 		{
@@ -1218,6 +1231,7 @@ function Update ()
 			}
 		}
 		
+		//moving to the world 3 level select scene
 		if (to3LevelSelect)
 		{			
 			isPlayOne = true;
@@ -1253,6 +1267,7 @@ function Update ()
 				{
 					SFXCont.ToLevel();
 				}
+				
 				Camera.main.GetComponent(LevelNumberTypeEffect).SendMessage("TypeAway");
 				if (Camera.main.GetComponent(LevelNumberTypeEffect).NextLevelReady)
 				{

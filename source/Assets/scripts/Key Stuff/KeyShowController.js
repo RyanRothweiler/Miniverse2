@@ -6,8 +6,7 @@ public var KeyNum : String;
 //private vars
 private var piece : KeyPiece;
 private var setTrue = false;
-private var pastPos : Vector3;
-private var pastOri : int;
+private var saved = false;
 
 function Start () 
 {
@@ -54,43 +53,23 @@ function Update ()
 		setTrue = true;
 		Key.SetActiveRecursively(true);
 	}
-	
-	//if not introing then save the key positions
-	if (!Camera.main.GetComponent(DragControlsPC).introing)
+}
+
+function SaveKey()
+{
+	if (Key.active && !saved)
 	{
-		//if the position of the key has changed then save it's new location
-		if (pastPos.x != Key.transform.position.x)
-		{
-			pastPos = Key.transform.position;
-			
-			//position
-			if (Camera.main.GetComponent(DragControlsPC).nextLevel)
-			{
-				PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x);
-				PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
-				PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
-			}
-			else
-			{
-				PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x - 20);
-				PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
-				PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
-			}
-			
-			//save everything
-			PlayerPrefs.Save();
-		}
+		saved = true;
 		
-		//check if orientation has changed
-		if (pastOri != piece.Orientation)
-		{
-			pastOri = piece.Orientation;
-			
-			//orientation
-			PlayerPrefs.SetInt(KeyNum+"o", piece.Orientation);
-			
-			//save everything
-			PlayerPrefs.Save();
-		}
+		//position
+		PlayerPrefs.SetFloat(KeyNum+"px", Key.transform.position.x - 20);
+		PlayerPrefs.SetFloat(KeyNum+"py", Key.transform.position.y);
+		PlayerPrefs.SetFloat(KeyNum+"pz", Key.transform.position.z);
+		
+		//orientation
+		PlayerPrefs.SetInt(KeyNum+"o", piece.Orientation);
+		
+		//save everything
+		PlayerPrefs.Save();
 	}
 }
