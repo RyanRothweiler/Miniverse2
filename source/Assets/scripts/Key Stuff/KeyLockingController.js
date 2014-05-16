@@ -30,6 +30,7 @@ function Start ()
 function Update () 
 {
 	Locked = false;
+	keys = 	GameObject.FindGameObjectsWithTag("key");
 	//check
 	for (var key : GameObject in keys)
 	{

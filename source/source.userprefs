@@ -1,10 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyPiece.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Level Select Stuff\LevelsCompleted.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2955" Column="4" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2554" Column="44" />
       <File FileName="Assets\scripts\Control Stuff\PlanetJoystick.js" Line="66" Column="4" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="246" Column="34" />
+      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="151" Column="123" />
+      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="61" Column="3" />
+      <File FileName="Assets\scripts\Level Select Stuff\LevelsCompleted.js" Line="14" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

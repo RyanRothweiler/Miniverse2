@@ -2361,7 +2361,7 @@ function LevelSelect()
 		if (PlatformPC)
 		{
 			//for horizontal scrolling
-			if (!KeySelected)
+			if (!KeySelected && !KeySelectOff)
 			{
 				LevelOffset.x += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 1000;
 			}
@@ -2551,7 +2551,7 @@ function LevelSelect()
 							Touch1Tap = true;
 						}
 					}
-					else if (!KeySelected) //else draggin' if no key is selected
+					else if (!KeySelected && !KeySelectOff) //else draggin' if no key is selected
 					{
 						//unpress level tag
 						if (iosTagDepress)
