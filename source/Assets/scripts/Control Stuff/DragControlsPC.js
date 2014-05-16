@@ -2037,9 +2037,6 @@ function SettingsMenu()
 //code for contact menu functionality
 function ContactMenu()
 {
-	//DELET ALL SAVED DATA. PLEASE FOR THE LOVE OF GOD REMOVE THIS CODE BEFORE CERTIFICATION
-	PlayerPrefs.DeleteAll();
-	
 	halt = true;
 	
 	if (PlatformPC)
@@ -2150,7 +2147,6 @@ function ContactMenu()
 				//twitter button
 				if (objectInfo.collider.name == "twitter")
 				{
-//					PlayerPrefs.DeleteAll();
 					Application.OpenURL("https://twitter.com/RytGames");
 				}
 				
@@ -3005,6 +3001,7 @@ function LevelWon()
 		FailType.transform.parent = null; //unparent
 		
 		//set level win level select variables
+		Debug.Log("saving "+Application.loadedLevel.ToString());
 		PlayerPrefs.SetInt("LevelCompleted "+Application.loadedLevel.ToString(), 1);
 	}
 }

@@ -11,6 +11,7 @@ function Start ()
 			{
 				if (GameObject.Find(i.ToString()))
 				{
+					Debug.Log(i);
 					GameObject.Find(i.ToString()).transform.Find("CompletedPlane").gameObject.active = true; //show completed plane
 				}
 			}
@@ -23,4 +24,5 @@ function Start ()
 
 function Update () 
 {
+
 }
