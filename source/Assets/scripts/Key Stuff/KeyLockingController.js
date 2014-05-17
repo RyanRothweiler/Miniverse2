@@ -25,32 +25,68 @@ function Start ()
 	
 	//get keys
 	keys = 	GameObject.FindGameObjectsWithTag("key");
+	
+	//check if the boss has been won already
+	if (PlayerPrefs.HasKey("W1BossWon"))
+	{
+		Debug.Log("turning off");
+		
+		//don't let things play again
+		Locked = false;
+		unlocked = true;
+		
+		//turn off puzzle piecess
+		pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, 0));
+		//turn on final puzzle
+		var KeyMat = FinalPuzzlePlane.renderer.material;
+		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, 1));
+		//turn off locking stripes
+		LockMat.SetColor("_Color", Color(LockMat.GetColor("_Color").r, LockMat.GetColor("_Color").g, LockMat.GetColor("_Color").b, 0));
+	}
 }
 
 function Update () 
 {
-	Locked = false;
-	keys = 	GameObject.FindGameObjectsWithTag("key");
-	//check
-	for (var key : GameObject in keys)
+	if (!PlayerPrefs.HasKey("W1BossWon"))
 	{
-		if (!key.GetComponent(KeyPiece).Completed)
+		Locked = false;
+		keys = 	GameObject.FindGameObjectsWithTag("key");
+		//check
+		for (var key : GameObject in keys)
+		{
+			if (!key.GetComponent(KeyPiece).Completed)
+			{
+				Locked = true;
+			}
+		}
+		
+		//make sure all the keys are there
+		if (keys.Length != 20)
 		{
 			Locked = true;
 		}
+		
+		if (!unlocked && !Locked)
+		{
+			unlocked = true;
+			BossUnlockAnim();
+		}
 	}
-	
-	//make sure all the keys are there
-	if (keys.Length != 20)
-	{
-		Locked = true;
-	}
-	
-	if (!unlocked && !Locked)
-	{
-		unlocked = true;
-		BossUnlockAnim();
-	}
+//	else
+//	{
+//		//don't let things play again
+//		Locked = false;
+//		unlocked = true;
+//		
+//		//turn off puzzle piecess
+//		pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, 0));
+//		//turn on final puzzle
+//		var KeyMat = FinalPuzzlePlane.renderer.material;
+//		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, 1));
+//		//turn off locking stripes
+//		var LockMat = LockPlane.renderer.material;
+//		LockMat.SetColor("_Color", Color(LockMat.GetColor("_Color").r, LockMat.GetColor("_Color").g, LockMat.GetColor("_Color").b, 0));
+//	}
 }
 
 //do this little animation thing when the boss level is first unlocked. Zoomes over to the boss tag, 
@@ -62,9 +98,9 @@ function BossUnlockAnim()
 	//smooth move the level tags while fading out each puzzle piece and fading in the completed puzzle
 	do //start fading out the puzzle pieces
 	{
-		pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, pieceMat.GetColor("_Color").a - (Time.deltaTime * 2)));
+		pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, pieceMat.GetColor("_Color").a - (Time.deltaTime * 3)));
 		yield WaitForSeconds(0.01);
-	} while (pieceMat.GetColor("_Color").a > 0);
+	} while (pieceMat.GetColor("_Color").a > -0.5);
 	
 	
 	var velocity : float;

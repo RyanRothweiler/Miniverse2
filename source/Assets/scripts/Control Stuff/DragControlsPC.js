@@ -75,6 +75,7 @@ public var Phase3 = false;
 public var PlatformIOS = false;
 public var PlatformPC = false;
 
+public var World1Boss = false;
 public var World2Boss = false;
 
 public var canMoveToWorld = true; //if can zoom to world
@@ -275,9 +276,6 @@ function Start ()
 	if (is1LevelSelect || is2LevelSelect || is3LevelSelect)
 	{
 		isLevelSelect = true;
-		
-		//get key savers
-		keySavers = GameObject.FindGameObjectsWithTag("KeySaver");
 	}
 	
 //	Debug.Log(Application.loadedLevel);
@@ -456,7 +454,6 @@ function Start ()
 	//set platform and platform specific settings
 	if (Application.platform == RuntimePlatform.IPhonePlayer)
 	{
-		print("IOS");
 		if (iosDrag)
 		{
 			DragRate = 0.02;
@@ -470,11 +467,9 @@ function Start ()
 	}
 	else
 	{
-//		print("IOS");
 //		DragRate = 0.02;
 //		PlatformIOS = true;
 //		PlatformPC = false;
-		print("PC");
 		PlatformPC = true;
 		PlatformIOS = false;
 		WorldDraggingInverted = true;
@@ -1168,6 +1163,8 @@ function Update ()
 	{
 		if (is1LevelSelect || is2LevelSelect || is3LevelSelect)
 		{
+			//get all the key savers
+			keySavers = GameObject.FindGameObjectsWithTag("KeySaver");
 			//save key locations
 			for (i = 0; i < keySavers.length; i++)
 			{
@@ -1346,18 +1343,21 @@ function FadeOutKeys()
 //fade in the keys
 function FadeInKeys()
 {
-	//wait until the level is done fading in 
-	do 
+	if (!PlayerPrefs.HasKey("W1BossWon"))
 	{
-		yield;
-	} while (Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount != 0);
-	
-	//now fade in
-	do
-	{
-		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime * 2)));
-		yield WaitForSeconds(0.01);
-	} while (KeyMat.GetColor("_Color").a < 1);
+		//wait until the level is done fading in 
+		do 
+		{
+			yield;
+		} while (Camera.main.GetComponent(DragControlsPC).SceneScaleController.transform.childCount != 0);
+		
+		//now fade in
+		do
+		{
+			KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime * 2)));
+			yield WaitForSeconds(0.01);
+		} while (KeyMat.GetColor("_Color").a < 1);
+	}
 }
 
 //set the next level... hence the name.
@@ -2770,7 +2770,7 @@ function RotateKey(obj : GameObject)
 		if (rotObj.tag == "key")
 		{
 			var targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * -1);
-			for (var i = 0; i < 30; i++)
+			for (var i = 0; i < 25; i++)
 			{
 				yield;
 				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
@@ -2779,17 +2779,17 @@ function RotateKey(obj : GameObject)
 		else
 		{
 			targetRotation = Quaternion.LookRotation(rotObj.transform.forward, rotObj.transform.right * 1);
-			for (i = 0; i < 30; i++)
+			for (i = 0; i < 25; i++)
 			{
 				yield;
-				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 10.0); 
+				rotObj.transform.rotation = Quaternion.Slerp(rotObj.transform.rotation, targetRotation, Time.deltaTime * 12.0); 
 			}
 		}
 		
 		//rotate the final small amount to get an exact rotation. so if the piece is rotated many times it doesn't slowly get off rotation a little every rotation, which compounds to a lot.		
 		rotObj.transform.Rotate(0, 0, Quaternion.Angle(targetRotation, rotObj.transform.rotation));
 		
-		yield WaitForSeconds(0.1);
+//		yield WaitForSeconds(0.1);
 		KeyRotating = false;
 		obj.GetComponent(KeyPiece).Rotating = false;
 	}
@@ -2949,6 +2949,12 @@ function LevelWon()
 {
 	if (!levelWon)
 	{
+		//if world1 boss then save that it's been won
+		if (World1Boss)
+		{
+			PlayerPrefs.SetInt("W1BossWon", 1);	
+		}
+		
 		//fade out reset button and back button
 		if (Camera.main.transform.Find("BackArrow") && Camera.main.transform.Find("ResetButton"))
 		{
@@ -2962,8 +2968,6 @@ function LevelWon()
 			SFXCont.LevelWin();
 		}
 		
-		//THIS HAS BEEN COMMENTED OUT FOR THE PLAYER TESTING
-			
 		//wait a bit 
 		if (world == 1 && Application.loadedLevel < 5)
 		{
@@ -3001,7 +3005,6 @@ function LevelWon()
 		FailType.transform.parent = null; //unparent
 		
 		//set level win level select variables
-		Debug.Log("saving "+Application.loadedLevel.ToString());
 		PlayerPrefs.SetInt("LevelCompleted "+Application.loadedLevel.ToString(), 1);
 	}
 }
