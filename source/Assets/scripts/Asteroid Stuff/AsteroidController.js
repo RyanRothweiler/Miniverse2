@@ -116,7 +116,7 @@ function Update ()
 	    found = false;	    
 	
 	    // loop through each tagged object, remembering nearest one found
-	    if (OnScreen)
+	    if (OnScreen || Wormhole)
 	    {
 		    for (var obj : GameObject in gameObjects) 
 		    {

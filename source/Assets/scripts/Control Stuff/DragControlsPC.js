@@ -1396,7 +1396,12 @@ function MovePeople(Asteroid : boolean)
 		{
 			dummyChildList = tempSelectedWorld.transform.parent.parent.gameObject.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.GetComponentsInChildren(HumanPerson);
 		}
+		if (wormhole)
+		{
+			dummyChildList = tempSelectedWorld.transform.gameObject.GetComponent(PlanetSearcher).nearestPlanet.transform.parent.parent.GetComponent(AsteroidController).Wormhole.GetComponent(WormholeController_SCR).TunnelTo.GetComponent(WormholeController_SCR).ChildAsteroid.transform.parent.parent.GetComponent(AsteroidController).nearestPlanet.transform.gameObject.GetComponentsInChildren(HumanPerson);
+		}
 		MoveDummyNum = dummyChildList.Length;
+		
 		
 		//get list of children being moved
 		if (!Asteroid)
