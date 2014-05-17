@@ -18,7 +18,7 @@ function Start ()
 
 function Update () 
 {
-	if (!dragControls.halt && fadeInVirgin)
+	if (Locked && !dragControls.halt && fadeInVirgin)
 	{
 		fadeInVirgin = false;
 		FadeIn();

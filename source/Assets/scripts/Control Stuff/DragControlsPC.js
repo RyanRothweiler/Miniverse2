@@ -210,7 +210,7 @@ private var Touch1Delta : Vector2; //delta of first touch
 private var Touch1Tap = false; //if the touch is a tap
 private var Touch1DoubleTap = false; //if this touch is a double tap. duh.
 private var Touch1Move = false; //if the touch is a moving one
-private var Movement1Delta : Vector2; //used for flicking
+public var Movement1Delta : Vector2; //used for flicking
 public var Touch1Start = true;
 public var Touching1 = false;
 public var Touch1WorldSelected = false;
@@ -2968,7 +2968,7 @@ function LevelWon()
 			SFXCont.LevelWin();
 		}
 		
-		//wait a bit 
+		//what level to load next for world1
 		if (world == 1 && Application.loadedLevel < 5)
 		{
 			to1LevelSelect = true;
@@ -2984,6 +2984,25 @@ function LevelWon()
 			else
 			{
 				to1LevelSelect = true;
+			}
+		}
+		
+		//what level to load next for world2
+		if (world == 2 && Application.loadedLevel < 27)
+		{
+			to2LevelSelect = true;
+		}
+		else
+		{
+			if (Application.loadedLevel < 44)
+			{
+				fromLSelect = false;
+				toLevel = true;
+				NextLevelNum = Application.loadedLevel+1;
+			}
+			else
+			{
+				to2LevelSelect = true;
 			}
 		}
 

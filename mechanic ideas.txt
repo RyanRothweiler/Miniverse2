@@ -1,0 +1,1 @@
+a gate that only unlocks when a planet has a certain amount of people

@@ -72,21 +72,6 @@ function Update ()
 			BossUnlockAnim();
 		}
 	}
-//	else
-//	{
-//		//don't let things play again
-//		Locked = false;
-//		unlocked = true;
-//		
-//		//turn off puzzle piecess
-//		pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, 0));
-//		//turn on final puzzle
-//		var KeyMat = FinalPuzzlePlane.renderer.material;
-//		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, 1));
-//		//turn off locking stripes
-//		var LockMat = LockPlane.renderer.material;
-//		LockMat.SetColor("_Color", Color(LockMat.GetColor("_Color").r, LockMat.GetColor("_Color").g, LockMat.GetColor("_Color").b, 0));
-//	}
 }
 
 //do this little animation thing when the boss level is first unlocked. Zoomes over to the boss tag, 
@@ -94,6 +79,7 @@ function BossUnlockAnim()
 {
 	//stop everything
 	dragControls.LSelectHalt = true;
+	dragControls.Movement1Delta = Vector2.zero;
 	
 	//smooth move the level tags while fading out each puzzle piece and fading in the completed puzzle
 	do //start fading out the puzzle pieces
