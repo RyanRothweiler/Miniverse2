@@ -14,10 +14,7 @@ private var speed = 0.02; //the speed at which to move the dots
 private var projectileNum = 0;
 
 function Start () 
-{
-	//slow anim speed
-	transform.Find("WormholeMO/Wormhole_MO").animation["Default Take"].speed = 0.1;
-	
+{	
 	if (SendDots)
 	{
 		projectileNum = Vector3.Distance(this.transform.position, TunnelTo.transform.position) * 1;
@@ -27,7 +24,16 @@ function Start ()
 
 function Update () 
 {
-
+	//anim pausing
+	if (Camera.main.GetComponent(DragControlsPC).LevelPaused)
+	{
+//		Debug.Log(transform.Find("Wormhole_MO"));
+		transform.Find("WormholeMO/Wormhole_MO").animation["Default Take"].speed = 0;
+	}
+	else
+	{
+		transform.Find("WormholeMO/Wormhole_MO").animation["Default Take"].speed = 0.1;
+	}
 }
 
 function PlaceDots()

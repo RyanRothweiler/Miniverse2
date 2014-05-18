@@ -56,6 +56,8 @@ function Update ()
 
 function TeleportOut(pitch : float)
 {
+	this.transform.parent = null;
+	
 	//teleport sound
 	if (pitch == 1)
 	{

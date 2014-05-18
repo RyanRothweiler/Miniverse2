@@ -1,15 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Key Stuff\KeyPiece.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
     <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2991" Column="49" />
-      <File FileName="Assets\scripts\Control Stuff\PlanetJoystick.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Key Stuff\KeyPiece.js" Line="135" Column="1" />
-      <File FileName="Assets\scripts\Key Stuff\KeyShowController.js" Line="44" Column="22" />
-      <File FileName="Assets\scripts\Level Select Stuff\LevelsCompleted.js" Line="14" Column="65" />
-      <File FileName="Assets\scripts\Key Stuff\KeyLockingController.js" Line="82" Column="44" />
-      <File FileName="Assets\scripts\UI Stuff\Locking Stuff\W3WorldLocking.js" Line="19" Column="6" />
-      <File FileName="Assets\scripts\UI Stuff\Locking Stuff\W2WorldLocking.js" Line="21" Column="16" />
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="3182" Column="25" />
+      <File FileName="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js" Line="17" Column="2" />
+      <File FileName="Assets\scripts\Asteroid Stuff\AsteroidController.js" Line="77" Column="1" />
+      <File FileName="Assets\scripts\Human Stuff\HumanPerson.js" Line="47" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
