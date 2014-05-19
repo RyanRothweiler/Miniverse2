@@ -29,8 +29,6 @@ function Start ()
 	//check if the boss has been won already
 	if (PlayerPrefs.HasKey("W1BossWon"))
 	{
-		Debug.Log("turning off");
-		
 		//don't let things play again
 		Locked = false;
 		unlocked = true;

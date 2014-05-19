@@ -14,6 +14,16 @@ function Start ()
 	Mat = transform.Find("PlaneTest/BossLevelLock").renderer.material;
 	Mat.SetColor("_Color", Color(Mat.GetColor("_Color").r, Mat.GetColor("_Color").g, Mat.GetColor("_Color").b, 0));
 	dragControls = Camera.main.GetComponent(DragControlsPC);
+	
+	//unlocking if world 1 is completed
+	if (PlayerPrefs.HasKey("W1BossWon"))
+	{
+		Locked = false;
+	}
+	else
+	{
+		Locked = true;
+	}
 }
 
 function Update () 

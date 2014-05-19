@@ -2964,12 +2964,6 @@ function LevelWon()
 {
 	if (!levelWon)
 	{
-		//if world1 boss then save that it's been won
-		if (World1Boss)
-		{
-			PlayerPrefs.SetInt("W1BossWon", 1);	
-		}
-		
 		//fade out reset button and back button
 		if (Camera.main.transform.Find("BackArrow") && Camera.main.transform.Find("ResetButton"))
 		{
@@ -2983,22 +2977,25 @@ function LevelWon()
 			SFXCont.LevelWin();
 		}
 		
-		//what level to load next for world1
-		if (world == 1 && Application.loadedLevel < 5)
+		if (!World1Boss)
 		{
-			to1LevelSelect = true;
-		}
-		else if (Application.loadedLevel >= 5)
-		{
-			if (!(Application.loadedLevel > 19))
-			{
-				fromLSelect = false;
-				toLevel = true;
-				NextLevelNum = Application.loadedLevel+1;
-			}
-			else
+			//what level to load next for world1
+			if (world == 1 && Application.loadedLevel < 5)
 			{
 				to1LevelSelect = true;
+			}
+			else if (Application.loadedLevel >= 5)
+			{
+				if (!(Application.loadedLevel > 19))
+				{
+					fromLSelect = false;
+					toLevel = true;
+					NextLevelNum = Application.loadedLevel+1;
+				}
+				else
+				{
+					to1LevelSelect = true;
+				}
 			}
 		}
 		
@@ -3040,6 +3037,17 @@ function LevelWon()
 		
 		//set level win level select variables
 		PlayerPrefs.SetInt("LevelCompleted "+Application.loadedLevel.ToString(), 1);
+		
+		//if world1 boss then save that it's been won
+		if (World1Boss)
+		{
+			PlayerPrefs.SetInt("W1BossWon", 1);	
+			to1LevelSelect = true;
+			to2LevelSelect = false;
+			toLevel = false;
+			fromLSelect = false;
+		}
+		
 	}
 }
  

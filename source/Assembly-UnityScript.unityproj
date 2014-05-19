@@ -146,6 +146,7 @@
      <Compile Include="Assets\scripts\UI Stuff\Sun Stuff\VisualizeKill.js" />
      <Compile Include="Assets\scripts\UI Stuff\TextTypeEffect.js" />
      <Compile Include="Assets\scripts\UI Stuff\WarningController.js" />
+     <Compile Include="Assets\scripts\UI Stuff\WorldsCompleted\W1Completed.js" />
      <Compile Include="Assets\scripts\UI Stuff\ZoomStarStreaks.js" />
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipGenerator.js" />
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipProjectileController.js" />
