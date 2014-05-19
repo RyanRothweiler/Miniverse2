@@ -6,12 +6,14 @@ public var move : Vector3; //the speed and direction to move this each frame
 public var end : GameObject; //the end of the line
 public var start : GameObject; //the start of the line
 public var positionRand : float;
+public var JectileEndParticles : GameObject;
 
 //private vars
 private var dragControls : DragControlsPC;
 private var startPos : Vector3; //the position to start the projectiles at
 private var killDist = 1000.0; //the distance at which to push away this projectile
 private var startGen : AlienShipGenerator;
+private var particlePushed = false;
 
 //some cached transforms
 private var thisTransform : Transform; //the cached transform for this
@@ -81,6 +83,7 @@ function OnTriggerEnter (collision : Collider)
 function PullToPlay()
 {
 	inPlay = true;
+	particlePushed = false;
 	
 	//move back to start position
 	startPos = startGen.Center;
@@ -92,6 +95,14 @@ function PullToPlay()
 //push this projectile away from play
 function PushAway()
 {
+	//play the particle effect
+	if (JectileEndParticles && !particlePushed)
+	{
+		particlePushed = true;
+		JectileEndParticles.transform.position = this.transform.position;
+		JectileEndParticles.GetComponent(ParticleSystem).Play();
+	}
+	
 	inPlay = false;
 	transform.position = Vector3(1000,1000,1000);
 }

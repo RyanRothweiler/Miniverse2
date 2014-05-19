@@ -34,7 +34,7 @@ function Update ()
 		FadeIn();
 	}
 	
-	if (!FadedOut && anim["Default Take"].time > 18)
+	if (!FadedOut && anim["Default Take"].time > 7)
 	{
 		FadedOut = true;
 		FadeOut();

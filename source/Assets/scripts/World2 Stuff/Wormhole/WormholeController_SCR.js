@@ -5,6 +5,7 @@ public var TunnelTo : GameObject; //where this wormhole tunnels to
 public var ChildAsteroid : GameObject; //the child asteroid used as sort of a dummy to make these work
 public var Dot : GameObject;
 public var SendDots = true;
+public var TeleportEffect : GameObject;
 
 public var DotSend : GameObject;
 public var DotReceive : GameObject;
@@ -27,7 +28,6 @@ function Update ()
 	//anim pausing
 	if (Camera.main.GetComponent(DragControlsPC).LevelPaused)
 	{
-//		Debug.Log(transform.Find("Wormhole_MO"));
 		transform.Find("WormholeMO/Wormhole_MO").animation["Default Take"].speed = 0;
 	}
 	else
@@ -54,4 +54,12 @@ function PlaceDots()
 		//randomize the position a bit
 		obj.transform.position.z = 15;
 	}
+}
+
+//this is called when teleporting people
+function Teleport(going : boolean)
+{
+	var tele = GameObject.Instantiate(TeleportEffect);
+	tele.transform.position = this.transform.position;
+	tele.GetComponent(WormholeTeleportController).Going = going;
 }

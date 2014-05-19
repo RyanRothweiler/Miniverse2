@@ -1535,6 +1535,11 @@ function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean
 				
 				//reset person scale and rotate up
 				dummyObj.transform.localScale = Vector3(1.2,1.2,1.2);
+				
+				//teleport effects
+				hole.GetComponent(WormholeController_SCR).TunnelTo.GetComponent(WormholeController_SCR).Teleport(false); //coming
+				yield WaitForSeconds(0.09);
+				hole.GetComponent(WormholeController_SCR).Teleport(true); //going
 			}
 		}
 	}

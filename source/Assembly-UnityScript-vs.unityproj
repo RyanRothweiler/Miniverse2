@@ -71,6 +71,7 @@
      <Compile Include="Assets\scripts\Effects\HumanTeleportEffectController.js" />
      <Compile Include="Assets\scripts\Effects\ShipTeleportController.js" />
      <Compile Include="Assets\scripts\Effects\TransitionStars.js" />
+     <Compile Include="Assets\scripts\Effects\WormholeTeleportController.js" />
      <Compile Include="Assets\scripts\Human Stuff\HumanPerson.js" />
      <Compile Include="Assets\scripts\Human Stuff\HumanPlanet.js" />
      <Compile Include="Assets\scripts\Human Stuff\HumanShip.js" />
@@ -157,7 +158,6 @@
      <Compile Include="Assets\scripts\World2 Stuff\PlantCanister.js" />
      <Compile Include="Assets\scripts\World2 Stuff\ShieldController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\Dot_SCR.js" />
-     <Compile Include="Assets\scripts\World2 Stuff\Wormhole\WormholeAnimPause.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js" />
      <Compile Include="Assets\scripts\World3 Stuff\IsolatedPerson.js" />
      <Compile Include="Assets\scripts\World3 Stuff\Mine.js" />

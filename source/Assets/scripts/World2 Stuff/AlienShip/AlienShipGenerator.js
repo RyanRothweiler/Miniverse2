@@ -5,6 +5,8 @@ public var Center : Vector3; //where to emit the projectiles from
 public var Rotater : boolean; //if this ship rotates
 public var RotateSpeed : float; //at what speed does this ship rotate
 public var preBaked = false;
+public var JectileEndParticle : GameObject;
+public var EmitterJectileParticle : Material;
 
 public var DeathAsteroid : GameObject; //the death asteroid prefab
 public var ProjectileLight : GameObject; //this are distributed evenly along the line (will need to be moved for dynamic moving alien ships
@@ -38,6 +40,10 @@ function Start ()
 	Center = transform.Find("EmitterMO").transform.position; //get initial center
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
 	PreBake(); //create and setup all the projectiles
+	
+	//particle stuff
+	JectileEndParticle.transform.parent = null;
+	EmitterJectileParticle.SetColor("_TintColor", Color(EmitterJectileParticle.GetColor("_TintColor").r, EmitterJectileParticle.GetColor("_TintColor").g, EmitterJectileParticle.GetColor("_TintColor").b, 0));
 }
 
 function Update () 	
@@ -58,6 +64,15 @@ function Update ()
 		if (Rotater && !dragControls.LevelPaused)
 		{
 			Rotate();
+		}
+		
+		if (dragControls.LevelPaused)
+		{
+			EmitterJectileParticle.SetColor("_TintColor", Color(EmitterJectileParticle.GetColor("_TintColor").r, EmitterJectileParticle.GetColor("_TintColor").g, EmitterJectileParticle.GetColor("_TintColor").b, 0));
+		}
+		else
+		{
+			EmitterJectileParticle.SetColor("_TintColor", Color(EmitterJectileParticle.GetColor("_TintColor").r, EmitterJectileParticle.GetColor("_TintColor").g, EmitterJectileParticle.GetColor("_TintColor").b, 0.15));
 		}
 	}
 }
@@ -80,6 +95,7 @@ function PreBake()
 		projectile.end = this.End;
 		projectile.start = this.gameObject;
 		projectile.positionRand = positionRand;
+		projectile.JectileEndParticles = JectileEndParticle;
 		
 		//distribute the projectile evenly along it's direction
 		projectile.transform.position = (i * ((endTransform.position - Center) / projectileNum)) + Center;

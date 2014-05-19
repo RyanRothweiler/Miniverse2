@@ -20,6 +20,7 @@ function Update ()
 function KillTo(target : GameObject)
 {
 	var speed = 8;
+	this.collider.enabled = false;
 	//lerp down and to the target
 	do 
 	{
@@ -30,6 +31,7 @@ function KillTo(target : GameObject)
 	
 	//then really kill it forever
 	transform.position = Vector3(1000,1000,1000);
+	GameObject.Destroy(this.gameObject);
 }
 
 function OnTriggerEnter (collision : Collider) 
