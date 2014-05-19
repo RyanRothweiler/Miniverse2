@@ -196,7 +196,7 @@ public var cameraZoomInPos : Vector3; //the position the camera zooms into. aka 
 private var dummyVector3 : Vector3;
 private var dummyVector2 : Vector2;
 //private var PrevLevelNum : GameObject; //when moving back to the level select screen, this holds the level num of the level which the player came from
-private static var PrevLevelLoc : Vector3; //the previous level tag's location
+public  static var PrevLevelLoc : Vector3; //the previous level tag's location
 public var LevelOffset = Vector3(-2,0,0); 
 private var shipLoc : Vector3; //the location of the ship
 private var Timer : LevelTimer; //the script which controls the level times
@@ -1716,6 +1716,7 @@ function shrinkCheck()
 function WorldSelect()
 {
 	halt = true;
+	PrevLevelLoc = Vector3.zero;
 	
 	if (PlatformPC)
 	{
@@ -1782,6 +1783,9 @@ function WorldSelect()
 				//move back to main menu
 				nextLevel = true;
 				toMainMenu = true;
+				
+				//fade out back button
+				this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 			}
 			
 			if (worldSelected && selectedWorld.collider.name == "w1")
@@ -1792,6 +1796,9 @@ function WorldSelect()
 				//move back to main menu
 				nextLevel = true;
 				to1LevelSelect = true;
+				
+				//fade out back button
+				this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 			}
 			
 			if (worldSelected && selectedWorld.collider.name == "w2")
@@ -1802,6 +1809,9 @@ function WorldSelect()
 				//move back to main menu
 				nextLevel = true;
 				to2LevelSelect = true;
+				
+				//fade out back button
+				this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 			}
 			
 			if (worldSelected && selectedWorld.collider.name == "w3")
@@ -1812,6 +1822,9 @@ function WorldSelect()
 				//move back to main menu
 				nextLevel = true;
 				to3LevelSelect = true;
+				
+				//fade out back button
+				this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 			}
 			worldSelected = false;
 		}
@@ -1850,6 +1863,9 @@ function WorldSelect()
 							DepressLevelTag(objectInfo, false);
 							depressedTag = objectInfo;
 							iosTagDepress = true;
+							
+							//fade out back button
+							this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 						}
 						
 						//to world 1 level select
@@ -1861,6 +1877,9 @@ function WorldSelect()
 							//move back to main menu
 							nextLevel = true;
 							to1LevelSelect = true;
+							
+							//fade out back button
+							this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 						}
 						
 						//to world 2 level select
@@ -1872,6 +1891,9 @@ function WorldSelect()
 							//move back to main menu
 							nextLevel = true;
 							to2LevelSelect = true;
+							
+							//fade out back button
+							this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 						}
 						
 						//to world 3 level select
@@ -1883,6 +1905,9 @@ function WorldSelect()
 							//move back to main menu
 							nextLevel = true;
 							to3LevelSelect = true;
+							
+							//fade out back button
+							this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 						}
 					}					
 				}
@@ -1905,6 +1930,9 @@ function WorldSelect()
 				//move back to main menu
 				nextLevel = true;
 				toMainMenu = true;
+	
+				//fade out back button
+				this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 			}
 		}
 	}
@@ -2976,10 +3004,10 @@ function LevelWon()
 		{
 			SFXCont.LevelWin();
 		}
-		
-		if (!World1Boss)
+
+		//what level to load next for world1
+		if (world == 1)
 		{
-			//what level to load next for world1
 			if (world == 1 && Application.loadedLevel < 5)
 			{
 				to1LevelSelect = true;
@@ -3000,28 +3028,27 @@ function LevelWon()
 		}
 		
 		//what level to load next for world2
-		if (world == 2 && Application.loadedLevel < 27)
+		if (world == 2)
 		{
-			to2LevelSelect = true;
-		}
-		else
-		{
-			if (Application.loadedLevel < 44)
-			{
-				fromLSelect = false;
-				toLevel = true;
-				NextLevelNum = Application.loadedLevel+1;
-			}
-			else
+			if (world == 2 && Application.loadedLevel < 27)
 			{
 				to2LevelSelect = true;
 			}
+			else
+			{
+				if (Application.loadedLevel < 44)
+				{
+					fromLSelect = false;
+					toLevel = true;
+					NextLevelNum = Application.loadedLevel+1;
+				}
+				else
+				{
+					to2LevelSelect = true;
+				}
+			}
 		}
 
-		if (world == 2)
-		{
-			to2LevelSelect = true;
-		}
 		if (world == 3)
 		{
 			to3LevelSelect = true;
@@ -3047,7 +3074,6 @@ function LevelWon()
 			toLevel = false;
 			fromLSelect = false;
 		}
-		
 	}
 }
  

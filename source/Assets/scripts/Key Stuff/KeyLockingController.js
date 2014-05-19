@@ -78,6 +78,7 @@ function BossUnlockAnim()
 	//stop everything
 	dragControls.LSelectHalt = true;
 	dragControls.Movement1Delta = Vector2.zero;
+	dragControls.PrevLevelLoc = Vector3.zero;
 	
 	//smooth move the level tags while fading out each puzzle piece and fading in the completed puzzle
 	do //start fading out the puzzle pieces
