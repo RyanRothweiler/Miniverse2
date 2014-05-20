@@ -18,7 +18,7 @@ function Start ()
 {	
 	if (SendDots)
 	{
-		projectileNum = Vector3.Distance(this.transform.position, TunnelTo.transform.position) * 1;
+		projectileNum = Vector3.Distance(this.transform.position, TunnelTo.transform.position) * 0;
 		PlaceDots();
 	}
 }
