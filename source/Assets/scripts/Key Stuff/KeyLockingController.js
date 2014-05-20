@@ -5,6 +5,7 @@ public var Locked : boolean;
 public var FinalPuzzlePlane : GameObject;
 public var LockPlane : GameObject;
 public var pieceMat : Material;
+public var world : int;
 
 //private var
 private var dragControls : DragControlsPC;
@@ -22,13 +23,17 @@ function Start ()
 	dragControls = Camera.main.GetComponent(DragControlsPC);
 	var LockMat = LockPlane.renderer.material;
 	LockPlane.renderer.material.SetColor("_Color", Color(LockMat.GetColor("_Color").r, LockMat.GetColor("_Color").g, LockMat.GetColor("_Color").b, 1));
+	world = dragControls.world;
+	Debug.Log(world);
 	
 	//get keys
 	keys = 	GameObject.FindGameObjectsWithTag("key");
 	
 	//check if the boss has been won already
-	if (PlayerPrefs.HasKey("W1BossWon"))
+	if (PlayerPrefs.HasKey("W"+world+"BossWon"))
 	{
+		Debug.Log("unlocked "+world);
+		
 		//don't let things play again
 		Locked = false;
 		unlocked = true;
@@ -45,7 +50,7 @@ function Start ()
 
 function Update () 
 {
-	if (!PlayerPrefs.HasKey("W1BossWon"))
+	if (PlayerPrefs.HasKey("W"+world+"BossWon"))
 	{
 		Locked = false;
 		keys = 	GameObject.FindGameObjectsWithTag("key");

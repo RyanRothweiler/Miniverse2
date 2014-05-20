@@ -279,15 +279,15 @@ function Start ()
 	}
 	
 //	Debug.Log(Application.loadedLevel);
-	if (Application.loadedLevel < 22)
+	if (Application.loadedLevel <= 24)
 	{
 		world = 1;
 	}
-	if (Application.loadedLevel > 23 && Application.loadedLevel < 46)
+	if (Application.loadedLevel >= 25 && Application.loadedLevel <= 46)
 	{
 		world = 2;
 	}
-	if (Application.loadedLevel > 47 && Application.loadedLevel < 68)
+	if (Application.loadedLevel >= 47 && Application.loadedLevel < 68)
 	{
 		world = 3;
 	}
@@ -2701,10 +2701,10 @@ function LevelSelect()
 					}
 				}
 				
-				//check a tap			
+				//check a tap
 				if (Touch1Tap && (Touch1StartPos.x + TouchTapBounds.x > Touch1EndPos.x) && (Touch1StartPos.x - TouchTapBounds.x < Touch1EndPos.x) && (Touch1StartPos.y + TouchTapBounds.y > Touch1EndPos.y) && (Touch1StartPos.y - TouchTapBounds.y < Touch1EndPos.y) )
 				{
-					if(Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
+					if(!KeyRotating && Physics.Raycast(Camera.main.WorldToScreenPoint(Vector3(Touch1StartPos.x,Touch1StartPos.y,Camera.main.transform.position.z)), Camera.main.ScreenToWorldPoint(Vector3(Touch1StartPos.x, Touch1StartPos.y, WorldZDepth - Camera.main.transform.position.z)), objectInfo))
 					{
 						if (objectInfo.collider.tag != "key")
 						{

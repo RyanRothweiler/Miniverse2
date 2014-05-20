@@ -10,14 +10,16 @@ private var dragControls : DragControlsPC;
 private var mat : Material;
 private var maxa : float;
 
+private var mats : Component[];
+
 private var FadedIn = false;
 private var FadedOut = true;
+private var pushed = false;
 
 function Start () 
 {
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
-//	mat = this.transform.Find("dot_MO").renderer.material;
-//	maxa = mat.color.a;
+	mats = this.GetComponentsInChildren(Renderer);
 }
 
 function Update () 
@@ -29,39 +31,49 @@ function Update ()
 		transform.position += Dir;
 	}
 	
-//	if (!dragControls.LevelPaused)
-//	{
-//		FadeOutMat(mat);
-//	}
-//	else
-//	{
-//		FadeInMat(mat);
-//	}
-
-	
 	//check if close to end
-	if (!dragControls.halt && Vector3.Distance(this.transform.position, EndObj.transform.position) < 0.1)
+	if ((!dragControls.halt && Vector3.Distance(this.transform.position, EndObj.transform.position) < 2) && !pushed)
 	{
-		this.transform.position = StartObj.transform.position;
+		pushed = true;
+		Reset();
 	}
 }
 
 //fade out the material
-function FadeOutMat(mat : Material)
+function FadeOutMat()
 {
 	do
 	{
-		mat.color.a -= Time.deltaTime * 10;
+		for (var mat : Component in mats)
+		{
+			mat.GetComponent(Renderer).material.SetColor("_Color", Color(1,1,1,mat.GetComponent(Renderer).material.GetColor("_Color").a - 0.02));
+		}
 		yield WaitForSeconds(0.01);
-	} while (mat.color.a > 0);
+	} while (mats[0].GetComponent(Renderer).material.GetColor("_Color").a > 0);
+	
+	//after done fading out then move to start
+	this.transform.position = StartObj.transform.position;
 }
 
 //fade in the material
-function FadeInMat(mat : Material)
+function FadeInMat()
 {
 	do
 	{
-		mat.color.a += Time.deltaTime * 10;
+		for (var mat : Component in mats)
+		{
+			mat.GetComponent(Renderer).material.SetColor("_Color", Color(1,1,1,mat.GetComponent(Renderer).material.GetColor("_Color").a + 0.02));
+		}
 		yield WaitForSeconds(0.01);
-	} while (mat.color.a < maxa);
+	} while (mats[0].GetComponent(Renderer).material.GetColor("_Color").a < 1);
+}
+
+function Reset()
+{
+	FadeOutMat();
+	
+	yield WaitForSeconds(1.5);
+	
+	FadeInMat();
+	pushed = false;
 }
