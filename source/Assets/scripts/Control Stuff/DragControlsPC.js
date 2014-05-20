@@ -1717,6 +1717,7 @@ function WorldSelect()
 {
 	halt = true;
 	PrevLevelLoc = Vector3.zero;
+	LevelOffset = Vector3.zero;
 	
 	if (PlatformPC)
 	{
