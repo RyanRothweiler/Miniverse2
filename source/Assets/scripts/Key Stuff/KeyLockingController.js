@@ -50,7 +50,7 @@ function Start ()
 
 function Update () 
 {
-	if (PlayerPrefs.HasKey("W"+world+"BossWon"))
+	if (!PlayerPrefs.HasKey("W"+world+"BossWon"))
 	{
 		Locked = false;
 		keys = 	GameObject.FindGameObjectsWithTag("key");
