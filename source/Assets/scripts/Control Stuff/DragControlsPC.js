@@ -29,9 +29,9 @@ public var CameraScaleSpeed : float; //the speed which the world scales up and d
 public var LevelSelectDragRate : float; //rate at which the level select tags are drug  
 public var TutorialTypeSpeed : float; //the speed at which the tutorials are typed
 
-//static var leveloffsetX = -2;//save level offest x position
-//static var leveloffsetY : float;
-//static var leveloffsetZ : float;
+static var leveloffsetX = -2;//save level offest x position
+static var leveloffsetY : float;
+static var leveloffsetZ : float;
 
 static var WorldDraggingInverted : boolean; //if world dragging is inverted
 public var CanMoveCameraHorizontal : boolean; //if the player can move the camera horizontally
@@ -478,7 +478,7 @@ function Start ()
 	//ios initializations
 	if (PlatformIOS)
 	{
-//		LevelOffset = Vector3(leveloffsetX, leveloffsetY, leveloffsetZ);
+		LevelOffset = Vector3(leveloffsetX, leveloffsetY, leveloffsetZ);
 	}
 	
 	//pc initializations
@@ -1718,6 +1718,9 @@ function WorldSelect()
 	halt = true;
 	PrevLevelLoc = Vector3.zero;
 	LevelOffset = Vector3.zero;
+	leveloffsetX = 0;
+	leveloffsetY = 0; 
+	leveloffsetZ = 0;
 	
 	if (PlatformPC)
 	{
@@ -2715,9 +2718,9 @@ function LevelSelect()
 									FadeOutKeys(); //fade out keys
 								
 									//save level offset
-//									leveloffsetX = LevelOffset.x;
-//									leveloffsetY = LevelOffset.y;
-//									leveloffsetZ = LevelOffset.z;
+									leveloffsetX = LevelOffset.x;
+									leveloffsetY = LevelOffset.y;
+									leveloffsetZ = LevelOffset.z;
 									
 									//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
 									NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
@@ -2742,9 +2745,9 @@ function LevelSelect()
 								FadeOutKeys(); //fade out keys
 								
 								//save level offset
-//								leveloffsetX = LevelOffset.x;
-//								leveloffsetY = LevelOffset.y;
-//								leveloffsetZ = LevelOffset.z;
+								leveloffsetX = LevelOffset.x;
+								leveloffsetY = LevelOffset.y;
+								leveloffsetZ = LevelOffset.z;
 								
 								//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
 //								previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
