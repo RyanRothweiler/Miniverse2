@@ -32,6 +32,7 @@ private var edjUsing = false;
 private var dragControls : DragControlsPC;
 
 private var holdersInstantiated : boolean; //if the holders have been instantiate 
+private var hitOnce = false;
 
 function Start () 
 {
@@ -71,6 +72,7 @@ function Update ()
 	if (LiveCombine && !Camera.main.GetComponent(DragControlsPC).halt && !Camera.main.GetComponent(DragControlsPC).LevelPaused)
 	{
 		MeshAdd();
+//		hitOnce = true;
 	}
 }
 
@@ -87,14 +89,31 @@ function MeshAdd ()
 	count = 0;
 	for (var sun : GameObject in MathSuns)
 	{
-		//create mesh circle data
-		circles[count].center = sun.transform.position;
-		circles[count].radius = Vector3.Distance(sun.transform.position, sun.transform.TransformPoint(sun.GetComponent(MeshFilter).mesh.vertices[10]));
-		circles[count].object.GetComponent(MathWireframeRender).CustomLines.Clear();
-		circles[count].hitOnce = false;
-		circles[count].hitTwice = false;
-		circles[count].endCircle = false;
-		count++;
+		if (!hitOnce)
+		{
+			//create mesh circle data
+			circles[count].center = sun.transform.position;
+			circles[count].radius = Vector3.Distance(sun.transform.position, sun.transform.TransformPoint(sun.GetComponent(MeshFilter).mesh.vertices[10]));
+			circles[count].object.GetComponent(MathWireframeRender).CustomLines.Clear();
+			circles[count].hitOnce = false;
+			circles[count].hitTwice = false;
+			circles[count].endCircle = false;
+			count++;
+		}
+		else //if already gone through once, then only use the circles that are shrinking
+		{
+//			if (sun.GetComponent(ShrinkCode).shrinkSpeed > 0)
+//			{
+//				//create mesh circle data
+//				circles[count].center = sun.transform.position;
+//				circles[count].radius = Vector3.Distance(sun.transform.position, sun.transform.TransformPoint(sun.GetComponent(MeshFilter).mesh.vertices[10]));
+//				circles[count].object.GetComponent(MathWireframeRender).CustomLines.Clear();
+//				circles[count].hitOnce = false;
+//				circles[count].hitTwice = false;
+//				circles[count].endCircle = false;
+//				count++;
+//			}
+		}
 	}
 	
 	//mark the end circles
