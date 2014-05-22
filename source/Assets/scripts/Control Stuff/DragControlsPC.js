@@ -547,7 +547,7 @@ function Update ()
 		{
 			//camera zooming
 			//zooming out
-			if (Input.GetMouseButtonDown(0) && FirstClick && !World2Boss)
+			if (Input.GetMouseButtonDown(0) && FirstClick && !World2Boss && !World1Boss)
 			{
 				if(CanScrollZoom && !LevelPaused)
 				{
@@ -701,7 +701,7 @@ function Update ()
 			}
 			
 			//check if the player clicks down mouse button on a planet
-			if (Input.GetMouseButtonDown(0) && !LevelPaused)
+			if (Input.GetMouseButtonDown(0) && !LevelPaused && !World2Boss)
 			{
 				mousePos = Input.mousePosition;
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
@@ -835,7 +835,7 @@ function Update ()
 						Touch1StartPos = touch.position;
 						
 						//planet selection
-						if (canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
+						if (!World2Boss && canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 						{
 							//if the planet is draggable
 							if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)

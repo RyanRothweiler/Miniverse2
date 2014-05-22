@@ -2,8 +2,7 @@
 
 //public vars
 public var ProjectileSpeed : float;
-public var ab1 : GameObject;
-public var ab2 : GameObject;
+public var humanShip : GameObject;
 
 //private vars
 private var dragControls : DragControlsPC;
@@ -59,22 +58,26 @@ function StickyPlanet()
 	}
 }
 
+//moves camera to the final ship
 function toPhase1()
 {
-	//when done then start phase one of the boss ai
-	ab1.GetComponent(AlienBoss).Phase1 = true;
-	
-	var vel : Vector3;
-	var from : Vector3;
-	var to : Vector3;
-	
-	to = Camera.main.transform.position + Vector3(0,13.5,0);
+	var speed = 0.15;
 	do 
 	{
 		yield;
-		from = Camera.main.transform.position;
-		Camera.main.transform.position = Vector3.SmoothDamp(from, to, vel, 1.5);
-	} while (Camera.main.transform.position.y < 13.5);
+//		from = Camera.main.transform.position;
+//		Camera.main.transform.position = Vector3.SmoothDamp(from, to, vel, 30); //the final number is the time it takes to get to the ship larget number means longer
+
+		Camera.main.transform.Translate(Vector3(0,speed,0));
+		
+	} while (Camera.main.transform.position.y < humanShip.transform.position.y - 3);
+	
+	do
+	{
+		Camera.main.transform.transform.Translate(Vector3(0,speed,0));
+		speed -= 0.002;
+		yield;
+	} while (speed > 0);
 }
 
 //check shooting
@@ -96,7 +99,7 @@ function PullProjectile()
 		{
 			//pull into play
 			projectiles[i].GetComponent(W2BossProjectileController).move = this.transform.up * ProjectileSpeed;
-			projectiles[i].transform.position = this.transform.position + (projectiles[i].GetComponent(W2BossProjectileController).move * 2);
+			projectiles[i].transform.position = this.transform.position + (projectiles[i].GetComponent(W2BossProjectileController).move * -0.1);
 			projectiles[i].tag = "Untagged";
 			return; //break out of the loop
 		}

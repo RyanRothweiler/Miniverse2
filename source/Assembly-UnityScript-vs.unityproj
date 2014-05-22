@@ -154,6 +154,7 @@
      <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\AlienBoss.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\BossBubble.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\BossGun.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\W2BProtectPlanet.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\W2BossProjectileController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\World2BossHumanPlanet.js" />
      <Compile Include="Assets\scripts\World2 Stuff\PlantCanister.js" />

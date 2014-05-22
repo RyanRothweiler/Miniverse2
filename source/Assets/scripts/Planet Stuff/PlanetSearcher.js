@@ -12,6 +12,7 @@ public var nearestPlanet : GameObject;
 public var selectLine : GameObject; //everything must have its own select line
 public var PlanetExplosion : GameObject; //the explosion prefab
 public var OnScreen : boolean;
+public var CanMovePeople = true;
 
 //world 1 boss level phases. Phase 1 is moving up, phase 2 is moving to the right, and phase 3 is moving down
 public var Phase1 = false;
@@ -130,7 +131,7 @@ function BeginSearch ()
     
 
     // loop through each tagged object, remembering nearest one found
-    if (OnScreen || Wormhole)
+    if (CanMovePeople && (OnScreen || Wormhole))
     {
 	    for (var obj : GameObject in gameObjects) 
 	    {

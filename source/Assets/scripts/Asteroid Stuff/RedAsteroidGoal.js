@@ -14,7 +14,7 @@ function Start ()
 function Update () 
 {
 	//update on screen
-	if (Camera.main.WorldToViewportPoint(transform.position).x > -0.5 && Camera.main.WorldToViewportPoint(transform.position).x < 1.5 && Camera.main.WorldToViewportPoint(transform.position).y > -0.5 && Camera.main.WorldToViewportPoint(transform.position).y < 1.5)
+	if (Camera.main.WorldToViewportPoint(transform.position).x > -0.2 && Camera.main.WorldToViewportPoint(transform.position).x < 1.2 && Camera.main.WorldToViewportPoint(transform.position).y > -0.2 && Camera.main.WorldToViewportPoint(transform.position).y < 1.2)
 	{
 		OnScreen = true;
 	}

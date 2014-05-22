@@ -9,9 +9,12 @@ public var Phase : int; //the phase which this asteroid belongs to
 //private vars
 private var start = true;	
 private var Going = false;
+private var dragControls : DragControlsPC;
 
 function Start () 
 {
+	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
+	
 	//randomize animation
 	Anim.animation["Default Take"].time = Random.Range(0,50);
 	Anim.animation["Default Take"].speed = Random.Range(-2.0,2.0);
@@ -64,5 +67,21 @@ function Update ()
 		{
 			transform.position += Direction * Time.deltaTime * 30;
 		}
+	}
+}
+
+function OnTriggerEnter (collision : Collider) 
+{
+	//if hit by a projectile, then kill
+	if (collision.name == "W2PlanetProjectile" && collision.gameObject.GetComponent(W2BossProjectileController).OnScreen) 
+	{
+		//create explosion
+		GameObject.Instantiate(dragControls.PlanetExplosion, this.transform.position, Quaternion(0,0,0,0)); //create explosion
+		
+		//move asteroid
+		this.transform.position = Vector3(1000,1000,1000);
+		
+		//move away bullet
+		collision.transform.position = Vector3(500,500,500);
 	}
 }

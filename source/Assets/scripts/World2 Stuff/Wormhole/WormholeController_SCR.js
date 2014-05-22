@@ -18,7 +18,7 @@ function Start ()
 {	
 	if (SendDots)
 	{
-		projectileNum = Vector3.Distance(this.transform.position, TunnelTo.transform.position) * 0;
+		projectileNum = Vector3.Distance(this.transform.position, TunnelTo.transform.position) * 0.7;
 		PlaceDots();
 	}
 }
@@ -38,6 +38,7 @@ function Update ()
 
 function PlaceDots()
 {
+	Debug.Log("placing dots");
 	for (var i = 0; i < projectileNum; i++)
 	{
 		//create a projectile
