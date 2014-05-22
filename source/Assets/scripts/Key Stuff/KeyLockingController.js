@@ -24,7 +24,6 @@ function Start ()
 	var LockMat = LockPlane.renderer.material;
 	LockPlane.renderer.material.SetColor("_Color", Color(LockMat.GetColor("_Color").r, LockMat.GetColor("_Color").g, LockMat.GetColor("_Color").b, 1));
 	world = dragControls.world;
-	Debug.Log(world);
 	
 	//get keys
 	keys = 	GameObject.FindGameObjectsWithTag("key");
