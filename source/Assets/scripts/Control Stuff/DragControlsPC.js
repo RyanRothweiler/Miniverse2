@@ -2562,9 +2562,9 @@ function LevelSelect()
 							}
 							else
 							{
-								if (objectInfo.collider.name == "boss level - 900,000")
+								if (objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text == "BOSS LEVEL")
 								{
-									if (!Camera.main.GetComponent(KeyLockingController).Locked)
+									if (!this.GetComponent(KeyLockingController).Locked)
 									{
 										FadeKick = false;
 										iosTagDepress = true;

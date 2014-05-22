@@ -13,6 +13,7 @@ public var selectLine : GameObject; //everything must have its own select line
 public var PlanetExplosion : GameObject; //the explosion prefab
 public var OnScreen : boolean;
 public var CanMovePeople = true;
+public var isShield = false;
 
 //world 1 boss level phases. Phase 1 is moving up, phase 2 is moving to the right, and phase 3 is moving down
 public var Phase1 = false;
@@ -47,6 +48,12 @@ function Start ()
 	//set drag controls
 	dragControls = Camera.main.GetComponent(DragControlsPC);
 	first = false;
+	
+	//set shield
+	if (this.transform.Find("Shield"))
+	{
+		isShield = true;
+	}
 }
 
 // Update is called once per frame 
@@ -155,9 +162,21 @@ function BeginSearch ()
 			
 			   	if (distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead && !GetComponentInChildren(planetLifeIndicator).dead)
 			   	{
-			   		nearestPlanet = obj;
-					nearestDistanceSqr = distanceSqr;
-			       	found = true;
+			   		if (obj.name == "HumanPlanet")
+			   		{
+			   			if (obj.GetComponent(PlanetSearcher).CanMovePeople)
+			   			{
+					   		nearestPlanet = obj;
+							nearestDistanceSqr = distanceSqr;
+					       	found = true;
+						}
+				    }
+				    else
+				    {
+				   		nearestPlanet = obj;
+						nearestDistanceSqr = distanceSqr;
+				       	found = true;	
+				    }
 			    }
 			}
 			    

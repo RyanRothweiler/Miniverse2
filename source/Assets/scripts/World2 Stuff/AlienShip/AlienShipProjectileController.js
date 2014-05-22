@@ -75,6 +75,13 @@ function OnTriggerEnter (collision : Collider)
 			{
 				PushAway();
 			}
+			
+			//if collide with a shield the
+			if (collision.name == "HumanPlanet" && collision.GetComponent(PlanetSearcher).isShield)
+			{
+				PushAway();
+			}
+			
 		}
 	}
 }

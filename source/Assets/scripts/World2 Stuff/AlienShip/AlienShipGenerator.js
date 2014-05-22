@@ -106,7 +106,7 @@ function PreBake()
 	
 	//if hit then push away the projectiles behind the shield
 	var projectiles = GameObject.FindGameObjectsWithTag("AlienShipProjectile");
-	if (hit && hitObj.collider.name == "Shield")
+	if (hit && hitObj.collider.name == "HumanPlanet" && hitObj.collider.GetComponent(PlanetSearcher).isShield)
 	{
 		for (var jectile : GameObject in projectiles)
 		{

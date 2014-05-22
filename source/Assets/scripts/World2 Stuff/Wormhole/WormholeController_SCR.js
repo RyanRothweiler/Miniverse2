@@ -38,7 +38,6 @@ function Update ()
 
 function PlaceDots()
 {
-	Debug.Log("placing dots");
 	for (var i = 0; i < projectileNum; i++)
 	{
 		//create a projectile

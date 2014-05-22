@@ -140,9 +140,21 @@ function Update ()
 				       	//checks distance if obj is not found an 
 				       	if (obj.name != "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead)
 				       	{
-				       		nearestPlanet = obj.gameObject;
-				       		nearestDistanceSqr = distanceSqr;
-				       		found = true;
+				       		if (obj.name == "HumanPlanet")
+				       		{
+				       			if (!obj.GetComponent(PlanetSearcher).isShield)
+				       			{
+						       		nearestPlanet = obj.gameObject;
+						       		nearestDistanceSqr = distanceSqr;
+						       		found = true;
+				       			}
+				       		}
+				       		else
+				       		{
+					       		nearestPlanet = obj.gameObject;
+					       		nearestDistanceSqr = distanceSqr;
+					       		found = true;
+					       	}
 				       	}
 				       	if (obj.name == "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist) //checks distance if obj is an asteroid
 				       	{
