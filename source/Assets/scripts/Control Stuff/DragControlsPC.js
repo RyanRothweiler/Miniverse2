@@ -19,7 +19,7 @@ public var peopleGoal : int; //win condition of the level
 public var peopleAlive : int; //People # Monitor
 public var WorldZDepth : int; //depth of the plane which all interactable object sit on
 public var CameraLocDepth : int; //the z depth which the camer sits on
-public static var previousLevel = 0; //the level num which the player was in last
+//public static var previousLevel = 0; //the level num which the player was in last
 public var world : int; //what world we're on
 
 public var worldDist : float; //distance which the worlds must stay to the sun
@@ -2486,7 +2486,7 @@ function LevelSelect()
 							FadeOutKeys(); //fade out keys
 							
 							//initialize information for next go around
-							previousLevel = 20;
+//							previousLevel = 20;
 							NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 							PrevLevelLoc = LevelOffsetController.transform.position;
 							LevelOffset = Vector3.zero;
@@ -2507,7 +2507,7 @@ function LevelSelect()
 						FadeOutKeys(); //fade out keys
 						
 						//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-						previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
+//						previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
 						NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 						PrevLevelLoc = LevelOffsetController.transform.position;
 						LevelOffset = Vector3.zero;
@@ -2722,7 +2722,7 @@ function LevelSelect()
 									leveloffsetZ = LevelOffset.z;
 									
 									//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-									previousLevel = 21;
+//									previousLevel = 21;
 									NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 									nextLevel = true;
 									toLevel = true;
@@ -2750,7 +2750,7 @@ function LevelSelect()
 								leveloffsetZ = LevelOffset.z;
 								
 								//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-								previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
+//								previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
 								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);;
 								nextLevel = true;
 								toLevel = true;

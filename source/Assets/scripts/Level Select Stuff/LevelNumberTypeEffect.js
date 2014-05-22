@@ -25,7 +25,7 @@ private var awayStart : int;
 function Start () 
 {
 	//get the previous level
-	prevLevel = Camera.main.GetComponent(DragControlsPC).previousLevel;
+//	prevLevel = Camera.main.GetComponent(DragControlsPC).previousLevel;
 	if (prevLevel > 1)
 	{
 		numNext = prevLevel - 2;
