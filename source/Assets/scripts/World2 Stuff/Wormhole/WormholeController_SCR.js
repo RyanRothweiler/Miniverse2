@@ -59,7 +59,7 @@ function PlaceDots()
 //this is called when teleporting people
 function Teleport(going : boolean)
 {
-	var tele = GameObject.Instantiate(TeleportEffect);
-	tele.transform.position = this.transform.position;
-	tele.GetComponent(WormholeTeleportController).Going = going;
+//	var tele = GameObject.Instantiate(TeleportEffect);
+//	tele.transform.position = this.transform.position;
+//	tele.GetComponent(WormholeTeleportController).Going = going;
 }

@@ -30,9 +30,7 @@ function Start ()
 	
 	//check if the boss has been won already
 	if (PlayerPrefs.HasKey("W"+world+"BossWon"))
-	{
-		Debug.Log("unlocked "+world);
-		
+	{		
 		//don't let things play again
 		Locked = false;
 		unlocked = true;

@@ -3009,45 +3009,45 @@ function LevelWon()
 		//what level to load next for world1
 		if (world == 1)
 		{
-			if (world == 1 && Application.loadedLevel < 5)
-			{
-				to1LevelSelect = true;
-			}
-			else if (Application.loadedLevel >= 5)
-			{
-				if (!(Application.loadedLevel > 19))
-				{
-					fromLSelect = false;
-					toLevel = true;
-					NextLevelNum = Application.loadedLevel+1;
-				}
-				else
-				{
+//			if (world == 1 && Application.loadedLevel < 5)
+//			{
+//				to1LevelSelect = true;
+//			}
+//			else if (Application.loadedLevel >= 5)
+//			{
+//				if (!(Application.loadedLevel > 19))
+//				{
+//					fromLSelect = false;
+//					toLevel = true;
+//					NextLevelNum = Application.loadedLevel+1;
+//				}
+//				else
+//				{
 					to1LevelSelect = true;
-				}
-			}
+//				}
+//			}
 		}
 		
 		//what level to load next for world2
 		if (world == 2)
 		{
-			if (world == 2 && Application.loadedLevel < 27)
-			{
-				to2LevelSelect = true;
-			}
-			else
-			{
-				if (Application.loadedLevel < 44)
-				{
-					fromLSelect = false;
-					toLevel = true;
-					NextLevelNum = Application.loadedLevel+1;
-				}
-				else
-				{
+//			if (world == 2 && Application.loadedLevel < 27)
+//			{
+//				to2LevelSelect = true;
+//			}
+//			else
+//			{
+//				if (Application.loadedLevel < 44)
+//				{
+//					fromLSelect = false;
+//					toLevel = true;
+//					NextLevelNum = Application.loadedLevel+1;
+//				}
+//				else
+//				{
 					to2LevelSelect = true;
-				}
-			}
+//				}
+//			}
 		}
 
 		if (world == 3)
