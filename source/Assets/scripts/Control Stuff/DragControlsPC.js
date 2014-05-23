@@ -77,6 +77,7 @@ public var PlatformPC = false;
 
 public var World1Boss = false;
 public var World2Boss = false;
+public var World3Boss = false;
 
 public var canMoveToWorld = true; //if can zoom to world
 public var canMoveToPlay = false; //if can zoom to play
@@ -277,6 +278,7 @@ function Start ()
 	{
 		isLevelSelect = true;
 	}
+	
 	
 //	Debug.Log(Application.loadedLevel);
 	if (Application.loadedLevel <= 24)
@@ -547,7 +549,7 @@ function Update ()
 		{
 			//camera zooming
 			//zooming out
-			if (Input.GetMouseButtonDown(0) && FirstClick && !World2Boss && !World1Boss)
+			if (Input.GetMouseButtonDown(0) && FirstClick && !World3Boss && !World1Boss)
 			{
 				if(CanScrollZoom && !LevelPaused)
 				{
@@ -655,7 +657,7 @@ function Update ()
 				}
 			}
 			//if view dragging
-			if ( (Input.GetAxis("Horizontal") || Input.GetAxis("Vertical")) && !LevelPaused && CanViewDrag)
+			if ( (Input.GetAxis("Horizontal") || Input.GetAxis("Vertical")) && !LevelPaused && CanViewDrag && !World3Boss)
 			{
 				if (CanMoveCameraHorizontal)
 				{
@@ -687,7 +689,7 @@ function Update ()
 			//if release mouse
 			if (Input.GetMouseButtonUp(0) && !AutoMoving && !LevelPaused)
 			{
-				if(!TouchAutoMove && !World2Boss)
+				if(!TouchAutoMove && !World3Boss)
 				{
 					if (!isLevelSelect && selectedWorld.collider != null && (selectedWorld.collider.name != "BackArrow" && selectedWorld.collider.name != "Shield"))
 					{
@@ -701,7 +703,7 @@ function Update ()
 			}
 			
 			//check if the player clicks down mouse button on a planet
-			if (Input.GetMouseButtonDown(0) && !LevelPaused && !World2Boss)
+			if (Input.GetMouseButtonDown(0) && !LevelPaused && !World3Boss)
 			{
 				mousePos = Input.mousePosition;
 				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), objectInfo))
@@ -764,7 +766,7 @@ function Update ()
 						//check double tapping. do this while touch1startpos still holds the last touch position
 						tapCount++;
 						TapResetWait();
-						if (!World2Boss && tapCount >= 2 && DoubleTapZoom && (touch.position.x > Touch1StartPos.x - 20 && touch.position.x < Touch1StartPos.x + 20) && (touch.position.y > Touch1StartPos.y - 20 && touch.position.y < Touch1StartPos.y + 20)) //if double tapped then zoom into that position
+						if (!World3Boss && tapCount >= 2 && DoubleTapZoom && (touch.position.x > Touch1StartPos.x - 20 && touch.position.x < Touch1StartPos.x + 20) && (touch.position.y > Touch1StartPos.y - 20 && touch.position.y < Touch1StartPos.y + 20)) //if double tapped then zoom into that position
 						{
 							tapCount = 0;
 							if (LevelPaused) 
@@ -835,7 +837,7 @@ function Update ()
 						Touch1StartPos = touch.position;
 						
 						//planet selection
-						if (!World2Boss && canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
+						if (canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 						{
 							//if the planet is draggable
 							if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher) && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
@@ -892,7 +894,7 @@ function Update ()
 				}
 				
 				//camera dragging
-				if (!LevelPaused && !Touch1WorldSelected && Touch1Move && CanViewDrag && !ShieldSelected)
+				if (!LevelPaused && !Touch1WorldSelected && Touch1Move && CanViewDrag && !ShieldSelected && !World3Boss)
 				{
 					Touch1CameraDragging = true;
 					if (CanMoveCameraHorizontal)
@@ -964,7 +966,7 @@ function Update ()
 		}		
 					
 		//check for sun proximity 
-		if (!TouchAutoMove && !World2Boss)
+		if (!TouchAutoMove && !World3Boss)
 		{
 			for (i = 0; i < worldObjects.length; i++)
 			{

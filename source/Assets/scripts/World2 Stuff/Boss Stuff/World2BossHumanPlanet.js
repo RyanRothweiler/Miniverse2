@@ -8,6 +8,7 @@ public var humanShip : GameObject;
 private var dragControls : DragControlsPC;
 private var projectiles : GameObject[];
 private var phase1Virgin = true;
+private var shot = false;
 
 function Start () 
 {
@@ -28,6 +29,11 @@ function StickyPlanet()
 {
 	//reset offSet
 	dragControls.offSet = Vector3.zero;
+	
+	if (!dragControls.introing)
+	{
+		this.transform.parent = Camera.main.transform;
+	}
 	
 	
 	if ((dragControls.worldSelected || dragControls.Touch1WorldSelected))
@@ -65,8 +71,6 @@ function toPhase1()
 	do 
 	{
 		yield;
-//		from = Camera.main.transform.position;
-//		Camera.main.transform.position = Vector3.SmoothDamp(from, to, vel, 30); //the final number is the time it takes to get to the ship larget number means longer
 
 		Camera.main.transform.Translate(Vector3(0,speed,0));
 		
@@ -83,9 +87,16 @@ function toPhase1()
 //check shooting
 function checkShooting()
 {
-	if (Input.GetMouseButtonDown(0) || Input.touches.Length > 0)
+	if (Input.GetMouseButtonDown(0) || (!shot && Input.touches.Length > 1))
 	{
+		shot = true;
 		PullProjectile();
+	}
+	
+	//reset touch shotting
+	if (Input.touches.Length < 2)
+	{
+		shot = false;
 	}
 }
 
