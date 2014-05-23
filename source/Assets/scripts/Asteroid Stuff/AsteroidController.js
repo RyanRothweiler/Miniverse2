@@ -10,6 +10,7 @@ public var selectLine : GameObject; //the proximity indicator
 public var RadiiObj : GameObject; //the radii object. no shit.
 public var Wormhole : GameObject;
 public var OnScreen : boolean;
+public var isShield = false;
 
 //private vars
 private var fVector : Vector3;
@@ -116,7 +117,7 @@ function Update ()
 	    found = false;	    
 	
 	    // loop through each tagged object, remembering nearest one found
-	    if (OnScreen || Wormhole)
+	    if ((OnScreen || Wormhole))
 	    {
 		    for (var obj : GameObject in gameObjects) 
 		    {
@@ -138,7 +139,7 @@ function Update ()
 					if (distanceSqr < dragControls.worldDist)		      	
 					{
 				       	//checks distance if obj is not found an 
-				       	if (obj.name != "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead)
+				       	if (!isShield && obj.name != "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist && !obj.GetComponentInChildren(planetLifeIndicator).dead)
 				       	{
 				       		if (obj.name == "HumanPlanet")
 				       		{
@@ -156,11 +157,14 @@ function Update ()
 					       		found = true;
 					       	}
 				       	}
-				       	if (obj.name == "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist) //checks distance if obj is an asteroid
+				       	if (!isShield && obj.name == "Asteroid" && distanceSqr < nearestDistanceSqr && distanceSqr < dragControls.worldDist) //checks distance if obj is an asteroid
 				       	{
-				       		nearestPlanet = obj.gameObject;
-				       		nearestDistanceSqr = distanceSqr;
-				       		found = true;
+				       		if (!obj.GetComponent(AsteroidController).isShield)
+				       		{
+					       		nearestPlanet = obj.gameObject;
+					       		nearestDistanceSqr = distanceSqr;
+					       		found = true;
+					       	}
 				       	}
 					}
 			   	}

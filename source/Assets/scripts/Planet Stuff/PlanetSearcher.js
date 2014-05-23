@@ -282,6 +282,15 @@ function OnTriggerEnter(info : Collider)
 		transform.position = Vector3(1000, 1000, 1000);
 		transform.gameObject.tag = "DEAD"; 
 	}
+	
+	if (!dragControls.introing)
+	{
+		//killing a mine
+		if (info.gameObject.name == "Mine" && isShield)
+		{
+			info.gameObject.GetComponent(Mine).Kill();
+		}
+	}
 }
 
 function KillPlanet()

@@ -32,5 +32,5 @@ function FadeTo(target : GameObject)
 	} while (KeyMat.GetColor("_Color").a > 0);
 	
 	//removes this object at the end
-	this.transform.position = Vector3(1000,1000,1000);
+	this.transform.position = Vector3(1050,1050,1050);
 }
