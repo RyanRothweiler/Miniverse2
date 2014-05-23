@@ -838,7 +838,7 @@ function Update ()
 						if (!World2Boss && canMoveToWorld && !LevelPaused && !Touch1WorldSelected && Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 						{
 							//if the planet is draggable
-							if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
+							if (objectInfo.collider.tag == "world" && objectInfo.collider.gameObject.GetComponent(PlanetSearcher) && objectInfo.collider.gameObject.GetComponent(PlanetSearcher).Draggable)
 							{
 								ShieldSelected = false;
 								Touch1WorldSelected = true;
