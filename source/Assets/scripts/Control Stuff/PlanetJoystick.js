@@ -48,7 +48,16 @@ function Update ()
 				
 				//move stuff, but make sure not to let the planet too close to the ship
 				var newPlanetPos = Camera.main.ScreenToWorldPoint(Vector3(((Input.mousePosition.x - home.x) * PlanetDragRate) + home.x, ((Input.mousePosition.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
-				if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > ShipBuffer)
+				if (!dragControls.selectedWorld.collider.GetComponent(PlanetSearcher).isShield)
+				{
+					if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > ShipBuffer)
+					{
+						transform.position += direction;
+						dragControls.selectedWorld.collider.transform.position = newPlanetPos;
+						dragControls.FailType.transform.parent = Camera.main.transform;
+					}
+				}
+				else
 				{
 					transform.position += direction;
 					dragControls.selectedWorld.collider.transform.position = newPlanetPos;
@@ -81,17 +90,21 @@ function Update ()
 				
 				//move stuff, but make sure not to let the planet too close to the ship
 				newPlanetPos = Camera.main.ScreenToWorldPoint(Vector3(((dragControls.Touch1EndPos.x - home.x) * PlanetDragRate) + home.x, ((dragControls.Touch1EndPos.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
-				if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > ShipBuffer)
+				if (!dragControls.selectedWorld.collider.GetComponent(PlanetSearcher).isShield)
+				{
+					if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > ShipBuffer)
+					{
+						transform.position += direction;
+						dragControls.selectedWorld.collider.transform.position = newPlanetPos;
+						dragControls.FailType.transform.parent = Camera.main.transform;
+					}
+				}
+				else
 				{
 					transform.position += direction;
 					dragControls.selectedWorld.collider.transform.position = newPlanetPos;
 					dragControls.FailType.transform.parent = Camera.main.transform;
 				}
-//				
-//				//move stuff
-//				transform.position += direction;
-//				dragControls.selectedWorld.collider.transform.position = Camera.main.ScreenToWorldPoint(Vector3(((dragControls.Touch1EndPos.x - home.x) * PlanetDragRate) + home.x, ((dragControls.Touch1EndPos.y - home.y) * PlanetDragRate) + home.y, 26)) + offset; 
-//				dragControls.FailType.transform.parent = Camera.main.transform;
 			}
 			else
 			{
