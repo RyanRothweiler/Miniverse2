@@ -83,7 +83,7 @@ function toPhase1()
 //check shooting
 function checkShooting()
 {
-	if (Input.GetMouseButtonDown(0))
+	if (Input.GetMouseButtonDown(0) || Input.touches.Length > 0)
 	{
 		PullProjectile();
 	}
