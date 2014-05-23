@@ -2,6 +2,7 @@
 
 //public var
 public var protectPlanetObj : GameObject;
+public var centerPlanet = false;
 
 //private var
 private var following = false;
@@ -23,11 +24,23 @@ function Update ()
 	if (!dragControls.introing)
 	{
 		//check if camera is close
-		if (!following && Vector3.Distance(this.transform.position, protectPlanetObj.transform.position) < 6.8)
+		if (!centerPlanet)
 		{
-			following = true;
-			offset = Camera.main.transform.position - this.transform.position;
-			Follow();
+			if (!following && Vector3.Distance(this.transform.position, protectPlanetObj.transform.position) < 6.8)
+			{
+				following = true;
+				offset = Camera.main.transform.position - this.transform.position;
+				Follow();
+			}
+		}
+		else
+		{
+			if (!following && Vector3.Distance(this.transform.position, protectPlanetObj.transform.position) < 1.5)
+			{
+				following = true;
+				offset = Camera.main.transform.position - this.transform.position;
+				Follow();
+			}
 		}
 	}
 }
