@@ -64,6 +64,7 @@ function Update ()
 			if (objectInfo.collider.name == "humanShip" && objectInfo.collider.gameObject == this.gameObject)
 			{
 				Selected = true;
+				dragControls.CanViewDrag = false;
 			}
 		}
 	}
@@ -73,12 +74,13 @@ function Update ()
 	{
 		Selected = false;
 		oVirgin = true;
+		dragControls.CanViewDrag = true;
 	}
 	
 	//if selected
 	if (Selected && !killed)
 	{
-		ShipMovement(); //move the shield
+		ShipMovement(); //move the ship
 	}
 }
 
