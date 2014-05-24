@@ -54,6 +54,11 @@ function Start ()
 	{
 		isShield = true;
 	}
+	
+	if (!CanMovePeople)
+	{
+		nearestPlanet = this.gameObject;
+	}
 }
 
 // Update is called once per frame 

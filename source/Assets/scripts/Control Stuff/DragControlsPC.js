@@ -651,7 +651,7 @@ function Update ()
 					var newPlanetPos = Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
 					if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > 3)
 					{
-						selectedWorld.transform.position = Vector3.Lerp(selectedWorld.transform.position, Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet, Time.deltaTime * 20);
+						selectedWorld.transform.position = Vector3.Lerp(selectedWorld.transform.position, Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,WorldZDepth - Camera.main.transform.position.z)) + offSet, Time.deltaTime * 30);
 					}
 				}
 			}
@@ -888,7 +888,7 @@ function Update ()
 					newPlanetPos = Camera.main.ScreenToWorldPoint(Vector3(Touch1EndPos.x,Touch1EndPos.y,WorldZDepth - Camera.main.transform.position.z)) + offSet;
 					if (Vector3.Distance(newPlanetPos, GameObject.Find("humanship_3_MO").transform.position) > 3)
 					{
-						selectedWorld.transform.position = Vector3.Lerp(selectedWorld.transform.position, newPlanetPos, Time.deltaTime * 20);
+						selectedWorld.transform.position = Vector3.Lerp(selectedWorld.transform.position, newPlanetPos, Time.deltaTime * 30);
 					}
 				}
 				
@@ -965,7 +965,7 @@ function Update ()
 		}		
 					
 		//check for sun proximity 
-		if (!TouchAutoMove && !World3Boss)
+		if (!TouchAutoMove && !World3Boss && !World2Boss)
 		{
 			for (i = 0; i < worldObjects.length; i++)
 			{

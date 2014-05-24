@@ -151,6 +151,8 @@
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipGenerator.js" />
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipProjectileController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipSpinIndicator.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\BossStuff\B2Planet.js" />
+     <Compile Include="Assets\scripts\World2 Stuff\BossStuff\SliderController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\PlantCanister.js" />
      <Compile Include="Assets\scripts\World2 Stuff\ShieldController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\Dot_SCR.js" />
