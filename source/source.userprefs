@@ -1,6 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Planet Stuff\PlanetSearcher.js">
+    <Files>
+      <File FileName="Assets\scripts\Planet Stuff\PlanetSearcher.js" Line="276" Column="22" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

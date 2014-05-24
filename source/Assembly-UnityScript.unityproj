@@ -18,7 +18,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_3_5_6;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_IOS;UNITY_IPHONE;ENABLE_GENERICS;ENABLE_TERRAIN;ENABLE_WEBCAM;ENABLE_MICROPHONE;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_3_5_7;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_WEBPLAYER;ENABLE_GENERICS;ENABLE_DUCK_TYPING;ENABLE_TERRAIN;ENABLE_MOVIES;ENABLE_WEBCAM;ENABLE_MICROPHONE;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW;ENABLE_SUBSTANCE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -37,10 +37,10 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -151,16 +151,17 @@
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipGenerator.js" />
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipProjectileController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\AlienShip\AlienShipSpinIndicator.js" />
-     <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\AlienBoss.js" />
-     <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\BossBubble.js" />
-     <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\BossGun.js" />
-     <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\W2BProtectPlanet.js" />
-     <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\W2BossProjectileController.js" />
-     <Compile Include="Assets\scripts\World2 Stuff\Boss Stuff\World2BossHumanPlanet.js" />
      <Compile Include="Assets\scripts\World2 Stuff\PlantCanister.js" />
      <Compile Include="Assets\scripts\World2 Stuff\ShieldController.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\Dot_SCR.js" />
      <Compile Include="Assets\scripts\World2 Stuff\Wormhole\WormholeController_SCR.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\Boss Stuff\AlienBoss.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\Boss Stuff\BossBubble.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\Boss Stuff\BossGun.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\Boss Stuff\W2BProtectPlanet.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\Boss Stuff\W2BossProjectileController.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\Boss Stuff\W3BCompletion.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\Boss Stuff\World2BossHumanPlanet.js" />
      <Compile Include="Assets\scripts\World3 Stuff\IsolatedPerson.js" />
      <Compile Include="Assets\scripts\World3 Stuff\Mine.js" />
      <Compile Include="Assets\scripts\World3 Stuff\ShipDrag.js" />
@@ -177,7 +178,7 @@
      <None Include="Assets\shaders\RampRim_Teleport.shader" />
      <None Include="Assets\shaders\UnlitAlphaWithFade.shader" />
      <None Include="Assets\editor\Flurry\SDK\Flurry-LICENSE.txt" />
- <Reference Include="Assets\Plugins\P31RestKit">
+ <Reference Include="P31RestKit">
  <HintPath>Assets\Plugins\P31RestKit.dll</HintPath>
  </Reference>
   </ItemGroup>

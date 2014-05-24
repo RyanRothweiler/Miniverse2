@@ -168,7 +168,7 @@ private var FadeKick = false; //if kick out of the level tag fading
 private var toSettings = false; //moving to the setting scene
 private var toContact = false; //moving to the contact scene
 public var to1LevelSelect = false; //move to the level select scene
-public var to2LevelSelect = false; //move to the level select scene\
+public var to2LevelSelect = false; //move to the level select scene
 public var to3LevelSelect = false; //move to the level select scene
 public var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
@@ -289,11 +289,10 @@ function Start ()
 	{
 		world = 2;
 	}
-	if (Application.loadedLevel >= 47 && Application.loadedLevel < 68)
+	if (Application.loadedLevel >= 47 && Application.loadedLevel <= 69)
 	{
 		world = 3;
 	}
-//	Debug.Log(world);
 	
 	//main menu intro stuff
 	if (isMainMenu && !rytIntroAlready)
@@ -3074,6 +3073,7 @@ function LevelWon()
 			PlayerPrefs.SetInt("W1BossWon", 1);	
 			to1LevelSelect = true;
 			to2LevelSelect = false;
+			to3LevelSelect = false;
 			toLevel = false;
 			fromLSelect = false;
 		}

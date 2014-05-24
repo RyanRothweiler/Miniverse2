@@ -3,7 +3,7 @@
 
 function Start () 
 {
-	for (var i = 0; i < 50; i++)
+	for (var i = 0; i < 70; i++)
 	{
 		if (PlayerPrefs.HasKey("LevelCompleted "+i.ToString()))
 		{
