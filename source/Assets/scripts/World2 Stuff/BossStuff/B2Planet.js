@@ -1,9 +1,10 @@
 #pragma strict
 
 //public vars
-private var dragControls : DragControlsPC;
+public var slideCont : GameObject;
 
 //private vars
+private var dragControls : DragControlsPC;
 
 function Start () 
 {
@@ -14,8 +15,8 @@ function Update ()
 {
 	if (!dragControls.introing)
 	{
-		this.transform.parent = Camera.main.transform;
-		this.transform.position.z = Camera.main.transform.position.z + 30;
+//		this.transform.parent = Camera.main.transform;
+//		this.transform.position.z = Camera.main.transform.position.z + 30;
 	}
 }
 
@@ -33,6 +34,13 @@ function OnTriggerEnter(info : Collider)
 			GameObject.Find("SliderController").GetComponent(SliderController).sliding = false;
 			//reset the level
 			dragControls.LevelLose(false);
+		}
+		
+		//hit the end plane, then start the end sequence
+		if (info.name == "ENDPLANE")
+		{
+			Debug.Log("hit");
+			slideCont.GetComponent(SliderController).sliding = false;
 		}
 	}
 }

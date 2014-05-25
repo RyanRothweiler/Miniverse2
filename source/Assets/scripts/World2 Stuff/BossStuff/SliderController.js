@@ -2,10 +2,13 @@
 
 //public var
 public var sliding = false;
+public var humanShip : GameObject;
+public var dude1 : GameObject;
 
 //private var
 private var dragControls : DragControlsPC;
-private var slideSpeed = 120;
+private var slideSpeed = 130;
+private var started = false;
 
 function Start () 
 {
@@ -15,8 +18,9 @@ function Start ()
 function Update () 
 {
 	//check sliding
-	if (!sliding && (dragControls.worldSelected || dragControls.Touch1WorldSelected))
+	if (!started && (dragControls.worldSelected || dragControls.Touch1WorldSelected))
 	{
+		started = true;
 		sliding = true;
 		Sliding();
 	}
@@ -24,14 +28,37 @@ function Update ()
 
 function Sliding()
 {
+	//slide until not sliding
 	do
 	{
 		yield;
 		this.transform.position.z -= slideSpeed * Time.deltaTime;
 	} while (sliding);
+		
+	//once down sliding (that means the level is over), then slow down slide into the spaceship
+	do
+	{
+		yield;
+		this.transform.position.z -= slideSpeed * Time.deltaTime;
+		slideSpeed -= 1;
+	} while (slideSpeed > 0);
+	
+	
+	yield WaitForSeconds(1.3);
+	
+	//teleport out human person
+	humanShip.transform.Find("humanship_3_MO").GetComponent(HumanShip).Teleport();
+	dude1.GetComponent(HumanPerson).TeleportOut(1);
+	
+	yield WaitForSeconds(0.1);
+	
+	PlayerPrefs.SetInt("W2BossWon", 1);	
+	
+	Camera.main.GetComponent(DragControlsPC).peopleSaved = 5;
 }
 
 function Reset()
 {
 	Debug.Log("reset");
 }
+

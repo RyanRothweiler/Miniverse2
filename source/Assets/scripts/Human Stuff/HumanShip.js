@@ -7,6 +7,7 @@ public var TeleportPS : GameObject;
 public var FlameLight1 : GameObject;
 public var FlameLight2 : GameObject;
 static var Gone = false; //if the ship has gone or not. to start the ship has not
+public var slideCont : GameObject;
 
 //private var
 private var oldPos : Vector3;
@@ -22,6 +23,14 @@ private var lightComp2 : Light;
 
 function Start () 
 {
+	//get drag controls script
+	DragControls = Camera.main.GetComponent(DragControlsPC);
+	
+	if (DragControls.World2Boss)
+	{
+		Gone = true;
+	}
+	
 	//get light stuff
 	lightComp1 = FlameLight1.GetComponent(Light);
 	lightComp2 = FlameLight2.GetComponent(Light);
@@ -48,13 +57,16 @@ function Start ()
 	//set up anim
 	animation["Intro"].speed = 0;
 	animation.Play("Intro");
-	
-	//get drag controls script
-	DragControls = Camera.main.GetComponent(DragControlsPC);
 }
 
 function Update () 
 {
+	//if world3boss
+	if (DragControls.World2Boss)
+	{
+		this.transform.parent.parent = slideCont.transform;
+	}
+	
 	//animation pausing
 	if (!DragControls.LevelPaused)
 	{
