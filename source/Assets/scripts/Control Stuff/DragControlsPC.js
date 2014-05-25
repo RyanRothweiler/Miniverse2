@@ -1096,7 +1096,7 @@ function Update ()
 	}
 	
 	//if player lost
-	if (LevelLost)
+	if (LevelLost && !levelWon)
 	{
 		isPlayOne = true;
 		ZoomIn();

@@ -23,6 +23,7 @@ function Start ()
 	dragControls = Camera.main.GetComponent(DragControlsPC);
 	var LockMat = LockPlane.renderer.material;
 	LockPlane.renderer.material.SetColor("_Color", Color(LockMat.GetColor("_Color").r, LockMat.GetColor("_Color").g, LockMat.GetColor("_Color").b, 1));
+	pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, 1));
 	world = dragControls.world;
 	
 	//get keys
@@ -30,7 +31,8 @@ function Start ()
 	
 	//check if the boss has been won already
 	if (PlayerPrefs.HasKey("W"+world+"BossWon"))
-	{		
+	{
+		Debug.Log("completed");
 		//don't let things play again
 		Locked = false;
 		unlocked = true;
