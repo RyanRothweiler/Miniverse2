@@ -893,7 +893,7 @@ function Update ()
 				}
 				
 				//camera dragging
-				if (!LevelPaused && !Touch1WorldSelected && Touch1Move && CanViewDrag && !ShieldSelected && !World3Boss)
+				if (!LevelPaused && !Touch1WorldSelected && Touch1Move && CanViewDrag && !ShieldSelected && !World3Boss && !World1Boss)
 				{
 					Touch1CameraDragging = true;
 					if (CanMoveCameraHorizontal)
