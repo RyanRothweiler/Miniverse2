@@ -1096,7 +1096,7 @@ function Update ()
 	}
 	
 	//if player lost
-	if (LevelLost && !levelWon)
+	if (LevelLost)
 	{
 		isPlayOne = true;
 		ZoomIn();
@@ -2993,7 +2993,7 @@ function LevelLose(back : boolean)
 function LevelWon()
 {
 	if (!levelWon)
-	{
+	{		
 		//fade out reset button and back button
 		if (Camera.main.transform.Find("BackArrow") && Camera.main.transform.Find("ResetButton"))
 		{

@@ -40,6 +40,7 @@ function Start ()
 		//turn off puzzle piecess
 		pieceMat.SetColor("_Color", Color(pieceMat.GetColor("_Color").r, pieceMat.GetColor("_Color").g, pieceMat.GetColor("_Color").b, 0));
 		//turn on final puzzle
+		FinalPuzzlePlane.SetActiveRecursively(true);
 		var KeyMat = FinalPuzzlePlane.renderer.material;
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, 1));
 		//turn off locking stripes

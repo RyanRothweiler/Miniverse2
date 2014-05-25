@@ -36,11 +36,11 @@ function OnTriggerEnter (collision : Collider)
 			dragControls.worldObjects = GameObject.FindGameObjectsWithTag("world"); //recreate world objects, removing the dead world
 			
 			//lost level if there is a human on this planet
-			if (transform.Find("HumanPerson(Clone)") != null || transform.Find("HumanPerson") != null)
+			if (transform.parent.Find("HumanPerson(Clone)") != null || transform.parent.Find("HumanPerson") != null)
 			{
 				dragControls.LevelLose(false);
-//				dragControls.LevelLost = true;
 			}
+			dragControls.LevelLose(false);
 			
 			this.transform.parent.parent.parent.position = Vector3(1000,1000,1000);
 			

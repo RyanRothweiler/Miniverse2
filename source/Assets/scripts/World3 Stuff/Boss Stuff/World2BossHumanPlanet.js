@@ -59,7 +59,10 @@ function StickyPlanet()
 		}
 		else
 		{
-			dragControls.LevelLose(false);
+			if (dragControls.World2Boss)
+			{
+				dragControls.LevelLose(false);
+			}
 		}
 	}
 }

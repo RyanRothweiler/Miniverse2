@@ -64,7 +64,6 @@ function OnTriggerEnter (collision : Collider)
 			if (transform.Find("HumanPerson(Clone)") != null || transform.Find("HumanPerson") != null)
 			{
 				dragControls.LevelLose(false);
-//				dragControls.LevelLost = true;
 			}
 			
 			//blow up the mine to if that is what's colliding
