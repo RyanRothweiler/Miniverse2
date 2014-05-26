@@ -2,6 +2,7 @@
 
 //public vars
 public var slideCont : GameObject;
+public var invincible = false;
 
 //private vars
 private var dragControls : DragControlsPC;
@@ -26,7 +27,7 @@ function OnTriggerEnter(info : Collider)
 	if (!dragControls.introing)
 	{
 		//hit a plate
-		if (info.gameObject.tag == "Plate")
+		if (info.gameObject.tag == "Plate" && !invincible)
 		{
 			//kill this planet
 			this.GetComponent(PlanetSearcher).KillPlanet();

@@ -132,7 +132,7 @@ function PlaceDots()
 	}
 }
 
-function OnTriggerEnter (collision : Collider) 
+function OnTriggerEnter (collision : Collider)  : IEnumerator
 {	
 	if (!dragControls.halt)
 	{			
@@ -176,7 +176,7 @@ function OnTriggerEnter (collision : Collider)
 //render the gl line from the ship to the end.
 function OnRenderObject() 
 {
-	if (use)
+	if (use && !(dragControls.levelWon || dragControls.LevelLost))
 	{
 		//set the pass
 	    GetComponent(MeshRenderer).material.SetPass(0); 

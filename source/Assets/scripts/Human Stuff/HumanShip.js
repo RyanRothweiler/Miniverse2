@@ -138,6 +138,9 @@ function FlyAway()
 {
 	Gone = false; //the spaceship has gone and moving to next level so reset
 	
+	//turn off the ship dragging line
+	this.transform.parent.GetComponent(ShipDrag).use = false;
+	
 	//wait a bit
 	yield WaitForSeconds(1);
 	

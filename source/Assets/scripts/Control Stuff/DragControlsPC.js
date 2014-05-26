@@ -1473,7 +1473,7 @@ function MovePeople(Asteroid : boolean)
 	MovingPeople = false;
 }
 
-function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean, personNum : int, toWormhole : boolean) //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
+function ReparentChild(fromChild : GameObject, rotOffset : int, toShip : boolean, personNum : int, toWormhole : boolean) : IEnumerator //this used to actually reparent the child, until the person movement effect changed, now it creates a new child at the planet. This only needs to know if the object being moved to is an asteroid.
 {
 	//teleport out 'from' child
 	fromChild.GetComponent(HumanPerson).TeleportOut(personNum);
