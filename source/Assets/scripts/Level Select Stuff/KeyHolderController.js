@@ -27,7 +27,7 @@ function Update ()
 		target.y = transform.position.y;
 		target.z = transform.position.z;
 		
-		transform.position = Vector3.SmoothDamp(transform.position, target, velocity, 0.15, 50, Time.deltaTime);
+		transform.position = Vector3.SmoothDamp(transform.position, target, velocity, 0.15, 500, Time.deltaTime);
 	}
 	
 	if (!endSet && Camera.main.GetComponent(DragControlsPC).toLevel)

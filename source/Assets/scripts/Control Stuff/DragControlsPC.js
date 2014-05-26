@@ -202,7 +202,7 @@ public var LevelOffset = Vector3(-2,0,0);
 private var shipLoc : Vector3; //the location of the ship
 private var Timer : LevelTimer; //the script which controls the level times
 private var dummyObj : GameObject; //a dummy game object
-private var SFXCont : SFXController; //sfx controller
+public var SFXCont : SFXController; //sfx controller
 
 //touch control variables
 public var Touch1StartPos = Vector2(0,0); //the start position of a touch
@@ -1098,16 +1098,13 @@ function Update ()
 	//if player lost
 	if (LevelLost)
 	{
-		Debug.Log("losing here");
 		isPlayOne = true;
 		ZoomIn();
 		
 		if (transform.position.z >= WorldZDepth + 20)
 		{
-			Debug.Log("losing inside another");
 			if (selectedWorld.collider != null && selectedWorld.collider.name == "BackArrow")
 			{
-				Debug.Log("back arrow");
 				if (Application.loadedLevelName == "Contact_SCE" || Application.loadedLevelName == "WorldSelect_SCE")
 				{
 					transform.DetachChildren();
@@ -1144,7 +1141,6 @@ function Update ()
 			}
 			else
 			{
-				Debug.Log("reset button");
 				#if UNITY_IPHONE
 					if (!LevelTimerEnded)
 					{

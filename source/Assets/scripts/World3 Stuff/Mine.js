@@ -14,6 +14,8 @@ public var FollowSpeed : float;
 public var FollowLight : GameObject;
 public var KeyMat : Material;
 
+public var slidOnce = false;
+
 //private vars
 private var dragControls : DragControlsPC;
 private var slid = false;
@@ -28,6 +30,7 @@ private var EyeMat : Material;
 private var eyeLight : Light;
 private var originalEyeColor : Color;
 private var BlinkSpeed : float;
+private var showLine = true;
 
 function Start () 
 {
@@ -44,7 +47,7 @@ function Start ()
 	if (Slide)
 	{		
 		projectileNum = Vector3.Distance(SlideStart.transform.position, SlideEnd.transform.position) * 1;
-		PlaceDots();
+//		PlaceDots();
 	}
 	else
 	{
@@ -94,7 +97,7 @@ function Update ()
 	if (Follow && !dragControls.halt && !dragControls.LevelPaused)
 	{
 		//if holding a planet
-		if (dragControls.worldSelected || dragControls.Touching1)
+		if (dragControls.worldSelected || dragControls.Touch1WorldSelected)
 		{
 			//then slowly move towards it
 			this.transform.position = Vector3.MoveTowards(transform.position, dragControls.selectedWorld.transform.position, Time.deltaTime * FollowSpeed * 5);
@@ -213,6 +216,8 @@ function doSlide()
 			} while (Vector3.Distance(this.transform.position, SlideEnd.transform.position) > 0.5);
 		}
 		
+		slidOnce = true;
+		
 		//wait a bit
 		skip = false;
 		
@@ -236,20 +241,57 @@ function doSlide()
 
 function FadeOutDots()
 {
-	do
-	{
-		endMat.SetColor("_Color", Color(endMat.GetColor("_Color").r, endMat.GetColor("_Color").g, endMat.GetColor("_Color").b, endMat.GetColor("_Color").a - (Time.deltaTime * 50)));
-		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a - (Time.deltaTime)));
-		yield WaitForSeconds(0.01);
-	} while (KeyMat.GetColor("_Color").a > 0);
+	showLine = false;
+//	do
+//	{
+//		endMat.SetColor("_Color", Color(endMat.GetColor("_Color").r, endMat.GetColor("_Color").g, endMat.GetColor("_Color").b, endMat.GetColor("_Color").a - (Time.deltaTime * 50)));
+//		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a - (Time.deltaTime)));
+//		yield WaitForSeconds(0.01);
+//	} while (KeyMat.GetColor("_Color").a > 0);
+
+//	var mat = this.renderer.material;
+//	do
+//	{
+//		mat.SetColor("_EmisColor", Color(mat.GetColor("_EmisColor").r - (Time.deltaTime * 50), mat.GetColor("_EmisColor").g - (Time.deltaTime * 50), mat.GetColor("_EmisColor").b - (Time.deltaTime * 50), mat.GetColor("_EmisColor").a));
+//		yield WaitForSeconds(0.01);
+//	} while (mat.GetColor("_EmisColor").a > 0);
 }
 
 function FadeInDots()
 {
-	do
+	showLine = true;
+//	do
+//	{
+//		endMat.SetColor("_Color", Color(endMat.GetColor("_Color").r, endMat.GetColor("_Color").g, endMat.GetColor("_Color").b, endMat.GetColor("_Color").a + (Time.deltaTime * 50)));
+//		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime)));
+//		yield WaitForSeconds(0.01);
+//	} while (KeyMat.GetColor("_Color").a < 1);
+	
+//	var mat = this.renderer.material;
+//	do
+//	{
+//		mat.SetColor("_EmisColor", Color(mat.GetColor("_EmisColor").r + (Time.deltaTime * 50), mat.GetColor("_EmisColor").g + (Time.deltaTime * 50), mat.GetColor("_EmisColor").b + (Time.deltaTime * 50), mat.GetColor("_EmisColor").a));
+//		yield WaitForSeconds(0.01);
+//	} while (mat.GetColor("_EmisColor").a < 1);
+}
+
+//render the gl line from the ship to the end.
+function OnRenderObject() 
+{
+	if (Slide && showLine && !dragControls.introing)
 	{
-		endMat.SetColor("_Color", Color(endMat.GetColor("_Color").r, endMat.GetColor("_Color").g, endMat.GetColor("_Color").b, endMat.GetColor("_Color").a + (Time.deltaTime * 50)));
-		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a + (Time.deltaTime)));
-		yield WaitForSeconds(0.01);
-	} while (KeyMat.GetColor("_Color").a < 1);
+		//set the pass
+	    GetComponent(MeshRenderer).material.SetPass(0); 
+	  	
+	    GL.PushMatrix(); 
+//	    GL.MultMatrix(transform.localToWorldMatrix); 
+	    GL.Begin(GL.LINES);
+	    
+	    //add lines
+		GL.Vertex(SlideStart.transform.position);
+		GL.Vertex(SlideEnd.transform.position);
+	  
+	    GL.End(); 
+	    GL.PopMatrix();
+	}
 }

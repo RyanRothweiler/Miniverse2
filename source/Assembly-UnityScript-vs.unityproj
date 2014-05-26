@@ -166,6 +166,7 @@
      <Compile Include="Assets\scripts\World3 Stuff\Boss Stuff\World2BossHumanPlanet.js" />
      <Compile Include="Assets\scripts\World3 Stuff\IsolatedPerson.js" />
      <Compile Include="Assets\scripts\World3 Stuff\Mine.js" />
+     <Compile Include="Assets\scripts\World3 Stuff\MineZoomWait.js" />
      <Compile Include="Assets\scripts\World3 Stuff\ShipDrag.js" />
      <None Include="Assets\shaders\RampRim.shader" />
      <None Include="Assets\shaders\CustFontShader.shader" />

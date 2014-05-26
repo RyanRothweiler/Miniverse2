@@ -5,6 +5,8 @@ public var NeonStartup : AudioClip;
 public var NeonLoop : AudioClip;
 public var LevelSelect : AudioClip;
 public var Theme : AudioClip;
+public var W2Theme : AudioClip;
+public var W3Theme : AudioClip;
 public var auso1 : AudioSource; //used for neon hums
 public var auso2 : AudioSource; //used for the level select background audio
 public var auso3 : AudioSource; //used for the music
@@ -30,6 +32,9 @@ function Start ()
 			GameObject.Destroy(objs[i]);
 		}
 	}
+	
+	//start checking world themes
+	CheckWorldTheme();
 }
 
 function Update () 
@@ -131,4 +136,41 @@ function FadeIn(so : AudioSource, speed : float, fadeTo : float)
 		so.volume += speed * 0.01;
 		yield;
 	} while (so.volume < fadeTo);
+}
+
+//checks what world it is and changes the world theme music based on the world
+function CheckWorldTheme()
+{
+	do
+	{
+		yield;
+		
+		if (!auso3.isPlaying)
+		{
+			if (DragControls.world == 1)
+			{
+				FadeOut(auso3, 1, 0);
+				auso3.clip = Theme;
+				auso3.Play();
+				FadeIn(auso3, 1, 1);
+			}
+			
+			if (DragControls.world == 2)
+			{
+				FadeOut(auso3, 1, 0);
+				auso3.clip = W2Theme;
+				auso3.Play();
+				FadeIn(auso3, 1, 1);
+			}
+			
+			if (DragControls.world == 3)
+			{
+				FadeOut(auso3, 1, 0);
+				auso3.clip = W3Theme;
+				auso3.Play();
+				FadeIn(auso3, 1, 1);
+			}
+		}
+		
+	} while (true);
 }

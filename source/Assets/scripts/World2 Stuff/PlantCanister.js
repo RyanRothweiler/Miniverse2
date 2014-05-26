@@ -49,6 +49,7 @@ function OnTriggerEnter (collision : Collider)
 			}
 			GameObject.Instantiate(dragControls.PlanetExplosion, transform.position, Quaternion(0,0,0,0)); //create explosion
 			this.transform.position = Vector3(1000,1000,1000);
+			dragControls.SFXCont.GetComponent(SFXController).Explode(); //play explosion sound
 		}
 	}
 }

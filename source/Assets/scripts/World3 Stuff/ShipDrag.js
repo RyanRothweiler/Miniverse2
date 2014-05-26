@@ -18,10 +18,13 @@ private var objectInfo : RaycastHit;
 private var oldDist = 1000.0;
 private var offset : Vector3;
 private var oVirgin = true;
+private var humanShip : HumanShip;
 
 function Start () 
 {
 	dragControls = Camera.main.GetComponent(DragControlsPC);
+	humanShip = this.transform.Find("humanship_3_MO").GetComponent(HumanShip);	
+	
 	if (use)
 	{
 		DotEnd.transform.parent = null;
@@ -35,7 +38,7 @@ function Start ()
 		
 		//place dots
 		projectileNum = Vector3.Distance(DotStart.transform.position, DotEnd.transform.position) * 1;
-		PlaceDots();
+//		PlaceDots();
 	}
 	else
 	{
@@ -75,6 +78,7 @@ function Update ()
 		Selected = false;
 		oVirgin = true;
 		dragControls.CanViewDrag = true;
+		humanShip.HideFlames(); //hide flames
 	}
 	
 	//if selected
@@ -99,6 +103,11 @@ function ShipMovement()
 		Camera.main.transform.position += Vector3.Distance(Camera.main.ScreenToWorldPoint(Vector3(Input.mousePosition.x, Input.mousePosition.y, dragControls.WorldZDepth - Camera.main.transform.position.z)) - offset, DotStart.transform.position) * transform.up * 0.1; //move camera also
 		
 		oldDist = Vector3.Distance(DotStart.transform.position, DotEnd.transform.position);
+		humanShip.ShowFlames(); //show flames
+	}
+	else
+	{
+		humanShip.HideFlames(); //hide flames
 	}
 }
 
@@ -138,6 +147,7 @@ function OnTriggerEnter (collision : Collider)
 			}
 			GameObject.Instantiate(dragControls.PlanetExplosion, transform.position, Quaternion(0,0,0,0)); //create explosion
 			this.transform.position = Vector3(1000,1000,1000);
+			dragControls.SFXCont.GetComponent(SFXController).Explode(); //play explosion sound
 			
 			dragControls.LevelLose(false);
 			
@@ -160,5 +170,26 @@ function OnTriggerEnter (collision : Collider)
 			//moves the person
 			dragControls.ReparentChild(collision.gameObject.transform.Find("HumanPerson").gameObject, 0, true, 1, false);
 		}
+	}
+}
+
+//render the gl line from the ship to the end.
+function OnRenderObject() 
+{
+	if (use)
+	{
+		//set the pass
+	    GetComponent(MeshRenderer).material.SetPass(0); 
+	  	
+	    GL.PushMatrix(); 
+//	    GL.MultMatrix(transform.localToWorldMatrix); 
+	    GL.Begin(GL.LINES);
+	    
+	    //add lines
+		GL.Vertex(DotStart.transform.position);
+		GL.Vertex(DotEnd.transform.position);
+	  
+	    GL.End(); 
+	    GL.PopMatrix();
 	}
 }

@@ -3,6 +3,8 @@
 //public vars
 public var auso1 : AudioSource;
 public var auso2 : AudioSource;
+public var auso3 : AudioSource;
+public var auso4 : AudioSource;
 
 public var RocketIn : AudioClip;
 public var CameraZoom : AudioClip;
@@ -51,4 +53,14 @@ function LevelWin()
 		auso1.clip = LevelWinClip;
 		auso1.Play();
 	}
+}
+
+function CanisterFill()
+{
+	auso3.Play();
+}
+
+function Explode()
+{
+	auso4.Play();
 }

@@ -229,3 +229,25 @@ function FadeInLight()
 		lightComp2.intensity += 0.18;
 	} while (lightComp1.intensity < maxIntensity);
 }
+
+//show the flames coming out of the ship
+function ShowFlames()
+{	
+	FadeInLight();
+	
+	//start fire
+	FlameEffect.GetComponent(ParticleSystem).enableEmission = true; //enable flames
+	FlameEffect.GetComponent(ParticleSystem).startSpeed  = 7; //enable flames
+	//enable renderers
+	FlameEffect.renderer.enabled = true;
+	FlameSmokeEffect.renderer.enabled = true;
+	
+}
+
+//....hide the flames... like the name says...
+function HideFlames()
+{
+	FadeOutLight();
+	
+	FlameEffect.GetComponent(ParticleSystem).enableEmission = false; //enable flames
+}
