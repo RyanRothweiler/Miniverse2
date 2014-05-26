@@ -1,6 +1,7 @@
 #pragma strict
 
 //public vars
+public var isShield = false;
 
 //private vars
 private var killed = false;
@@ -23,7 +24,7 @@ function OnTriggerEnter (collision : Collider)
 	if (!dragControls.halt)
 	{
 		//alien ship
-		if ((collision.tag == "AlienShipProjectile" || collision.tag == "Mine") && !killed)
+		if ((collision.tag == "AlienShipProjectile" || collision.tag == "Mine") && !killed && !isShield)
 		{
 			killed = true;
 			//clean up scene and delete planet
@@ -40,7 +41,6 @@ function OnTriggerEnter (collision : Collider)
 			{
 				dragControls.LevelLose(false);
 			}
-			dragControls.LevelLose(false);
 			
 			this.transform.parent.parent.parent.position = Vector3(1000,1000,1000);
 			

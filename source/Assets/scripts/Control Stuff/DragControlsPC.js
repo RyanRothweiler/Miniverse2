@@ -2718,7 +2718,7 @@ function LevelSelect()
 						if (objectInfo.collider.tag != "key")
 						{
 							//if the boss level then check if it's locked
-							if (objectInfo.collider.name == "boss level - 900,000")
+							if (objectInfo.collider.name == "21" || objectInfo.collider.name == "45" || objectInfo.collider.name == "68")
 							{
 								if (!Camera.main.GetComponent(KeyLockingController).Locked)
 								{
