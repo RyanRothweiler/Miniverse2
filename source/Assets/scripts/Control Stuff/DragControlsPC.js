@@ -1022,7 +1022,7 @@ function Update ()
 	{
 		if (Touching1)
 		{
-			if (Physics.Raycast(Camera.main.ScreenPointToRay(Touch1EndPos), objectInfo))
+			if (Physics.Raycast(Camera.main.ScreenPointToRay(Touch1StartPos), objectInfo))
 			{
 				if (objectInfo.collider.name == "BackArrow" || objectInfo.collider.name == "ResetButton")
 				{
@@ -1098,14 +1098,16 @@ function Update ()
 	//if player lost
 	if (LevelLost)
 	{
+		Debug.Log("losing here");
 		isPlayOne = true;
 		ZoomIn();
 		
 		if (transform.position.z >= WorldZDepth + 20)
 		{
-			StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
+			Debug.Log("losing inside another");
 			if (selectedWorld.collider != null && selectedWorld.collider.name == "BackArrow")
 			{
+				Debug.Log("back arrow");
 				if (Application.loadedLevelName == "Contact_SCE" || Application.loadedLevelName == "WorldSelect_SCE")
 				{
 					transform.DetachChildren();
@@ -1138,11 +1140,11 @@ function Update ()
 					{
 						Application.LoadLevel("w3_levelselect");
 					}
-					
 				}
 			}
 			else
 			{
+				Debug.Log("reset button");
 				#if UNITY_IPHONE
 					if (!LevelTimerEnded)
 					{
@@ -1254,7 +1256,7 @@ function Update ()
 				Application.LoadLevel("WorldSelect_SCE"); 
 			}
 		}
-		
+				
 		//moving to a level
 		if (toLevel)
 		{
@@ -2449,8 +2451,8 @@ function LevelSelect()
 					
 					if (objectInfo.collider.name == "BackArrow")
 					{
-						tagPressed = true;
-						DepressLevelTag(objectInfo, false);
+//						tagPressed = true;
+//						DepressLevelTag(objectInfo, false);
 					}
 				}
 				
@@ -2549,6 +2551,7 @@ function LevelSelect()
 						//check for tag depression
 						if(Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), objectInfo))
 						{
+							//if touching a key
 							if (objectInfo.collider.tag == "key")
 							{
 								//check double tapping to rotate key
@@ -2561,9 +2564,10 @@ function LevelSelect()
 									RotateKey(objectInfo.collider.gameObject);
 								}
 							}
-							else
+							//else touching a level tag
+							else if (objectInfo.collider.tag == "LevelTag")
 							{
-								if (objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text == "BOSS LEVEL")
+								if (objectInfo.collider.transform.Find("Num") && objectInfo.collider.transform.Find("Num").GetComponent(TextMesh).text == "BOSS LEVEL")
 								{
 									if (!this.GetComponent(KeyLockingController).Locked)
 									{
@@ -2585,6 +2589,12 @@ function LevelSelect()
 									depressedTag = objectInfo;
 									iosTagDepress = true;
 								}
+							}
+							//finally else touching back button then back out to the world select
+							else 
+							{
+								LevelSelectGoToWorld();
+								return;
 							}
 						}
 						
@@ -3278,4 +3288,21 @@ function PersonGroupMoveNext(holder : GameObject)
 		}
 
 	} while (!moved);
+}
+
+//this is here to no fucking good reason. well actually it is what makes the level select back button work. id fucking k why the back button doesn't work on level select
+function LevelSelectGoToWorld()
+{
+	do
+	{
+		yield;
+		isPlayOne = true;
+		ZoomIn();
+		if (transform.position.z >= WorldZDepth + 100)
+		{
+			transform.DetachChildren();
+			StarStreakMat.SetColor("_TintColor",Color(StarStreakMat.GetColor("_TintColor").r, StarStreakMat.GetColor("_TintColor").g, StarStreakMat.GetColor("_TintColor").b, 0));
+			Application.LoadLevel("WorldSelect_SCE"); 
+		}
+	} while (true);
 }
