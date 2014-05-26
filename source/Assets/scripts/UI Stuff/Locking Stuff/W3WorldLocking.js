@@ -20,7 +20,7 @@ function Start ()
 	}
 	else
 	{
-		Locked = false; //this should be true, only false for testing purposes
+		Locked = true;
 	}
 }
 
