@@ -32,7 +32,10 @@ function OnTriggerEnter (collision : Collider)
 		{
 			transform.Find("planetShrinkingEffect").GetComponent(planetLifeIndicator).Refill();
 			collision.gameObject.GetComponent(PlantCanister).KillTo(this.gameObject);
-			dragControls.SFXCont.CanisterFill();
+			if (dragControls.SFXCont)
+			{
+				dragControls.SFXCont.CanisterFill();
+			}
 		}
 		
 		//isolated person
