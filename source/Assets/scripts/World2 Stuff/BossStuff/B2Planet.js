@@ -29,6 +29,7 @@ function OnTriggerEnter(info : Collider)
 		//hit a plate
 		if (info.gameObject.tag == "Plate" && !invincible)
 		{
+			GameObject.Instantiate(dragControls.PlanetExplosion, transform.position, Quaternion(0,0,0,0)); //create explosion
 			//kill this planet
 			this.GetComponent(PlanetSearcher).KillPlanet();
 			//stop slider controller
