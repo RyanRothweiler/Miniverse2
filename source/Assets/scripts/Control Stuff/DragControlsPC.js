@@ -199,7 +199,7 @@ private var dummyVector2 : Vector2;
 //private var PrevLevelNum : GameObject; //when moving back to the level select screen, this holds the level num of the level which the player came from
 public  static var PrevLevelLoc : Vector3; //the previous level tag's location
 public var LevelOffset = Vector3(-2,0,0); 
-private var shipLoc : Vector3; //the location of the ship
+//private var shipLoc : Vector3; //the location of the ship
 private var Timer : LevelTimer; //the script which controls the level times
 private var dummyObj : GameObject; //a dummy game object
 public var SFXCont : SFXController; //sfx controller
@@ -255,6 +255,11 @@ function OnLevelWasLoaded()
 
 function Start () 
 {
+
+//	PlayerPrefs.SetInt("W1BossWon",1);
+//	PlayerPrefs.SetInt("W2BossWon",1);
+//	PlayerPrefs.SetInt("W3BossWon",1);
+	
 	//analytics shenanigans
 	#if UNITY_IPHONE
 		//setup analytics
@@ -326,11 +331,6 @@ function Start ()
 	if (!isLevelSelect)
 	{
 		transform.Find("SunRadiiController").GetComponent(MathSunRadiiCombine).MeshAdd();
-	}
-	
-	if (!LevelSelect)
-	{
-		shipLoc = GameObject.Find("humanShip").transform.position;
 	}
 	
 	cameraZoomInPos = transform.Find("ZoomInInit").transform.position;
@@ -1737,6 +1737,11 @@ function WorldSelect()
 					DepressLevelTag(objectInfo, false);
 				}
 				
+				if (objectInfo.collider.name == "GameEnd")
+				{
+					selectedWorld = objectInfo;
+				}
+				
 				//w1
 				if (objectInfo.collider.name == "w1" || objectInfo.collider.name == "w2" || objectInfo.collider.name == "w3")
 				{
@@ -1829,6 +1834,12 @@ function WorldSelect()
 				//fade out back button
 				this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 			}
+			
+			if (selectedWorld.collider.name == "GameEnd")
+			{
+				Application.OpenURL("https://twitter.com/RytGames");
+			}
+			
 			worldSelected = false;
 		}
 	}
@@ -1911,6 +1922,11 @@ function WorldSelect()
 							
 							//fade out back button
 							this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
+						}
+						
+						if (objectInfo.collider.name == "GameEnd")
+						{
+							Application.OpenURL("https://twitter.com/RytGames");
 						}
 					}					
 				}
@@ -2972,7 +2988,7 @@ function LevelLose(back : boolean)
 	Touch1WorldSelected = false;
 	
 	if (!back)
-	{
+	{	
 		stopHidingFileType = true; //stop hiding that type! dog!
 	}
 	FailType.renderer.material.mainTexture = FailTexture;
@@ -2999,7 +3015,9 @@ function LevelLose(back : boolean)
 function LevelWon()
 {
 	if (!levelWon)
-	{		
+	{
+		halt = true;
+		
 		//fade out reset button and back button
 		if (Camera.main.transform.Find("BackArrow") && Camera.main.transform.Find("ResetButton"))
 		{
@@ -3024,13 +3042,13 @@ function LevelWon()
 //			{
 //				if (!(Application.loadedLevel > 19))
 //				{
-//					fromLSelect = false;
-//					toLevel = true;
-//					NextLevelNum = Application.loadedLevel+1;
+					fromLSelect = false;
+					toLevel = true;
+					NextLevelNum = Application.loadedLevel+1;
 //				}
 //				else
 //				{
-					to1LevelSelect = true;
+//					to1LevelSelect = true;
 //				}
 //			}
 		}
@@ -3061,6 +3079,17 @@ function LevelWon()
 		{
 			to3LevelSelect = true;
 		}
+		
+		//if on a boss level then go the world select and not anything else
+		if (Application.loadedLevel == 21 || Application.loadedLevel == 45 || Application.loadedLevel == 68)
+		{
+			to1LevelSelect = false;
+			to2LevelSelect = false;
+			to3LevelSelect = false;
+			
+			toWorldSelect = true;
+		}
+		
 		yield WaitForSeconds(3.5);
 		
 		levelWon = true;

@@ -118,6 +118,7 @@
      <Compile Include="Assets\scripts\Tutorial Stuff\TouchTutorial.js" />
      <Compile Include="Assets\scripts\Tutorial Stuff\WorldTouchTutorial.js" />
      <Compile Include="Assets\scripts\UI Stuff\BackArrow.js" />
+     <Compile Include="Assets\scripts\UI Stuff\GameEnd.js" />
      <Compile Include="Assets\scripts\UI Stuff\LevelTimerDisplay.js" />
      <Compile Include="Assets\scripts\UI Stuff\LevelWinText.js" />
      <Compile Include="Assets\scripts\UI Stuff\Locking Stuff\W2WorldLocking.js" />

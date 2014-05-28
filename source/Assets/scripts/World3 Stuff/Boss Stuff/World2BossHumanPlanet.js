@@ -30,7 +30,7 @@ function StickyPlanet()
 	//reset offSet
 	dragControls.offSet = Vector3.zero;
 	
-	if (!dragControls.introing && !dragControls.LevelWon)
+	if (!dragControls.introing && !dragControls.levelWon)
 	{
 		this.transform.parent = Camera.main.transform;
 	}

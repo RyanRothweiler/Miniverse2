@@ -58,7 +58,7 @@ function Start ()
 }
 
 function Update () 
-{
+{	
 	//if this is selected
 	if((Input.GetMouseButtonDown(0) && dragControls.canMoveToWorld))
 	{
@@ -147,7 +147,10 @@ function OnTriggerEnter (collision : Collider)  : IEnumerator
 			}
 			GameObject.Instantiate(dragControls.PlanetExplosion, transform.position, Quaternion(0,0,0,0)); //create explosion
 			this.transform.position = Vector3(1000,1000,1000);
-			dragControls.SFXCont.GetComponent(SFXController).Explode(); //play explosion sound
+			if (dragControls.SFXCont)
+			{
+				dragControls.SFXCont.GetComponent(SFXController).Explode(); //play explosion sound
+			}
 			
 			dragControls.LevelLose(false);
 			
