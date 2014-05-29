@@ -256,8 +256,8 @@ function OnLevelWasLoaded()
 function Start () 
 {
 
-//	PlayerPrefs.SetInt("W1BossWon",1);
-//	PlayerPrefs.SetInt("W2BossWon",1);
+	//PlayerPrefs.SetInt("W1BossWon",1);
+	PlayerPrefs.SetInt("W2BossWon",1);
 //	PlayerPrefs.SetInt("W3BossWon",1);
 	
 	//analytics shenanigans
@@ -500,6 +500,7 @@ function Start ()
 //main update function
 function Update ()
 {
+	Debug.Log(FirstClick);
 	//rest stuff
 	Transitioning = false;
 	
@@ -752,19 +753,24 @@ function Update ()
 		{
 			//reset
 			Touching1 = false;
+			var looked = false;
 			
 			//first check all touches
 			for (var touch : Touch in Input.touches)
 			{
+				if (!looked)
+				{
+					looked = true;
+					tapCount++;
+					TapResetWait();
+				} 
+				
 				//check touching first
 				if (touch.fingerId == 0)
-				{
+				{					
 					//first touch
 					if (Touch1Start)
-					{
-						//check double tapping. do this while touch1startpos still holds the last touch position
-						tapCount++;
-						TapResetWait();
+					{						
 						if (!World3Boss && tapCount >= 2 && DoubleTapZoom && (touch.position.x > Touch1StartPos.x - 20 && touch.position.x < Touch1StartPos.x + 20) && (touch.position.y > Touch1StartPos.y - 20 && touch.position.y < Touch1StartPos.y + 20)) //if double tapped then zoom into that position
 						{
 							tapCount = 0;
@@ -3252,7 +3258,10 @@ function FadeLevelTagSize(startSize : float)
 //wait and then reset tap count
 function TapResetWait()
 {
-	yield WaitForSeconds (tapTimeLimit);
+	for (var t = 0; t < 10; t++)
+	{
+		yield;
+	}
 	tapCount = 0;
 }
 

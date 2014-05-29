@@ -40,7 +40,7 @@ function Sliding()
 	{
 		yield;
 		this.transform.position.z -= slideSpeed * Time.deltaTime;
-		slideSpeed -= 2 * Time.deltaTime;
+		slideSpeed -= 17 * Time.deltaTime;
 	} while (slideSpeed > 0);
 	
 	
