@@ -1325,7 +1325,11 @@ function Update ()
 //resets the first click after some time
 function ResetFirstClick() 
 {
-	yield WaitForSeconds(0.2);
+	for (var t = 0; t < 19; t++)
+	{
+		yield;
+	}
+	Debug.Log("resetting");
 	FirstClick = false;
 }
 
@@ -3042,13 +3046,13 @@ function LevelWon()
 //			{
 //				if (!(Application.loadedLevel > 19))
 //				{
-					fromLSelect = false;
-					toLevel = true;
-					NextLevelNum = Application.loadedLevel+1;
+//					fromLSelect = false;
+//					toLevel = true;
+//					NextLevelNum = Application.loadedLevel+1;
 //				}
 //				else
 //				{
-//					to1LevelSelect = true;
+					to1LevelSelect = true;
 //				}
 //			}
 		}
