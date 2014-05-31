@@ -500,7 +500,6 @@ function Start ()
 //main update function
 function Update ()
 {
-	Debug.Log(FirstClick);
 	//rest stuff
 	Transitioning = false;
 	
@@ -1335,7 +1334,6 @@ function ResetFirstClick()
 	{
 		yield;
 	}
-	Debug.Log("resetting");
 	FirstClick = false;
 }
 
@@ -1347,12 +1345,13 @@ function FadeOutKeys()
 		KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, KeyMat.GetColor("_Color").a - (Time.deltaTime * 2)));
 		yield WaitForSeconds(0.01);
 	} while (KeyMat.GetColor("_Color").a > 0);
+	KeyMat.SetColor("_Color", Color(KeyMat.GetColor("_Color").r, KeyMat.GetColor("_Color").g, KeyMat.GetColor("_Color").b, 0));
 }
  
 //fade in the keys
 function FadeInKeys()
 {
-	if (!PlayerPrefs.HasKey("W1BossWon"))
+	if (!PlayerPrefs.HasKey("W1BossWon") || !PlayerPrefs.HasKey("W2BossWon") || !PlayerPrefs.HasKey("W2BossWon"))
 	{
 		//wait until the level is done fading in 
 		do 

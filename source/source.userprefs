@@ -1,6 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\World2 Stuff\BossStuff\SliderController.js">
+    <Files>
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\World2 Stuff\BossStuff\B2Planet.js" Line="1" Column="1" />
+      <File FileName="Assets\scripts\World2 Stuff\BossStuff\SliderController.js" Line="27" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
