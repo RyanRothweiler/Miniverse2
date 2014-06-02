@@ -100,6 +100,7 @@ public var PausePlane : GameObject; //the pause plane which will show when zoome
 public var ZoomStreaks : GameObject; //the star streaks which show when zooming
 public var DeathSphere : GameObject; //a sphere that dies after a time. used for debuging
 public var FailType : GameObject; //the type which shows on level fail
+public var AskBuyObj : GameObject; 
 public var StarStreakMat : Material;
 public var KeyMat : Material; //the material used for the keys
 public var GlowMat : Material; //the material used for the glow behind the keys
@@ -172,7 +173,7 @@ public var to2LevelSelect = false; //move to the level select scene
 public var to3LevelSelect = false; //move to the level select scene
 public var toLevel = false; //moving to a level scene
 private var toMainMenu = false; //moving to the main menu scene
-private var toWorldSelect = false;
+public var toWorldSelect = false;
 private var FirstClick = false; //used to detect double clicking
 private var stopHidingFileType = false; //used to stop hiding the fail type! what did you think it did?
 private var LevelTimerEnded = false;
@@ -254,12 +255,7 @@ function OnLevelWasLoaded()
 }
 
 function Start () 
-{
-
-	//PlayerPrefs.SetInt("W1BossWon",1);
-	PlayerPrefs.SetInt("W2BossWon",1);
-//	PlayerPrefs.SetInt("W3BossWon",1);
-	
+{	
 	//analytics shenanigans
 	#if UNITY_IPHONE
 		//setup analytics
@@ -1167,6 +1163,14 @@ function Update ()
 	{
 		if (is1LevelSelect || is2LevelSelect || is3LevelSelect)
 		{
+			//check what the next level moving to is to check for in app purchases
+			if (NextLevelNum >= 10 && !PlayerPrefs.HasKey("MiniverseLevels10through40"))
+			{
+				nextLevel = false;
+				toLevel = false;
+				BuyAsk();
+			}
+							
 			//get all the key savers
 			keySavers = GameObject.FindGameObjectsWithTag("KeySaver");
 			//save key locations
@@ -1844,7 +1848,7 @@ function WorldSelect()
 				this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 			}
 			
-			if (selectedWorld.collider.name == "GameEnd")
+			if (worldSelected && selectedWorld.collider.name == "GameEnd")
 			{
 				Application.OpenURL("https://twitter.com/RytGames");
 			}
@@ -3047,19 +3051,16 @@ function LevelWon()
 //			{
 //				to1LevelSelect = true;
 //			}
-//			else if (Application.loadedLevel >= 5)
-//			{
-//				if (!(Application.loadedLevel > 19))
-//				{
-//					fromLSelect = false;
-//					toLevel = true;
-//					NextLevelNum = Application.loadedLevel+1;
-//				}
-//				else
-//				{
-					to1LevelSelect = true;
-//				}
-//			}
+			if (Application.loadedLevel == 9)
+			{
+				fromLSelect = false;
+				toLevel = true;
+				NextLevelNum = 10;
+			}
+			else
+			{
+				to1LevelSelect = true;
+			}
 		}
 		
 		//what level to load next for world2
@@ -3342,4 +3343,10 @@ function LevelSelectGoToWorld()
 			Application.LoadLevel("WorldSelect_SCE"); 
 		}
 	} while (true);
+}
+
+//ask the player to buy a level pack
+function BuyAsk()
+{
+	AskBuyObj.GetComponent(AskBuyController).StartUp();
 }
