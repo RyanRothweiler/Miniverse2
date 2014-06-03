@@ -255,7 +255,12 @@ function OnLevelWasLoaded()
 }
 
 function Start () 
-{	
+{
+//	PlayerPrefs.SetInt("W2BossWon", 1);
+//	PlayerPrefs.SetInt("W1BossWon", 1);
+	
+	
+	
 	//analytics shenanigans
 	#if UNITY_IPHONE
 		//setup analytics
@@ -1775,6 +1780,10 @@ function WorldSelect()
 							worldSelected = true;
 							selectedWorld = objectInfo;
 							DepressLevelTag(objectInfo, false);
+						}
+						else if (PlayerPrefs.HasKey("W2BossWon")) //else it is locked, and world 2 has been beaten then show askbuy
+						{
+							AskBuyObj.GetComponent(AskBuyController).inWorldSelect = true;
 						}
 					}
 					else

@@ -3,6 +3,7 @@
 //publc vars
 public var Using = false;
 public var inlevel = false;
+public var inWorldSelect = false;
 public var blackPlane : GameObject;
 public var ask : GameObject;
 public var yes : GameObject;
@@ -25,6 +26,11 @@ function Start ()
 
 function Update () 
 {
+	if (!dragControls.introing && !Using && inWorldSelect && PlayerPrefs.HasKey("W2BossWon") && !PlayerPrefs.HasKey("MiniverseLevels40through60"))
+	{
+		StartUp();
+	}
+	
 	if (!dragControls.introing && !Using && inlevel && !PlayerPrefs.HasKey("MiniverseLevels10through40"))
 	{
 		StartUp();	
@@ -61,16 +67,25 @@ function Update ()
 						inlevel = false;
 						dragControls.halt = false;
 						StopDown();
-						PlayerPrefs.SetInt("MiniverseLevels10through40",1);
+						
+						if (!inWorldSelect)
+						{
+							PlayerPrefs.SetInt("MiniverseLevels10through40",1);
+						}
+						else
+						{
+							PlayerPrefs.SetInt("MiniverseLevels40through60",1);
+						}
 					}
 					
 					//no
 					if (objectInfo.collider.name == "no")
 					{
-						if (!inlevel)
+						if (!inlevel && !inWorldSelect)
 						{
 							dragControls.isLevelSelect = true;
 						}
+						inWorldSelect = false;
 						StopDown();
 					}
 				}			
@@ -93,16 +108,26 @@ function Update ()
 						if (objectInfo.collider.name == "yes")
 						{
 							StopDown();
-							PlayerPrefs.SetInt("MiniverseLevels10through40",1);
+							
+							if (!inWorldSelect)
+							{
+								PlayerPrefs.SetInt("MiniverseLevels10through40",1);
+							}
+							else
+							{
+								PlayerPrefs.SetInt("MiniverseLevels40through60",1);
+							}
+							
 						}
 						
 						//no
 						if (objectInfo.collider.name == "no")
 						{
-							if (!inlevel)
+							if (!inlevel && !inWorldSelect)
 							{
 								dragControls.isLevelSelect = true;
 							}
+							inWorldSelect = false;
 							StopDown();
 						}
 					}	

@@ -3,6 +3,7 @@ public var Locked = true;
 
 //private vars
 private var fadeInVirgin = true;
+private var fadeOutVirgin = true;
 private var dragControls : DragControlsPC;
 private var Mat : Material;
 
@@ -14,7 +15,7 @@ function Start ()
 	dragControls = Camera.main.GetComponent(DragControlsPC);
 	
 	//unlocking if world 1 is completed
-	if (PlayerPrefs.HasKey("W2BossWon"))
+	if (PlayerPrefs.HasKey("W2BossWon") && PlayerPrefs.HasKey("MiniverseLevels40through60"))
 	{
 		Locked = false;
 	}
@@ -26,10 +27,18 @@ function Start ()
 
 function Update () 
 {
-	if (Locked && !dragControls.halt && fadeInVirgin)
+	if (Locked && !dragControls.introing && fadeInVirgin)
 	{
 		fadeInVirgin = false;
 		FadeIn();
+	}
+	
+	//check if unlocked
+	if (PlayerPrefs.HasKey("W2BossWon") && PlayerPrefs.HasKey("MiniverseLevels40through60") && fadeOutVirgin)
+	{
+		fadeOutVirgin = false;
+		Locked = false;
+		FadeOut();
 	}
 }
 
@@ -40,4 +49,13 @@ function FadeIn()
 		Mat.SetColor("_Color", Color(Mat.GetColor("_Color").r, Mat.GetColor("_Color").g, Mat.GetColor("_Color").b, Mat.GetColor("_Color").a + (Time.deltaTime * 2)));
 		yield WaitForSeconds(0.01);
 	} while (Mat.GetColor("_Color").a < 1);	
+}
+
+function FadeOut()
+{
+	do //fade in the final puzzle plane
+	{
+		Mat.SetColor("_Color", Color(Mat.GetColor("_Color").r, Mat.GetColor("_Color").g, Mat.GetColor("_Color").b, Mat.GetColor("_Color").a - (Time.deltaTime * 2)));
+		yield WaitForSeconds(0.01);
+	} while (Mat.GetColor("_Color").a > 0);	
 }
