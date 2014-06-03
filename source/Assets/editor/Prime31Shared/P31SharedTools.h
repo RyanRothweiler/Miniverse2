@@ -19,5 +19,7 @@
 
 + (void)unityPause:(BOOL)shouldPause;
 
++ (UIViewController*)unityViewController;
+
 @end
 
