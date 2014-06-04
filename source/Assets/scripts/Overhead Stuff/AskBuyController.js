@@ -26,11 +26,19 @@ function Start ()
 
 function Update () 
 {
+	//check if something has been purchased
+	//Debug.Log(StoreKitBinding.getAllSavedTransactions().Count);
+//	if (StoreKitBinding.getAllSavedTransactions().l)
+//	{
+//		
+//	}
+	
+	//check starting up on world select
 	if (!dragControls.introing && !Using && inWorldSelect && PlayerPrefs.HasKey("W2BossWon") && !PlayerPrefs.HasKey("MiniverseLevels40through60"))
 	{
 		StartUp();
 	}
-	
+	//check starting up on level select
 	if (!dragControls.introing && !Using && inlevel && !PlayerPrefs.HasKey("MiniverseLevels10through40"))
 	{
 		StartUp();	
@@ -107,6 +115,19 @@ function Update ()
 						//yes						
 						if (objectInfo.collider.name == "yes")
 						{
+							Debug.Log("yest");
+							//get product information
+							StoreKitBinding.requestProductData( ["MiniverseLevels10through40", "MiniverseLevels40through60"] );
+							//initiate purchase
+							if (inWorldSelect)
+							{
+								StoreKitBinding.purchaseProduct( "MiniverseLevels40through60", 1 );
+							}
+							else
+							{
+								StoreKitBinding.purchaseProduct( "MiniverseLevels10through40", 1 );
+							}
+			
 							StopDown();
 							
 							if (!inWorldSelect)
@@ -117,15 +138,15 @@ function Update ()
 							{
 								PlayerPrefs.SetInt("MiniverseLevels40through60",1);
 							}
-							
 						}
 						
 						//no
 						if (objectInfo.collider.name == "no")
 						{
+							Debug.Log("now");
 							if (!inlevel && !inWorldSelect)
 							{
-								dragControls.isLevelSelect = true;
+								dragControls.LSelectHalt = false;
 							}
 							inWorldSelect = false;
 							StopDown();
@@ -139,6 +160,7 @@ function Update ()
 
 function StartUp()
 {
+	this.transform.position = Vector3(29.73, -0.73, 6.89);
 	dragControls.halt = true;
 	Using = true;
 	FadeIn();
@@ -219,6 +241,8 @@ function FadeOut()
 		mat.SetColor("_Color", Color(mat.GetColor("_Color").r, mat.GetColor("_Color").g, mat.GetColor("_Color").b, mat.GetColor("_Color").a - (Time.deltaTime * 2)));
 		yield WaitForSeconds(0.01);
 	} while (mat.GetColor("_Color").a > 0);
+	
+	this.transform.position = Vector3(1000,1000,1000);
 }
 
 function startOut()
