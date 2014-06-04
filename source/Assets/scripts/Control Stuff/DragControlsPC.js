@@ -2787,35 +2787,43 @@ function LevelSelect()
 							}
 							else //else do your regular stuff
 							{
-								FadeOutKeys(); //fade out keys
+								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 								
-								//save level offset
-								leveloffsetX = LevelOffset.x;
-								leveloffsetY = LevelOffset.y;
-								leveloffsetZ = LevelOffset.z;
-								
-								//Level is set to the collider's name and then loaded. See "nextLevel" code in update function.
-//								previousLevel = int.Parse(objectInfo.collider.transform.Find("scene").GetComponent(TextMesh).text);
-								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);;
-								nextLevel = true;
-								toLevel = true;
-								isLevelSelect = false;
-								//isMenu = false;
-								inGame = true;
-								fromLSelect = true;
-								
-								//Goes back to main menu	
-								if(objectInfo.collider.name == "mainmenu")
+								if (NextLevelNum >= 10 && !PlayerPrefs.HasKey("MiniverseLEvels10through40"))
 								{
-									transform.DetachChildren();
-									Application.LoadLevel("mainmenu");
-									isLevelSelect = false;
-									//isMenu = true;
+									toLevel = false;
+									Touch1Tap = false;
+									BuyAsk();
 								}
-								
-								Touch1Tap = false;
-								Touch1StartPos = Vector2(0,0);
-								Touch1EndPos = Vector2(1000,1000);
+								else
+								{
+									FadeOutKeys(); //fade out keys
+									
+									//save level offset
+									leveloffsetX = LevelOffset.x;
+									leveloffsetY = LevelOffset.y;
+									leveloffsetZ = LevelOffset.z;
+									
+									nextLevel = true;
+									toLevel = true;
+									isLevelSelect = false;
+									//isMenu = false;
+									inGame = true;
+									fromLSelect = true;
+									
+									//Goes back to main menu	
+									if(objectInfo.collider.name == "mainmenu")
+									{
+										transform.DetachChildren();
+										Application.LoadLevel("mainmenu");
+										isLevelSelect = false;
+										//isMenu = true;
+									}
+									
+									Touch1Tap = false;
+									Touch1StartPos = Vector2(0,0);
+									Touch1EndPos = Vector2(1000,1000);
+								}
 							}
 						}
 					}

@@ -116,28 +116,30 @@ function Update ()
 						if (objectInfo.collider.name == "yes")
 						{
 							Debug.Log("yest");
-							//get product information
-							StoreKitBinding.requestProductData( ["MiniverseLevels10through40", "MiniverseLevels40through60"] );
-							//initiate purchase
-							if (inWorldSelect)
-							{
-								StoreKitBinding.purchaseProduct( "MiniverseLevels40through60", 1 );
-							}
-							else
-							{
-								StoreKitBinding.purchaseProduct( "MiniverseLevels10through40", 1 );
-							}
-			
-							StopDown();
-							
-							if (!inWorldSelect)
-							{
-								PlayerPrefs.SetInt("MiniverseLevels10through40",1);
-							}
-							else
-							{
-								PlayerPrefs.SetInt("MiniverseLevels40through60",1);
-							}
+							#if UNITY_IPHONE
+								//get product information
+								StoreKitBinding.requestProductData( ["MiniverseLevels10through40", "MiniverseLevels40through60"] );
+								//initiate purchase
+								if (inWorldSelect)
+								{
+									StoreKitBinding.purchaseProduct( "MiniverseLevels40through60", 1 );
+								}
+								else
+								{
+									StoreKitBinding.purchaseProduct( "MiniverseLevels10through40", 1 );
+								}
+				
+								StopDown();
+								
+								if (!inWorldSelect)
+								{
+									PlayerPrefs.SetInt("MiniverseLevels10through40",1);
+								}
+								else
+								{
+									PlayerPrefs.SetInt("MiniverseLevels40through60",1);
+								}
+							#endif
 						}
 						
 						//no
@@ -160,7 +162,7 @@ function Update ()
 
 function StartUp()
 {
-	this.transform.position = Vector3(29.73, -0.73, 6.89);
+	this.transform.position = Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z + 19);
 	dragControls.halt = true;
 	Using = true;
 	FadeIn();
