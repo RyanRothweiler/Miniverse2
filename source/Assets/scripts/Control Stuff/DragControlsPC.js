@@ -261,11 +261,11 @@ function Start ()
 	
 	
 	//check for restoring purchases
-	if (!PlayerPrefs.HasKey("iapChecked"))
-	{
-		PlayerPrefs.SetInt("iapChecked",1);
-		StoreKitBinding.restoreCompletedTransactions();
-	}
+//	if (!PlayerPrefs.HasKey("iapChecked"))
+//	{
+//		PlayerPrefs.SetInt("iapChecked",1);
+//		StoreKitBinding.restoreCompletedTransactions();
+//	}
 	
 	
 	//analytics shenanigans
@@ -2439,6 +2439,11 @@ function MainMenu()
 					is2LevelSelect = false;
 					is3LevelSelect = false;
 					inGame = true;
+				}
+				
+				if (objectInfo.collider.name == "restore")
+				{
+					StoreKitBinding.restoreCompletedTransactions();
 				}
 				
 				Touch1Tap = false;
