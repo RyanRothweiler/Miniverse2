@@ -13,7 +13,9 @@ public var plane1 : GameObject;
 public var plane2 : GameObject;
 public var plane3 : GameObject;
 public var plane4 : GameObject;
-public var plane5 : GameObject;
+public var plane5 : GameObject; 
+
+public var evented : boolean;
 
 //private vars
 private var dragControls : DragControlsPC;
@@ -21,18 +23,14 @@ private var objectInfo : RaycastHit;
 
 function Start () 
 {
-	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls
+	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls 
+	
+	//get product information
+	StoreKitBinding.requestProductData( ["MiniverseLevels10through40", "MiniverseLevels40through60"] );
 }
 
 function Update () 
 {
-	//check if something has been purchased
-	//Debug.Log(StoreKitBinding.getAllSavedTransactions().Count);
-//	if (StoreKitBinding.getAllSavedTransactions().l)
-//	{
-//		
-//	}
-	
 	//check starting up on world select
 	if (!dragControls.introing && !Using && inWorldSelect && PlayerPrefs.HasKey("W2BossWon") && !PlayerPrefs.HasKey("MiniverseLevels40through60"))
 	{
@@ -72,7 +70,6 @@ function Update ()
 					//yes
 					if (objectInfo.collider.name == "yes")
 					{
-						inlevel = false;
 						dragControls.halt = false;
 						StopDown();
 						
@@ -115,43 +112,16 @@ function Update ()
 						//yes						
 						if (objectInfo.collider.name == "yes")
 						{
-							Debug.Log("yest");
-							#if UNITY_IPHONE
-								//get product information
-								StoreKitBinding.requestProductData( ["MiniverseLevels10through40", "MiniverseLevels40through60"] );
-								//initiate purchase
-								if (inWorldSelect)
-								{
-									StoreKitBinding.purchaseProduct( "MiniverseLevels40through60", 1 );
-								}
-								else
-								{
-									StoreKitBinding.purchaseProduct( "MiniverseLevels10through40", 1 );
-								}
-				
-								StopDown();
-								
-								if (!inWorldSelect)
-								{
-									PlayerPrefs.SetInt("MiniverseLevels10through40",1);
-								}
-								else
-								{
-									PlayerPrefs.SetInt("MiniverseLevels40through60",1);
-								}
-							#endif
+							yesGo();
 						}
 						
 						//no
 						if (objectInfo.collider.name == "no")
 						{
-							Debug.Log("now");
-							if (!inlevel && !inWorldSelect)
-							{
-								dragControls.LSelectHalt = false;
-							}
+							dragControls.LSelectHalt = false;
 							inWorldSelect = false;
 							StopDown();
+							
 						}
 					}	
 				}
@@ -160,8 +130,44 @@ function Update ()
 	}
 }
 
+function yesGo()
+{
+	#if UNITY_IPHONE
+		//initiate purchase
+		if (inWorldSelect)
+		{
+			StoreKitBinding.purchaseProduct( "MiniverseLevels40through60", 1 );
+		}
+		else
+		{
+			StoreKitBinding.purchaseProduct( "MiniverseLevels10through40", 1 );
+		}
+		
+		//stop anything else from being called
+		Using = false;
+		inlevel = false;
+		inWorldSelect = false;
+		
+		//wait until something happens to move on
+		StoreKitEventListener.evented = false;
+		do
+		{
+			yield;
+		} while (!StoreKitEventListener.evented);
+		Debug.Log("event happened");
+		
+		StopDown();
+		
+		dragControls.halt = false;
+		dragControls.LSelectHalt = false;
+	#endif
+}
+
 function StartUp()
 {
+	Debug.Log("staring up");
+	dragControls.LSelectHalt = true;
+	dragControls.isWorldSelect = false;
 	this.transform.position = Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z + 19);
 	dragControls.halt = true;
 	Using = true;
@@ -170,11 +176,17 @@ function StartUp()
 
 function StopDown()
 {
+	Debug.Log("stopping down");
 	startOut();
 	inlevel = false;
 	
-	Using = false;
 	FadeOut();
+	dragControls.LSelectHalt = false;
+	
+	if (Application.loadedLevel == 47)
+	{
+		dragControls.isWorldSelect = true;
+	}
 }
 
 function FadeIn()
@@ -244,13 +256,34 @@ function FadeOut()
 		yield WaitForSeconds(0.01);
 	} while (mat.GetColor("_Color").a > 0);
 	
+	dragControls.halt = false;
+	dragControls.LSelectHalt = false;
+	
+	if (Application.loadedLevel == 47)
+	{
+		dragControls.isWorldSelect = true;
+	}
+	
 	this.transform.position = Vector3(1000,1000,1000);
+	
+	//if this is a level and nothing was purchased, the go to level select,
+	if (Application.loadedLevel == 10 && !PlayerPrefs.HasKey("MiniverseLevels10through40"))
+	{
+		Debug.Log("nothing was bought so going to back level select");
+		inlevel = false;
+		dragControls.nextLevel = true;
+		dragControls.to1LevelSelect = true;
+	}
+	
+	Debug.Log("this probably means something was purhcased");
 }
 
 function startOut()
 {
 	if (inlevel)
 	{
+		Debug.Log("doing this dumb thing");
+		
 		yield WaitForSeconds(2);
 		
 		inlevel = false;

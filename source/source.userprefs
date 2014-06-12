@@ -1,13 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
-    <Files>
-      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\Overhead Stuff\AskBuyController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\UI Stuff\Locking Stuff\W2WorldLocking.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\UI Stuff\Locking Stuff\W3WorldLocking.js" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
