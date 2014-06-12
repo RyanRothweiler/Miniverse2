@@ -37,7 +37,7 @@ public class StoreKitEventListener : MonoBehaviour
 		StoreKitManager.paymentQueueUpdatedDownloadsEvent -= paymentQueueUpdatedDownloadsEvent;
 	}
 	
-	
+	public static bool evented;
 	
 	void transactionUpdatedEvent( StoreKitTransaction transaction )
 	{
@@ -57,6 +57,7 @@ public class StoreKitEventListener : MonoBehaviour
 	
 	void productListRequestFailedEvent( string error )
 	{
+		evented = true;
 		Debug.Log( "productListRequestFailedEvent: " + error );
 	}
 	
@@ -69,6 +70,7 @@ public class StoreKitEventListener : MonoBehaviour
 
 	void purchaseCancelledEvent( string error )
 	{
+		evented = true;
 		Debug.Log( "purchaseCancelledEvent: " + error );
 	}
 	
@@ -81,18 +83,22 @@ public class StoreKitEventListener : MonoBehaviour
 	
 	void purchaseSuccessfulEvent( StoreKitTransaction transaction )
 	{
+		evented = true;
+		PlayerPrefs.SetInt(transaction.productIdentifier, 1);
 		Debug.Log( "purchaseSuccessfulEvent: " + transaction );
 	}
 	
 	
 	void restoreTransactionsFailedEvent( string error )
 	{
+		evented = true;
 		Debug.Log( "restoreTransactionsFailedEvent: " + error );
 	}
 	
 	
 	void restoreTransactionsFinishedEvent()
 	{
+		evented = true;
 		Debug.Log( "restoreTransactionsFinished" );
 	}
 	

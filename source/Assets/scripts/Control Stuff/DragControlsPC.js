@@ -256,9 +256,16 @@ function OnLevelWasLoaded()
 
 function Start () 
 {
-//	PlayerPrefs.SetInt("W2BossWon", 1);
-//	PlayerPrefs.SetInt("W1BossWon", 1);
+	//PlayerPrefs.SetInt("W2BossWon", 1);
+	//PlayerPrefs.SetInt("W1BossWon", 1);
 	
+	
+	//check for restoring purchases
+	if (!PlayerPrefs.HasKey("iapChecked"))
+	{
+		PlayerPrefs.SetInt("iapChecked",1);
+		StoreKitBinding.restoreCompletedTransactions();
+	}
 	
 	
 	//analytics shenanigans
@@ -1104,6 +1111,7 @@ function Update ()
 	//if player lost
 	if (LevelLost)
 	{
+		Debug.Log("level lost");
 		isPlayOne = true;
 		ZoomIn();
 		
@@ -1168,13 +1176,13 @@ function Update ()
 	{
 		if (is1LevelSelect || is2LevelSelect || is3LevelSelect)
 		{
-			//check what the next level moving to is to check for in app purchases
-			if (NextLevelNum >= 10 && !PlayerPrefs.HasKey("MiniverseLevels10through40"))
-			{
-				nextLevel = false;
-				toLevel = false;
-				BuyAsk();
-			}
+//			//check what the next level moving to is to check for in app purchases
+//			if (NextLevelNum >= 10 && !PlayerPrefs.HasKey("MiniverseLevels10through40"))
+//			{
+//				nextLevel = false;
+//				toLevel = false;
+//				BuyAsk();
+//			}
 							
 			//get all the key savers
 			keySavers = GameObject.FindGameObjectsWithTag("KeySaver");
@@ -1257,6 +1265,7 @@ function Update ()
 		//moving to world select
 		if (toWorldSelect)
 		{
+			Debug.Log("going to world");
 			isPlayOne = true;
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 100)
@@ -1270,6 +1279,8 @@ function Update ()
 		//moving to a level
 		if (toLevel)
 		{
+			Debug.Log("going to level");
+			Debug.Log(NextLevelNum);
 			if (fromLSelect)
 			{
 				//play rocket in sound
@@ -1312,6 +1323,7 @@ function Update ()
 		//moving to the main menu scene
 		if (toMainMenu)
 		{
+			Debug.Log("going to main mneu from this giant dick");
 			isPlayOne = true;
 			ZoomIn();
 			if (transform.position.z >= WorldZDepth + 100)
@@ -1945,6 +1957,12 @@ function WorldSelect()
 							//fade out back button
 							this.transform.Find("BackArrow").GetComponent(NeonFlicker).KillOut();
 						}
+						//check if world 2 is beaten but world 3 hasn't been purchased yet
+						if (objectInfo.collider.name == "w3" && objectInfo.collider.transform.Find("LockPlane").GetComponent(W3WorldLocking).Locked && !PlayerPrefs.HasKey("MiniverseLevels40through60") && PlayerPrefs.HasKey("W2BossWon"))
+						{
+							AskBuyObj.GetComponent(AskBuyController).inWorldSelect = true;
+							BuyAsk();
+						}
 						
 						if (objectInfo.collider.name == "GameEnd")
 						{
@@ -2250,6 +2268,7 @@ function ContactMenu()
 //Code for Main Menu functionality
 function MainMenu()
 {
+	Debug.Log("main menuing");
 	halt = true;
 	
 	//pc controls
@@ -2284,6 +2303,7 @@ function MainMenu()
 			{
 				if (!Beta)
 				{
+					Debug.Log("1");
 					nextLevel = true;
 					toWorldSelect = true;
 					is1LevelSelect = false;
@@ -2376,6 +2396,7 @@ function MainMenu()
 				{
 					if (!Beta)
 					{
+						Debug.Log("2");
 						toWorldSelect = true;
 						is1LevelSelect = false;
 						is2LevelSelect = false;
@@ -2386,6 +2407,7 @@ function MainMenu()
 					}
 					else
 					{
+						Debug.Log("3");
 						to1LevelSelect = true;
 						toWorldSelect = false;
 						is1LevelSelect = false;
@@ -2439,6 +2461,7 @@ function MainMenu()
 function LevelSelect()
 {
 	halt = true;
+	isMainMenu = false;
 	
 	if (!LSelectHalt)
 	{
@@ -2625,7 +2648,7 @@ function LevelSelect()
 								}
 							}
 							//finally else touching back button then back out to the world select
-							else 
+							else if (objectInfo.collider.name == "BackArrow")
 							{
 								LevelSelectGoToWorld();
 								return;
@@ -2789,11 +2812,22 @@ function LevelSelect()
 							{
 								NextLevelNum = int.Parse(objectInfo.collider.gameObject.transform.Find("scene").GetComponent(TextMesh).text);
 								
-								if (NextLevelNum >= 10 && !PlayerPrefs.HasKey("MiniverseLEvels10through40"))
+								if (NextLevelNum >= 10 && !PlayerPrefs.HasKey("MiniverseLevels10through40"))
 								{
+									Debug.Log("buy starting here");
+									isMainMenu = false;
+									iosTagDepress = false;
 									toLevel = false;
 									Touch1Tap = false;
+									Touching1 = true;
+									LSelectHalt = true;
+									Touch1StartPos = Vector2(0,0);
+									Touch1EndPos = Vector2(1000,1000);
+									Touch1Tap = false;
+									
 									BuyAsk();
+									
+									//return;
 								}
 								else
 								{
@@ -3114,6 +3148,7 @@ function LevelWon()
 			to2LevelSelect = false;
 			to3LevelSelect = false;
 			
+			Debug.Log("4");
 			toWorldSelect = true;
 		}
 		
@@ -3350,6 +3385,7 @@ function LevelSelectGoToWorld()
 {
 	do
 	{
+		Debug.Log("doing this goinb back from here");
 		yield;
 		isPlayOne = true;
 		ZoomIn();
@@ -3365,5 +3401,6 @@ function LevelSelectGoToWorld()
 //ask the player to buy a level pack
 function BuyAsk()
 {
+	Debug.Log("buy starting");
 	AskBuyObj.GetComponent(AskBuyController).StartUp();
 }
