@@ -1,6 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Control Stuff\DragControlsPC.js">
+    <Files>
+      <File FileName="Assets\scripts\Control Stuff\DragControlsPC.js" Line="2445" Column="6" />
+      <File FileName="Assets\scripts\Overhead Stuff\AskBuyController.js" Line="29" Column="15" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -2443,7 +2443,15 @@ function MainMenu()
 				
 				if (objectInfo.collider.name == "restore")
 				{
-					StoreKitBinding.restoreCompletedTransactions();
+					#if UNITY_IPHONE
+						StoreKitBinding.restoreCompletedTransactions();
+					#endif
+				}
+				
+				if (objectInfo.collider.name == "journalistFix")
+				{
+					PlayerPrefs.SetInt("MiniverseLevels10through40", 1);
+					PlayerPrefs.SetInt("MiniverseLevels40through60", 1);
 				}
 				
 				Touch1Tap = false;

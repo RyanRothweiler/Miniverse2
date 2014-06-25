@@ -26,7 +26,9 @@ function Start ()
 	dragControls = Camera.main.GetComponent(DragControlsPC); //get drag controls 
 	
 	//get product information
-	StoreKitBinding.requestProductData( ["MiniverseLevels10through40", "MiniverseLevels40through60"] );
+	#if UNITY_IPHONE
+		StoreKitBinding.requestProductData( ["MiniverseLevels10through40", "MiniverseLevels40through60"] );
+	#endif
 }
 
 function Update () 
