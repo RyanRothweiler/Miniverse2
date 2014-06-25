@@ -2268,7 +2268,6 @@ function ContactMenu()
 //Code for Main Menu functionality
 function MainMenu()
 {
-	Debug.Log("main menuing");
 	halt = true;
 	
 	//pc controls
@@ -2450,6 +2449,7 @@ function MainMenu()
 				
 				if (objectInfo.collider.name == "journalistFix")
 				{
+					Debug.Log("Set");
 					PlayerPrefs.SetInt("MiniverseLevels10through40", 1);
 					PlayerPrefs.SetInt("MiniverseLevels40through60", 1);
 				}
